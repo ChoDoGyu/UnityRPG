@@ -2,7 +2,8 @@
     "name": "UnityRPG.Gameplay",
     "rootNamespace": "UnityRPG",
     "references": [
-        "GUID:be6eabcff5727f94abc2eb38704e0b74"
+        "GUID:be6eabcff5727f94abc2eb38704e0b74",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
