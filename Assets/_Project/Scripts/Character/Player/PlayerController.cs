@@ -7,6 +7,7 @@ namespace UnityRPG.Character.Player
     [RequireComponent(typeof(PlayerMotor))]
     [RequireComponent(typeof(PlayerRotator))]
     [RequireComponent(typeof(PlayerCameraController))]
+    [RequireComponent(typeof(PlayerVisualAnimator))]
     public sealed class PlayerController : MonoBehaviour
     {
         private CharacterController characterController;
@@ -14,6 +15,7 @@ namespace UnityRPG.Character.Player
         private PlayerMotor playerMotor;
         private PlayerRotator playerRotator;
         private PlayerCameraController playerCameraController;
+        private PlayerVisualAnimator visualAnimator;
 
         public CharacterController CharacterController =>
             characterController;
@@ -37,6 +39,9 @@ namespace UnityRPG.Character.Player
 
             playerCameraController =
                 GetComponent<PlayerCameraController>();
+
+            visualAnimator =
+                GetComponent<PlayerVisualAnimator>();
         }
 
         private void Update()
@@ -56,6 +61,11 @@ namespace UnityRPG.Character.Player
 
             playerRotator.Rotate(
                 playerMotor.CurrentMoveDirection,
+                deltaTime);
+
+            visualAnimator.UpdateAnimation(
+                playerMotor.CurrentHorizontalSpeed,
+                inputReader.IsSprintPressed,
                 deltaTime);
         }
     }

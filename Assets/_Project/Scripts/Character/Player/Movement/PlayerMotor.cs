@@ -26,6 +26,8 @@ namespace UnityRPG.Character.Player
 
         public Vector3 CurrentMoveDirection { get; private set; }
 
+        public float CurrentHorizontalSpeed { get; private set; }
+
         public bool IsGrounded =>
             characterController.isGrounded;
 
@@ -56,6 +58,14 @@ namespace UnityRPG.Character.Player
 
             characterController.Move(
                 velocity * deltaTime);
+
+            Vector3 currentVelocity =
+                characterController.velocity;
+
+            currentVelocity.y = 0f;
+
+            CurrentHorizontalSpeed =
+                currentVelocity.magnitude;
         }
 
         private void UpdateHorizontalDirection(
