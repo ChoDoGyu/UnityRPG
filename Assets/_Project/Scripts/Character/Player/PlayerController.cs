@@ -195,7 +195,7 @@ namespace UnityRPG.Character.Player
                 return;
             }
 
-            attackController.TryStartAttack();
+            attackController.RequestAttack();
         }
     }
 }

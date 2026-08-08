@@ -18,8 +18,15 @@ namespace UnityRPG.Combat
         [Min(0f)]
         private float attackDamage = 10f;
 
+        [SerializeField]
+        [Min(1)]
+        private int maxComboCount = 3;
+
         private MeleeHitDetector hitDetector;
+
         private float remainingDuration;
+        private int currentComboStep;
+        private bool isNextAttackQueued;
 
         public bool IsAttacking =>
             remainingDuration > 0f;
@@ -27,24 +34,23 @@ namespace UnityRPG.Combat
         public bool CanAttack =>
             !IsAttacking;
 
+        public int CurrentComboStep =>
+            currentComboStep;
+
         private void Awake()
         {
             hitDetector = GetComponent<MeleeHitDetector>();
         }
 
-        public bool TryStartAttack()
+        public void RequestAttack()
         {
-            if (!CanAttack)
+            if (!IsAttacking)
             {
-                return false;
+                StartAttack(1);
+                return;
             }
 
-            remainingDuration =
-                attackDuration;
-
-            ApplyHit();
-
-            return true;
+            QueueNextAttack();
         }
 
         public void UpdateAttack(float deltaTime)
@@ -58,6 +64,52 @@ namespace UnityRPG.Combat
                 Mathf.Max(
                     0f,
                     remainingDuration - deltaTime);
+
+            if (remainingDuration > 0f)
+            {
+                return;
+            }
+
+            if (isNextAttackQueued &&
+                currentComboStep < maxComboCount)
+            {
+                StartAttack(
+                    currentComboStep + 1);
+
+                return;
+            }
+
+            EndCombo();
+        }
+
+        private void StartAttack(int comboStep)
+        {
+            currentComboStep =
+                comboStep;
+
+            remainingDuration =
+                attackDuration;
+
+            isNextAttackQueued =
+                false;
+
+            ApplyHit();
+        }
+
+        private void QueueNextAttack()
+        {
+            if (currentComboStep >= maxComboCount)
+            {
+                return;
+            }
+
+            isNextAttackQueued = true;
+        }
+
+        private void EndCombo()
+        {
+            currentComboStep = 0;
+            isNextAttackQueued = false;
         }
 
         private void ApplyHit()
