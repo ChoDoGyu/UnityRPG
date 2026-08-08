@@ -20,6 +20,8 @@ GameObject:
   - component: {fileID: 739497072507529576}
   - component: {fileID: 2696405582685427564}
   - component: {fileID: 2031709074170502014}
+  - component: {fileID: 6436335833976685284}
+  - component: {fileID: 3811925040633698544}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -244,6 +246,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46af2543f479cdd4da6aa81bf78a268f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Character.Player.PlayerLockOnController
+  maxLockDistance: 20
+--- !u!114 &6436335833976685284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810838048693877344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02846bf5758e47d4d95923851ec4ed17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Combat.MeleeHitDetector
+  hitRadius: 1
+  hitDistance: 1.5
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 64
+--- !u!114 &3811925040633698544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810838048693877344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0de2e4059a3951341be9e54490cfdbb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Combat.PlayerAttackController
+  attackReference: {fileID: 4613765813261899622}
+  attackDuration: 0.4
 --- !u!1 &1000176733347427081
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,13 +2,19 @@ using UnityEngine;
 
 namespace UnityRPG.Combat
 {
+    [RequireComponent(typeof(MeleeHitDetector))]
     public sealed class PlayerAttackController : MonoBehaviour
     {
+        [Header("Reference")]
+        [SerializeField]
+        private Transform attackReference;
+
         [Header("Attack")]
         [SerializeField]
         [Min(0.01f)]
         private float attackDuration = 0.4f;
 
+        private MeleeHitDetector hitDetector;
         private float remainingDuration;
 
         public bool IsAttacking =>
@@ -16,6 +22,11 @@ namespace UnityRPG.Combat
 
         public bool CanAttack =>
             !IsAttacking;
+
+        private void Awake()
+        {
+            hitDetector = GetComponent<MeleeHitDetector>();
+        }
 
         public bool TryStartAttack()
         {

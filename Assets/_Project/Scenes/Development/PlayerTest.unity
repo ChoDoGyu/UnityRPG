@@ -272,6 +272,7 @@ GameObject:
   m_Component:
   - component: {fileID: 367654516}
   - component: {fileID: 367654515}
+  - component: {fileID: 367654517}
   m_Layer: 6
   m_Name: LockOnDummy_C
   m_TagString: Untagged
@@ -309,6 +310,18 @@ Transform:
   - {fileID: 863997434}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &367654517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 367654514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd0a45f8632754448bde57b914a372d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Combat.TrainingDummyHealth
 --- !u!1 &389407450
 GameObject:
   m_ObjectHideFlags: 0
@@ -1355,6 +1368,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1373474923}
   - component: {fileID: 1373474924}
+  - component: {fileID: 1373474925}
   m_Layer: 6
   m_Name: LockOnDummy_A
   m_TagString: Untagged
@@ -1392,6 +1406,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Character.Player.LockOnTarget
   aimPoint: {fileID: 1226510561}
+--- !u!114 &1373474925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1373474922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd0a45f8632754448bde57b914a372d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Combat.TrainingDummyHealth
 --- !u!1 &1434446127
 GameObject:
   m_ObjectHideFlags: 0
@@ -1402,6 +1428,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1434446129}
   - component: {fileID: 1434446128}
+  - component: {fileID: 1434446130}
   m_Layer: 6
   m_Name: LockOnDummy_B
   m_TagString: Untagged
@@ -1439,6 +1466,18 @@ Transform:
   - {fileID: 260038549}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1434446130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1434446127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd0a45f8632754448bde57b914a372d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Combat.TrainingDummyHealth
 --- !u!1 &1672442407
 GameObject:
   m_ObjectHideFlags: 0
