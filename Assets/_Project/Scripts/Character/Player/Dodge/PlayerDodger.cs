@@ -18,17 +18,25 @@ namespace UnityRPG.Character.Player
         [Min(0f)]
         private float dodgeSpeed = 12f;
 
+        [SerializeField]
+        [Min(0f)]
+        private float dodgeCooldown = 0.5f;
+
         private CharacterController characterController;
 
         private Vector3 dodgeDirection;
         private float remainingDuration;
         private bool isConfigured;
+        private float cooldownRemaining;
 
         public bool IsDodging =>
             remainingDuration > 0f;
 
         public Vector3 DodgeDirection =>
             dodgeDirection;
+
+        public bool CanDodge =>
+            !IsDodging && cooldownRemaining <= 0f;
 
         private void Awake()
         {
@@ -51,7 +59,8 @@ namespace UnityRPG.Character.Player
             Transform cameraReference)
         {
             if (!isConfigured ||
-                cameraReference == null)
+                cameraReference == null ||
+                !CanDodge)
             {
                 return false;
             }
@@ -61,8 +70,9 @@ namespace UnityRPG.Character.Player
                     moveInput,
                     cameraReference);
 
-            remainingDuration =
-                dodgeDuration;
+            remainingDuration = dodgeDuration;
+
+            cooldownRemaining = dodgeCooldown;
 
             return true;
         }
@@ -121,6 +131,19 @@ namespace UnityRPG.Character.Player
             facingDirection.y = 0f;
 
             return facingDirection.normalized;
+        }
+
+        public void UpdateCooldown(float deltaTime)
+        {
+            if (cooldownRemaining <= 0f)
+            {
+                return;
+            }
+
+            cooldownRemaining =
+                Mathf.Max(
+                    0f,
+                    cooldownRemaining - deltaTime);
         }
     }
 }

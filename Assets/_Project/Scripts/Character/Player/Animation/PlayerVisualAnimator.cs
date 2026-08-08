@@ -95,6 +95,22 @@ namespace UnityRPG.Character.Player
         [Min(0f)]
         private float transitionSpeed = 12f;
 
+        [Header("Dodge")]
+        [SerializeField]
+        [Min(0f)]
+        private float dodgeBodyDrop = 0.12f;
+
+        [SerializeField]
+        private float dodgeBodyLean = 20f;
+
+        [SerializeField]
+        [Min(0f)]
+        private float dodgeHandBack = 0.18f;
+
+        [SerializeField]
+        [Min(0f)]
+        private float dodgeFootSpread = 0.12f;
+
         private Vector3 bodyBasePosition;
         private Vector3 leftHandBasePosition;
         private Vector3 rightHandBasePosition;
@@ -155,10 +171,17 @@ namespace UnityRPG.Character.Player
         public void UpdateAnimation(
             float horizontalSpeed,
             bool isSprinting,
+            bool isDodging,
             float deltaTime)
         {
             if (!isConfigured)
             {
+                return;
+            }
+
+            if (isDodging)
+            {
+                UpdateDodge(deltaTime);
                 return;
             }
 
@@ -385,6 +408,75 @@ namespace UnityRPG.Character.Player
                 Mathf.Exp(
                     -transitionSpeed *
                     deltaTime);
+        }
+
+        private void UpdateDodge(float deltaTime)
+        {
+            float smoothFactor =
+                GetSmoothFactor(deltaTime);
+
+            Vector3 bodyTarget =
+                bodyBasePosition +
+                Vector3.down * dodgeBodyDrop;
+
+            Quaternion bodyRotationTarget =
+                bodyBaseRotation *
+                Quaternion.Euler(
+                    dodgeBodyLean,
+                    0f,
+                    0f);
+
+            Vector3 leftHandTarget =
+                leftHandBasePosition +
+                Vector3.back * dodgeHandBack;
+
+            Vector3 rightHandTarget =
+                rightHandBasePosition +
+                Vector3.back * dodgeHandBack;
+
+            Vector3 leftFootTarget =
+                leftFootBasePosition +
+                Vector3.forward * dodgeFootSpread;
+
+            Vector3 rightFootTarget =
+                rightFootBasePosition +
+                Vector3.back * dodgeFootSpread;
+
+            body.localPosition =
+                Vector3.Lerp(
+                    body.localPosition,
+                    bodyTarget,
+                    smoothFactor);
+
+            body.localRotation =
+                Quaternion.Slerp(
+                    body.localRotation,
+                    bodyRotationTarget,
+                    smoothFactor);
+
+            leftHand.localPosition =
+                Vector3.Lerp(
+                    leftHand.localPosition,
+                    leftHandTarget,
+                    smoothFactor);
+
+            rightHand.localPosition =
+                Vector3.Lerp(
+                    rightHand.localPosition,
+                    rightHandTarget,
+                    smoothFactor);
+
+            leftFoot.localPosition =
+                Vector3.Lerp(
+                    leftFoot.localPosition,
+                    leftFootTarget,
+                    smoothFactor);
+
+            rightFoot.localPosition =
+                Vector3.Lerp(
+                    rightFoot.localPosition,
+                    rightFootTarget,
+                    smoothFactor);
         }
     }
 }

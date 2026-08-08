@@ -34,6 +34,8 @@ namespace UnityRPG.Character.Player
         {
             float deltaTime = Time.deltaTime;
 
+            playerDodger.UpdateCooldown(deltaTime);
+
             UpdateCamera(deltaTime);
 
             bool isDodgeFrame =
@@ -44,7 +46,9 @@ namespace UnityRPG.Character.Player
                 UpdateMovement(deltaTime);
             }
 
-            UpdateVisual(deltaTime);
+            UpdateVisual(
+                isDodgeFrame,
+                deltaTime);
         }
 
         private void UpdateCamera(float deltaTime)
@@ -84,18 +88,22 @@ namespace UnityRPG.Character.Player
             }
         }
 
-        private void UpdateVisual(float deltaTime)
+        private void UpdateVisual(
+            bool isDodgeFrame,
+            float deltaTime)
         {
             visualAnimator.UpdateAnimation(
                 playerMotor.CurrentHorizontalSpeed,
                 playerMotor.IsSprinting,
+                isDodgeFrame,
                 deltaTime);
         }
 
         private bool UpdateDodge(float deltaTime)
         {
             if (inputReader.WasDodgePressed &&
-                playerMotor.IsGrounded)
+                playerMotor.IsGrounded &&
+                playerDodger.CanDodge)
             {
                 if (stateController.TryEnterDodge())
                 {
