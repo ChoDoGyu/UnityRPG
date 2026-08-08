@@ -87,12 +87,34 @@ namespace UnityRPG.Character.Player
                 cameraTarget,
                 deltaTime);
 
-            if (stateController.CanRotate)
+            UpdateRotation(deltaTime);
+        }
+
+        private void UpdateRotation(float deltaTime)
+        {
+            if (!stateController.CanRotate)
             {
-                playerRotator.Rotate(
-                    playerMotor.CurrentMoveDirection,
-                    deltaTime);
+                return;
             }
+
+            if (lockOnController.IsLockedOn)
+            {
+                Vector3 targetDirection =
+                    lockOnController.CurrentTarget.AimPosition -
+                    transform.position;
+
+                targetDirection.y = 0f;
+
+                playerRotator.Rotate(
+                    targetDirection,
+                    deltaTime);
+
+                return;
+            }
+
+            playerRotator.Rotate(
+                playerMotor.CurrentMoveDirection,
+                deltaTime);
         }
 
         private void UpdateVisual(
