@@ -322,6 +322,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd0a45f8632754448bde57b914a372d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Combat.TrainingDummyHealth
+  maxHealth: 100
+  currentHealth: 0
 --- !u!1 &389407450
 GameObject:
   m_ObjectHideFlags: 0
@@ -1418,6 +1420,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd0a45f8632754448bde57b914a372d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Combat.TrainingDummyHealth
+  maxHealth: 100
+  currentHealth: 0
 --- !u!1 &1434446127
 GameObject:
   m_ObjectHideFlags: 0
@@ -1478,6 +1482,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd0a45f8632754448bde57b914a372d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Combat.TrainingDummyHealth
+  maxHealth: 100
+  currentHealth: 0
 --- !u!1 &1672442407
 GameObject:
   m_ObjectHideFlags: 0
@@ -1983,6 +1989,30 @@ PrefabInstance:
     - target: {fileID: 3171799723806331505, guid: acfb77fcfd5761549bb349a926078283, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4445118300463334293, guid: acfb77fcfd5761549bb349a926078283, type: 3}
+      propertyPath: attackBodyLean
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4445118300463334293, guid: acfb77fcfd5761549bb349a926078283, type: 3}
+      propertyPath: attackBodyTurn
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 4445118300463334293, guid: acfb77fcfd5761549bb349a926078283, type: 3}
+      propertyPath: attackHandSide
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 4445118300463334293, guid: acfb77fcfd5761549bb349a926078283, type: 3}
+      propertyPath: attackHandReach
+      value: 0.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 4445118300463334293, guid: acfb77fcfd5761549bb349a926078283, type: 3}
+      propertyPath: attackLeftHandBack
+      value: 0.18
+      objectReference: {fileID: 0}
+    - target: {fileID: 4445118300463334293, guid: acfb77fcfd5761549bb349a926078283, type: 3}
+      propertyPath: thirdAttackHandLift
+      value: 0.8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

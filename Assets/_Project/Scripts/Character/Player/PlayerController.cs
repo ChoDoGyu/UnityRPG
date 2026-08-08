@@ -52,19 +52,18 @@ namespace UnityRPG.Character.Player
             UpdateLockOn();
             UpdateCamera(deltaTime);
 
-            bool isDodging =
-                UpdateDodge(deltaTime);
+            bool isDodging = UpdateDodge(deltaTime);
 
             UpdateAttackInput();
+
+            UpdateAttackRotation(deltaTime);
 
             if (!isDodging)
             {
                 UpdateMovement(deltaTime);
             }
 
-            UpdateVisual(
-                isDodging,
-                deltaTime);
+            UpdateVisual(isDodging, deltaTime);
         }
 
         private void UpdateCamera(float deltaTime)
@@ -243,6 +242,29 @@ namespace UnityRPG.Character.Player
             }
 
             attackController.RequestAttack();
+        }
+
+        private void UpdateAttackRotation(float deltaTime)
+        {
+            if (!attackController.CanTrackTarget)
+            {
+                return;
+            }
+
+            if (!lockOnController.IsLockedOn)
+            {
+                return;
+            }
+
+            Vector3 targetDirection =
+                lockOnController.CurrentTarget.AimPosition -
+                transform.position;
+
+            targetDirection.y = 0f;
+
+            playerRotator.Rotate(
+                targetDirection,
+                deltaTime);
         }
     }
 }

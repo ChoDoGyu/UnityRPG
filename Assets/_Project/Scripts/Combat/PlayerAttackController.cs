@@ -26,6 +26,10 @@ namespace UnityRPG.Combat
         [Range(0f, 1f)]
         private float hitNormalizedTime = 0.5f;
 
+        [SerializeField]
+        [Range(0f, 1f)]
+        private float targetTrackingNormalizedTime = 0.25f;
+
         private MeleeHitDetector hitDetector;
 
         private float remainingDuration;
@@ -38,6 +42,10 @@ namespace UnityRPG.Combat
 
         public int CurrentComboStep =>
             currentComboStep;
+
+        public bool CanTrackTarget =>
+            IsAttacking &&
+            NormalizedProgress <= targetTrackingNormalizedTime;
 
         public float NormalizedProgress
         {
