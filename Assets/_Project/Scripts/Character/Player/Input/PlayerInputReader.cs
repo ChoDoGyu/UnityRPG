@@ -22,6 +22,9 @@ namespace UnityRPG.Character.Player
         public bool WasDodgePressed =>
             inputActions.Player.Dodge.WasPressedThisFrame();
 
+        public bool WasLockOnPressed =>
+            inputActions.Player.LockOn.WasPressedThisFrame();
+
         private void Awake()
         {
             inputActions = new PlayerInputActions();

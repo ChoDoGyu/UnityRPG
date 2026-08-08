@@ -9,6 +9,8 @@ namespace UnityRPG.Character.Player
     [RequireComponent(typeof(PlayerVisualAnimator))]
     [RequireComponent(typeof(PlayerStateController))]
     [RequireComponent(typeof(PlayerDodger))]
+
+    [RequireComponent(typeof(PlayerLockOnController))]
     public sealed class PlayerController : MonoBehaviour
     {
         private PlayerInputReader inputReader;
@@ -18,6 +20,7 @@ namespace UnityRPG.Character.Player
         private PlayerVisualAnimator visualAnimator;
         private PlayerStateController stateController;
         private PlayerDodger playerDodger;
+        private PlayerLockOnController lockOnController;
 
         private void Awake()
         {
@@ -28,13 +31,17 @@ namespace UnityRPG.Character.Player
             visualAnimator = GetComponent<PlayerVisualAnimator>();
             stateController = GetComponent<PlayerStateController>();
             playerDodger = GetComponent<PlayerDodger>();
+            lockOnController = GetComponent<PlayerLockOnController>();
         }
 
         private void Update()
         {
             float deltaTime = Time.deltaTime;
 
-            playerDodger.UpdateCooldown(deltaTime);
+            playerDodger.UpdateCooldown(
+                deltaTime);
+
+            UpdateLockOn();
 
             UpdateCamera(deltaTime);
 
@@ -139,6 +146,17 @@ namespace UnityRPG.Character.Player
             }
 
             return true;
+        }
+
+        private void UpdateLockOn()
+        {
+            if (!inputReader.WasLockOnPressed)
+            {
+                return;
+            }
+
+            lockOnController.ToggleLockOn(
+                playerCameraController.CameraTarget);
         }
     }
 }

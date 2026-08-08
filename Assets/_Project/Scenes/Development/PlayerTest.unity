@@ -1553,28 +1553,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1672442407}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1927422175 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 810838048693877344, guid: acfb77fcfd5761549bb349a926078283, type: 3}
-  m_PrefabInstance: {fileID: 6491401770166236350}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1927422186
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1927422175}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f71c133fc8e836f4dafe278f52dd8f53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Character.Player.PlayerTargetFinder
-  searchRadius: 15
-  maxSearchAngle: 60
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!1 &1976734657
 GameObject:
   m_ObjectHideFlags: 0
@@ -1927,6 +1905,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerRoot
       objectReference: {fileID: 0}
+    - target: {fileID: 2696405582685427564, guid: acfb77fcfd5761549bb349a926078283, type: 3}
+      propertyPath: targetLayer.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 3171799723806331505, guid: acfb77fcfd5761549bb349a926078283, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1970,10 +1952,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 810838048693877344, guid: acfb77fcfd5761549bb349a926078283, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1927422186}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: acfb77fcfd5761549bb349a926078283, type: 3}
 --- !u!4 &6491401770166236351 stripped
 Transform:
