@@ -1,0 +1,16 @@
+{
+    "name": "UnityRPG.Gameplay",
+    "rootNamespace": "UnityRPG",
+    "references": [
+        "GUID:be6eabcff5727f94abc2eb38704e0b74"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,17 @@
+{
+    "name": "UnityRPG.UI",
+    "rootNamespace": "UnityRPG.UI",
+    "references": [
+        "GUID:be6eabcff5727f94abc2eb38704e0b74",
+        "GUID:d422bbe74ae58a649b13b546aa7f2ece"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
