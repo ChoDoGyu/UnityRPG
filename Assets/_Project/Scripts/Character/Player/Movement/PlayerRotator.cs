@@ -36,5 +36,19 @@ namespace UnityRPG.Character.Player
                     targetRotation,
                     rotationSpeed * deltaTime);
         }
+
+        public void SetFacingDirection(Vector3 direction)
+        {
+            if (rotationTarget == null ||
+                direction.sqrMagnitude <= 0.001f)
+            {
+                return;
+            }
+
+            rotationTarget.rotation =
+                Quaternion.LookRotation(
+                    direction,
+                    Vector3.up);
+        }
     }
 }

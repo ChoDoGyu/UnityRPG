@@ -76,9 +76,12 @@ namespace UnityRPG.Character.Player
                 cameraTarget,
                 deltaTime);
 
-            playerRotator.Rotate(
-                playerMotor.CurrentMoveDirection,
-                deltaTime);
+            if (stateController.CanRotate)
+            {
+                playerRotator.Rotate(
+                    playerMotor.CurrentMoveDirection,
+                    deltaTime);
+            }
         }
 
         private void UpdateVisual(float deltaTime)
@@ -104,6 +107,11 @@ namespace UnityRPG.Character.Player
                     if (!started)
                     {
                         stateController.ExitDodge();
+                    }
+                    else
+                    {
+                        playerRotator.SetFacingDirection(
+                            playerDodger.DodgeDirection);
                     }
                 }
             }
