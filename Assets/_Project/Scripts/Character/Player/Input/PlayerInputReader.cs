@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace UnityRPG.Character.Player
 {
@@ -14,6 +15,9 @@ namespace UnityRPG.Character.Player
 
         public bool IsSprintPressed =>
             inputActions.Player.Sprint.IsPressed();
+
+        public bool IsLookInputMouse =>
+            inputActions.Player.Look.activeControl?.device is Mouse;
 
         private void Awake()
         {

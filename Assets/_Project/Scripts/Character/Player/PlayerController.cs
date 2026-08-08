@@ -6,14 +6,14 @@ namespace UnityRPG.Character.Player
     [RequireComponent(typeof(PlayerInputReader))]
     [RequireComponent(typeof(PlayerMotor))]
     [RequireComponent(typeof(PlayerRotator))]
+    [RequireComponent(typeof(PlayerCameraController))]
     public sealed class PlayerController : MonoBehaviour
     {
         private CharacterController characterController;
         private PlayerInputReader inputReader;
         private PlayerMotor playerMotor;
         private PlayerRotator playerRotator;
-
-        private Transform cameraTransform;
+        private PlayerCameraController playerCameraController;
 
         public CharacterController CharacterController =>
             characterController;
@@ -23,36 +23,35 @@ namespace UnityRPG.Character.Player
 
         private void Awake()
         {
-            characterController = GetComponent<CharacterController>();
-            inputReader = GetComponent<PlayerInputReader>();
-            playerMotor = GetComponent<PlayerMotor>();
-            playerRotator = GetComponent<PlayerRotator>();
-        }
+            characterController =
+                GetComponent<CharacterController>();
 
-        private void Start()
-        {
-            Camera mainCamera = Camera.main;
+            inputReader =
+                GetComponent<PlayerInputReader>();
 
-            if (mainCamera == null)
-            {
-                Debug.LogError(
-                    "[Player] Main Camera를 찾을 수 없습니다.");
+            playerMotor =
+                GetComponent<PlayerMotor>();
 
-                enabled = false;
-                return;
-            }
+            playerRotator =
+                GetComponent<PlayerRotator>();
 
-            cameraTransform = mainCamera.transform;
+            playerCameraController =
+                GetComponent<PlayerCameraController>();
         }
 
         private void Update()
         {
             float deltaTime = Time.deltaTime;
 
+            playerCameraController.RotateCamera(
+                inputReader.LookInput,
+                inputReader.IsLookInputMouse,
+                deltaTime);
+
             playerMotor.Move(
                 inputReader.MoveInput,
                 inputReader.IsSprintPressed,
-                cameraTransform,
+                playerCameraController.CameraTarget,
                 deltaTime);
 
             playerRotator.Rotate(

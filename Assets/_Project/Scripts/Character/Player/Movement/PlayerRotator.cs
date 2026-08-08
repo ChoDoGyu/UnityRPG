@@ -5,12 +5,25 @@ namespace UnityRPG.Character.Player
     public sealed class PlayerRotator : MonoBehaviour
     {
         [SerializeField]
+        private Transform rotationTarget;
+
+        [SerializeField]
         [Min(0f)]
         private float rotationSpeed = 720f;
 
+        private void Awake()
+        {
+            if (rotationTarget == null)
+            {
+                Debug.LogError(
+                    "[Player] PlayerRotator의 Rotation Target이 설정되지 않았습니다.");
+            }
+        }
+
         public void Rotate(Vector3 direction, float deltaTime)
         {
-            if (direction.sqrMagnitude <= 0.001f)
+            if (rotationTarget == null ||
+                direction.sqrMagnitude <= 0.001f)
             {
                 return;
             }
@@ -18,10 +31,11 @@ namespace UnityRPG.Character.Player
             Quaternion targetRotation =
                 Quaternion.LookRotation(direction, Vector3.up);
 
-            transform.rotation = Quaternion.RotateTowards(
-                transform.rotation,
-                targetRotation,
-                rotationSpeed * deltaTime);
+            rotationTarget.rotation =
+                Quaternion.RotateTowards(
+                    rotationTarget.rotation,
+                    targetRotation,
+                    rotationSpeed * deltaTime);
         }
     }
 }

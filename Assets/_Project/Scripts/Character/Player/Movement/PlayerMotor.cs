@@ -37,10 +37,13 @@ namespace UnityRPG.Character.Player
         public void Move(
             Vector2 input,
             bool isSprinting,
-            Transform cameraTransform,
+            Transform cameraReference,
             float deltaTime)
         {
-            UpdateHorizontalDirection(input, cameraTransform);
+            UpdateHorizontalDirection(
+                input,
+                cameraReference);
+
             UpdateGravity(deltaTime);
 
             float currentSpeed =
@@ -57,16 +60,16 @@ namespace UnityRPG.Character.Player
 
         private void UpdateHorizontalDirection(
             Vector2 input,
-            Transform cameraTransform)
+            Transform cameraReference)
         {
             Vector2 clampedInput =
                 Vector2.ClampMagnitude(input, 1f);
 
             Vector3 cameraForward =
-                cameraTransform.forward;
+                cameraReference.forward;
 
             Vector3 cameraRight =
-                cameraTransform.right;
+                cameraReference.right;
 
             cameraForward.y = 0f;
             cameraRight.y = 0f;
