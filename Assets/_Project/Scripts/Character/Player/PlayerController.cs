@@ -51,6 +51,7 @@ namespace UnityRPG.Character.Player
 
             playerMotor.Move(
                 inputReader.MoveInput,
+                inputReader.IsSprintPressed,
                 cameraTransform,
                 deltaTime);
 
