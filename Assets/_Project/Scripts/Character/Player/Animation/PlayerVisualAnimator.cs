@@ -105,15 +105,51 @@ namespace UnityRPG.Character.Player
 
         private float cycle;
 
+        private bool isConfigured;
+
         private void Awake()
         {
-            bodyBasePosition = body.localPosition;
-            leftHandBasePosition = leftHand.localPosition;
-            rightHandBasePosition = rightHand.localPosition;
-            leftFootBasePosition = leftFoot.localPosition;
-            rightFootBasePosition = rightFoot.localPosition;
+            if (!ValidateParts())
+            {
+                return;
+            }
 
-            bodyBaseRotation = body.localRotation;
+            bodyBasePosition =
+                body.localPosition;
+
+            leftHandBasePosition =
+                leftHand.localPosition;
+
+            rightHandBasePosition =
+                rightHand.localPosition;
+
+            leftFootBasePosition =
+                leftFoot.localPosition;
+
+            rightFootBasePosition =
+                rightFoot.localPosition;
+
+            bodyBaseRotation =
+                body.localRotation;
+
+            isConfigured = true;
+        }
+
+        private bool ValidateParts()
+        {
+            if (body == null ||
+                leftHand == null ||
+                rightHand == null ||
+                leftFoot == null ||
+                rightFoot == null)
+            {
+                Debug.LogError(
+                    "[Player] PlayerVisualAnimator의 캐릭터 파츠 참조가 누락되었습니다.");
+
+                return false;
+            }
+
+            return true;
         }
 
         public void UpdateAnimation(
@@ -121,6 +157,11 @@ namespace UnityRPG.Character.Player
             bool isSprinting,
             float deltaTime)
         {
+            if (!isConfigured)
+            {
+                return;
+            }
+
             bool isMoving =
                 horizontalSpeed > movingSpeedThreshold;
 

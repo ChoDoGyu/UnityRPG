@@ -27,14 +27,27 @@ namespace UnityRPG.Character.Player
         private float yaw;
         private float pitch;
 
+        private bool isConfigured;
+
         public Transform CameraTarget => cameraTarget;
 
         private void Awake()
         {
-            Vector3 rotation = cameraTarget.eulerAngles;
+            if (cameraTarget == null)
+            {
+                Debug.LogError(
+                    "[Player] PlayerCameraController의 Camera Target이 설정되지 않았습니다.");
+
+                return;
+            }
+
+            Vector3 rotation =
+                cameraTarget.eulerAngles;
 
             yaw = rotation.y;
             pitch = NormalizeAngle(rotation.x);
+
+            isConfigured = true;
         }
 
         public void RotateCamera(
@@ -42,6 +55,11 @@ namespace UnityRPG.Character.Player
             bool isMouseInput,
             float deltaTime)
         {
+            if (!isConfigured)
+            {
+                return;
+            }
+
             if (lookInput.sqrMagnitude <= 0.001f)
             {
                 return;

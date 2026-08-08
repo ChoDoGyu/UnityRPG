@@ -5,6 +5,8 @@ namespace UnityRPG.Character.Player
     [RequireComponent(typeof(CharacterController))]
     public sealed class PlayerMotor : MonoBehaviour
     {
+        private const float MovingSpeedThreshold = 0.15f;
+
         [Header("Movement")]
         [SerializeField]
         [Min(0f)]
@@ -31,14 +33,20 @@ namespace UnityRPG.Character.Player
         public bool IsGrounded =>
             characterController.isGrounded;
 
+        public bool IsMoving =>
+            CurrentHorizontalSpeed > MovingSpeedThreshold;
+
+        public bool IsSprinting { get; private set; }
+
         private void Awake()
         {
-            characterController = GetComponent<CharacterController>();
+            characterController =
+                GetComponent<CharacterController>();
         }
 
         public void Move(
             Vector2 input,
-            bool isSprinting,
+            bool sprintRequested,
             Transform cameraReference,
             float deltaTime)
         {
@@ -49,7 +57,9 @@ namespace UnityRPG.Character.Player
             UpdateGravity(deltaTime);
 
             float currentSpeed =
-                isSprinting ? sprintSpeed : moveSpeed;
+                sprintRequested
+                    ? sprintSpeed
+                    : moveSpeed;
 
             Vector3 velocity =
                 CurrentMoveDirection * currentSpeed;
@@ -59,13 +69,8 @@ namespace UnityRPG.Character.Player
             characterController.Move(
                 velocity * deltaTime);
 
-            Vector3 currentVelocity =
-                characterController.velocity;
-
-            currentVelocity.y = 0f;
-
-            CurrentHorizontalSpeed =
-                currentVelocity.magnitude;
+            UpdateMovementState(
+                sprintRequested);
         }
 
         private void UpdateHorizontalDirection(
@@ -100,7 +105,8 @@ namespace UnityRPG.Character.Player
 
         private void UpdateGravity(float deltaTime)
         {
-            if (IsGrounded && verticalVelocity < 0f)
+            if (IsGrounded &&
+                verticalVelocity < 0f)
             {
                 verticalVelocity =
                     groundedVerticalVelocity;
@@ -108,7 +114,24 @@ namespace UnityRPG.Character.Player
                 return;
             }
 
-            verticalVelocity += gravity * deltaTime;
+            verticalVelocity +=
+                gravity * deltaTime;
+        }
+
+        private void UpdateMovementState(
+            bool sprintRequested)
+        {
+            Vector3 currentVelocity =
+                characterController.velocity;
+
+            currentVelocity.y = 0f;
+
+            CurrentHorizontalSpeed =
+                currentVelocity.magnitude;
+
+            IsSprinting =
+                sprintRequested &&
+                IsMoving;
         }
     }
 }
