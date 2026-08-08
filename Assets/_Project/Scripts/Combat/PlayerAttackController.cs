@@ -14,6 +14,10 @@ namespace UnityRPG.Combat
         [Min(0.01f)]
         private float attackDuration = 0.4f;
 
+        [SerializeField]
+        [Min(0f)]
+        private float attackDamage = 10f;
+
         private MeleeHitDetector hitDetector;
         private float remainingDuration;
 
@@ -38,6 +42,8 @@ namespace UnityRPG.Combat
             remainingDuration =
                 attackDuration;
 
+            ApplyHit();
+
             return true;
         }
 
@@ -52,6 +58,32 @@ namespace UnityRPG.Combat
                 Mathf.Max(
                     0f,
                     remainingDuration - deltaTime);
+        }
+
+        private void ApplyHit()
+        {
+            if (attackReference == null)
+            {
+                Debug.LogError(
+                    "[Combat] PlayerAttackController의 Attack Reference가 설정되지 않았습니다.");
+
+                return;
+            }
+
+            var targets =
+                hitDetector.FindTargets(
+                    attackReference);
+
+            DamageInfo damageInfo =
+                new DamageInfo(
+                    attackDamage,
+                    gameObject);
+
+            foreach (IDamageable target in targets)
+            {
+                target.TakeDamage(
+                    damageInfo);
+            }
         }
     }
 }
