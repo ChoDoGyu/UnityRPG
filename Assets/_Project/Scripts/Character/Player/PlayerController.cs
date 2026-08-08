@@ -45,16 +45,16 @@ namespace UnityRPG.Character.Player
             UpdateLockOn();
             UpdateCamera(deltaTime);
 
-            bool isDodgeFrame =
+            bool isDodging =
                 UpdateDodge(deltaTime);
 
-            if (!isDodgeFrame)
+            if (!isDodging)
             {
                 UpdateMovement(deltaTime);
             }
 
             UpdateVisual(
-                isDodgeFrame,
+                isDodging,
                 deltaTime);
         }
 
@@ -118,13 +118,13 @@ namespace UnityRPG.Character.Player
         }
 
         private void UpdateVisual(
-            bool isDodgeFrame,
+            bool isDodging,
             float deltaTime)
         {
             visualAnimator.UpdateAnimation(
                 playerMotor.CurrentHorizontalSpeed,
                 playerMotor.IsSprinting,
-                isDodgeFrame,
+                isDodging,
                 lockOnController.IsLockedOn,
                 playerMotor.CurrentMoveDirection,
                 deltaTime);

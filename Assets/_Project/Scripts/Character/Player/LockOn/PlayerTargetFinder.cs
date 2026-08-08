@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace UnityRPG.Character.Player
 {
+    [DisallowMultipleComponent]
     public sealed class PlayerTargetFinder : MonoBehaviour
     {
         [Header("Search")]

@@ -2,6 +2,7 @@
 
 namespace UnityRPG.Character.Player
 {
+    [DisallowMultipleComponent]
     [RequireComponent(typeof(PlayerTargetFinder))]
     public sealed class PlayerLockOnController : MonoBehaviour
     {
