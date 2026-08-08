@@ -19,6 +19,9 @@ namespace UnityRPG.Character.Player
         public bool IsLookInputMouse =>
             inputActions.Player.Look.activeControl?.device is Mouse;
 
+        public bool WasDodgePressed =>
+            inputActions.Player.Dodge.WasPressedThisFrame();
+
         private void Awake()
         {
             inputActions = new PlayerInputActions();
