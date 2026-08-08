@@ -8,6 +8,7 @@ namespace UnityRPG.Character.Player
     [RequireComponent(typeof(PlayerCameraController))]
     [RequireComponent(typeof(PlayerVisualAnimator))]
     [RequireComponent(typeof(PlayerStateController))]
+    [RequireComponent(typeof(PlayerDodger))]
     public sealed class PlayerController : MonoBehaviour
     {
         private PlayerInputReader inputReader;
@@ -16,6 +17,7 @@ namespace UnityRPG.Character.Player
         private PlayerCameraController playerCameraController;
         private PlayerVisualAnimator visualAnimator;
         private PlayerStateController stateController;
+        private PlayerDodger playerDodger;
 
         private void Awake()
         {
@@ -25,6 +27,7 @@ namespace UnityRPG.Character.Player
             playerCameraController = GetComponent<PlayerCameraController>();
             visualAnimator = GetComponent<PlayerVisualAnimator>();
             stateController = GetComponent<PlayerStateController>();
+            playerDodger = GetComponent<PlayerDodger>();
         }
 
         private void Update()
@@ -32,7 +35,15 @@ namespace UnityRPG.Character.Player
             float deltaTime = Time.deltaTime;
 
             UpdateCamera(deltaTime);
-            UpdateMovement(deltaTime);
+
+            bool isDodgeFrame =
+                UpdateDodge(deltaTime);
+
+            if (!isDodgeFrame)
+            {
+                UpdateMovement(deltaTime);
+            }
+
             UpdateVisual(deltaTime);
         }
 
@@ -46,6 +57,11 @@ namespace UnityRPG.Character.Player
 
         private void UpdateMovement(float deltaTime)
         {
+            if (!stateController.CanMove)
+            {
+                return;
+            }
+
             Transform cameraTarget =
                 playerCameraController.CameraTarget;
 
@@ -71,6 +87,42 @@ namespace UnityRPG.Character.Player
                 playerMotor.CurrentHorizontalSpeed,
                 playerMotor.IsSprinting,
                 deltaTime);
+        }
+
+        private bool UpdateDodge(float deltaTime)
+        {
+            if (inputReader.WasDodgePressed &&
+                playerMotor.IsGrounded)
+            {
+                if (stateController.TryEnterDodge())
+                {
+                    bool started =
+                        playerDodger.TryStartDodge(
+                            inputReader.MoveInput,
+                            playerCameraController.CameraTarget);
+
+                    if (!started)
+                    {
+                        stateController.ExitDodge();
+                    }
+                }
+            }
+
+            if (stateController.CurrentState !=
+                PlayerState.Dodging)
+            {
+                return false;
+            }
+
+            playerDodger.UpdateDodge(
+                deltaTime);
+
+            if (!playerDodger.IsDodging)
+            {
+                stateController.ExitDodge();
+            }
+
+            return true;
         }
     }
 }

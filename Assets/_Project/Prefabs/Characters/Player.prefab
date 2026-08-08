@@ -16,6 +16,8 @@ GameObject:
   - component: {fileID: 7362338317362497582}
   - component: {fileID: 1047985175376667507}
   - component: {fileID: 4445118300463334293}
+  - component: {fileID: 5190169177384520186}
+  - component: {fileID: 739497072507529576}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -171,6 +173,33 @@ MonoBehaviour:
   runBodyBob: 0.065
   runBodyLean: 8
   transitionSpeed: 12
+--- !u!114 &5190169177384520186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810838048693877344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac0170024f4b93440b83bb596228efdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Character.Player.PlayerStateController
+--- !u!114 &739497072507529576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810838048693877344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77ba09f94ea690e41bdbd5be37b2f93b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Character.Player.PlayerDodger
+  facingReference: {fileID: 4613765813261899622}
+  dodgeDuration: 0.25
+  dodgeSpeed: 12
 --- !u!1 &1000176733347427081
 GameObject:
   m_ObjectHideFlags: 0
