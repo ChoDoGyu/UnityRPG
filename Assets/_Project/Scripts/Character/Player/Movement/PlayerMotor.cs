@@ -11,6 +11,8 @@ namespace UnityRPG.Character.Player
 
         private CharacterController characterController;
 
+        public Vector3 CurrentMoveDirection { get; private set; }
+
         private void Awake()
         {
             characterController = GetComponent<CharacterController>();
@@ -29,17 +31,18 @@ namespace UnityRPG.Character.Player
             cameraForward.Normalize();
             cameraRight.Normalize();
 
-            Vector3 moveDirection =
+            CurrentMoveDirection =
                 cameraForward * clampedInput.y +
                 cameraRight * clampedInput.x;
 
-            if (moveDirection.sqrMagnitude > 1f)
+            if (CurrentMoveDirection.sqrMagnitude > 1f)
             {
-                moveDirection.Normalize();
+                CurrentMoveDirection =
+                    CurrentMoveDirection.normalized;
             }
 
             characterController.Move(
-                moveDirection * moveSpeed * deltaTime);
+                CurrentMoveDirection * moveSpeed * deltaTime);
         }
     }
 }

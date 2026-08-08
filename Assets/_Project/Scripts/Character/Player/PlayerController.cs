@@ -5,11 +5,13 @@ namespace UnityRPG.Character.Player
     [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(PlayerInputReader))]
     [RequireComponent(typeof(PlayerMotor))]
+    [RequireComponent(typeof(PlayerRotator))]
     public sealed class PlayerController : MonoBehaviour
     {
         private CharacterController characterController;
         private PlayerInputReader inputReader;
         private PlayerMotor playerMotor;
+        private PlayerRotator playerRotator;
 
         private Transform cameraTransform;
 
@@ -24,6 +26,7 @@ namespace UnityRPG.Character.Player
             characterController = GetComponent<CharacterController>();
             inputReader = GetComponent<PlayerInputReader>();
             playerMotor = GetComponent<PlayerMotor>();
+            playerRotator = GetComponent<PlayerRotator>();
         }
 
         private void Start()
@@ -44,10 +47,16 @@ namespace UnityRPG.Character.Player
 
         private void Update()
         {
+            float deltaTime = Time.deltaTime;
+
             playerMotor.Move(
                 inputReader.MoveInput,
                 cameraTransform,
-                Time.deltaTime);
+                deltaTime);
+
+            playerRotator.Rotate(
+                playerMotor.CurrentMoveDirection,
+                deltaTime);
         }
     }
 }
