@@ -20,6 +20,10 @@ namespace UnityRPG.Character.Player
         [SerializeField]
         private Transform rightFoot;
 
+        [Header("Reference")]
+        [SerializeField]
+        private Transform movementReference;
+
         [Header("State")]
         [SerializeField]
         [Min(0f)]
@@ -111,6 +115,35 @@ namespace UnityRPG.Character.Player
         [Min(0f)]
         private float dodgeFootSpread = 0.12f;
 
+        [Header("Lock-On")]
+        [SerializeField]
+        [Min(0f)]
+        private float lockOnBodyDrop = 0.04f;
+
+        [SerializeField]
+        [Min(0f)]
+        private float lockOnStepDistance = 0.14f;
+
+        [SerializeField]
+        [Min(0f)]
+        private float lockOnSideStepDistance = 0.16f;
+
+        [SerializeField]
+        [Min(0f)]
+        private float lockOnFootLift = 0.06f;
+
+        [SerializeField]
+        [Min(0f)]
+        private float lockOnHandSwing = 0.08f;
+
+        [SerializeField]
+        [Min(0f)]
+        private float lockOnBodyBob = 0.025f;
+
+        [SerializeField]
+        [Min(0f)]
+        private float lockOnIdleHandForward = 0.06f;
+
         private Vector3 bodyBasePosition;
         private Vector3 leftHandBasePosition;
         private Vector3 rightHandBasePosition;
@@ -153,14 +186,15 @@ namespace UnityRPG.Character.Player
 
         private bool ValidateParts()
         {
-            if (body == null ||
+            if (movementReference == null ||
+                body == null ||
                 leftHand == null ||
                 rightHand == null ||
                 leftFoot == null ||
                 rightFoot == null)
             {
                 Debug.LogError(
-                    "[Player] PlayerVisualAnimator의 캐릭터 파츠 참조가 누락되었습니다.");
+                    "[Player] PlayerVisualAnimator의 캐릭터 파츠 또는 이동 기준 참조가 누락되었습니다.");
 
                 return false;
             }
@@ -172,6 +206,8 @@ namespace UnityRPG.Character.Player
             float horizontalSpeed,
             bool isSprinting,
             bool isDodging,
+            bool isLockedOn,
+            Vector3 moveDirection,
             float deltaTime)
         {
             if (!isConfigured)
@@ -207,7 +243,18 @@ namespace UnityRPG.Character.Player
                         : walkCycleSpeed;
             }
 
-            cycle += cycleSpeed * deltaTime;
+            cycle +=
+                cycleSpeed * deltaTime;
+
+            if (isLockedOn)
+            {
+                UpdateLockOn(
+                    moveDirection,
+                    isMoving,
+                    deltaTime);
+
+                return;
+            }
 
             if (!isMoving)
             {
@@ -476,6 +523,190 @@ namespace UnityRPG.Character.Player
                 Vector3.Lerp(
                     rightFoot.localPosition,
                     rightFootTarget,
+                    smoothFactor);
+        }
+
+        private void UpdateLockOn(
+            Vector3 worldMoveDirection,
+            bool isMoving,
+            float deltaTime)
+        {
+            if (!isMoving)
+            {
+                UpdateLockOnIdle(deltaTime);
+                return;
+            }
+
+            Vector3 localDirection =
+                movementReference.InverseTransformDirection(
+                    worldMoveDirection);
+
+            localDirection.y = 0f;
+
+            if (localDirection.sqrMagnitude > 0.001f)
+            {
+                localDirection.Normalize();
+            }
+
+            float swing =
+                Mathf.Sin(cycle);
+
+            float leftLift =
+                Mathf.Max(0f, swing) *
+                lockOnFootLift;
+
+            float rightLift =
+                Mathf.Max(0f, -swing) *
+                lockOnFootLift;
+
+            float forwardOffset =
+                swing *
+                lockOnStepDistance *
+                localDirection.z;
+
+            float sideOffset =
+                swing *
+                lockOnSideStepDistance *
+                localDirection.x;
+
+            Vector3 leftFootTarget =
+                leftFootBasePosition +
+                new Vector3(
+                    sideOffset,
+                    leftLift,
+                    forwardOffset);
+
+            Vector3 rightFootTarget =
+                rightFootBasePosition +
+                new Vector3(
+                    -sideOffset,
+                    rightLift,
+                    -forwardOffset);
+
+            Vector3 handSwing =
+                new Vector3(
+                    -sideOffset,
+                    0f,
+                    -forwardOffset).normalized *
+                lockOnHandSwing *
+                Mathf.Abs(swing);
+
+            Vector3 leftHandTarget =
+                leftHandBasePosition +
+                handSwing;
+
+            Vector3 rightHandTarget =
+                rightHandBasePosition -
+                handSwing;
+
+            float bodyBob =
+                (Mathf.Abs(Mathf.Cos(cycle)) - 0.5f) *
+                2f *
+                lockOnBodyBob;
+
+            Vector3 bodyTarget =
+                bodyBasePosition +
+                Vector3.down * lockOnBodyDrop +
+                Vector3.up * bodyBob;
+
+            float smoothFactor =
+                GetSmoothFactor(deltaTime);
+
+            body.localPosition =
+                Vector3.Lerp(
+                    body.localPosition,
+                    bodyTarget,
+                    smoothFactor);
+
+            body.localRotation =
+                Quaternion.Slerp(
+                    body.localRotation,
+                    bodyBaseRotation,
+                    smoothFactor);
+
+            leftHand.localPosition =
+                Vector3.Lerp(
+                    leftHand.localPosition,
+                    leftHandTarget,
+                    smoothFactor);
+
+            rightHand.localPosition =
+                Vector3.Lerp(
+                    rightHand.localPosition,
+                    rightHandTarget,
+                    smoothFactor);
+
+            leftFoot.localPosition =
+                Vector3.Lerp(
+                    leftFoot.localPosition,
+                    leftFootTarget,
+                    smoothFactor);
+
+            rightFoot.localPosition =
+                Vector3.Lerp(
+                    rightFoot.localPosition,
+                    rightFootTarget,
+                    smoothFactor);
+        }
+
+        private void UpdateLockOnIdle(float deltaTime)
+        {
+            float idleBob =
+                Mathf.Sin(cycle) *
+                idleBodyBob;
+
+            Vector3 bodyTarget =
+                bodyBasePosition +
+                Vector3.down * lockOnBodyDrop +
+                Vector3.up * idleBob;
+
+            Vector3 leftHandTarget =
+                leftHandBasePosition +
+                Vector3.forward *
+                lockOnIdleHandForward;
+
+            Vector3 rightHandTarget =
+                rightHandBasePosition +
+                Vector3.forward *
+                lockOnIdleHandForward;
+
+            float smoothFactor =
+                GetSmoothFactor(deltaTime);
+
+            body.localPosition =
+                Vector3.Lerp(
+                    body.localPosition,
+                    bodyTarget,
+                    smoothFactor);
+
+            body.localRotation =
+                Quaternion.Slerp(
+                    body.localRotation,
+                    bodyBaseRotation,
+                    smoothFactor);
+
+            leftHand.localPosition =
+                Vector3.Lerp(
+                    leftHand.localPosition,
+                    leftHandTarget,
+                    smoothFactor);
+
+            rightHand.localPosition =
+                Vector3.Lerp(
+                    rightHand.localPosition,
+                    rightHandTarget,
+                    smoothFactor);
+
+            leftFoot.localPosition =
+                Vector3.Lerp(
+                    leftFoot.localPosition,
+                    leftFootBasePosition,
+                    smoothFactor);
+
+            rightFoot.localPosition =
+                Vector3.Lerp(
+                    rightFoot.localPosition,
+                    rightFootBasePosition,
                     smoothFactor);
         }
     }

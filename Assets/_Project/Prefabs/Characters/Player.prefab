@@ -157,6 +157,7 @@ MonoBehaviour:
   rightHand: {fileID: 5138645430008665280}
   leftFoot: {fileID: 3719458725875533608}
   rightFoot: {fileID: 3872828570310627575}
+  movementReference: {fileID: 4613765813261899622}
   movingSpeedThreshold: 0.15
   runSpeedThreshold: 6
   idleCycleSpeed: 2
@@ -179,6 +180,13 @@ MonoBehaviour:
   dodgeBodyLean: 20
   dodgeHandBack: 0.18
   dodgeFootSpread: 0.12
+  lockOnBodyDrop: 0.04
+  lockOnStepDistance: 0.14
+  lockOnSideStepDistance: 0.16
+  lockOnFootLift: 0.06
+  lockOnHandSwing: 0.08
+  lockOnBodyBob: 0.025
+  lockOnIdleHandForward: 0.06
 --- !u!114 &5190169177384520186
 MonoBehaviour:
   m_ObjectHideFlags: 0

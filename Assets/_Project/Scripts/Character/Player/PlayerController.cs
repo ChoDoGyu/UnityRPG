@@ -125,6 +125,8 @@ namespace UnityRPG.Character.Player
                 playerMotor.CurrentHorizontalSpeed,
                 playerMotor.IsSprinting,
                 isDodgeFrame,
+                lockOnController.IsLockedOn,
+                playerMotor.CurrentMoveDirection,
                 deltaTime);
         }
 
