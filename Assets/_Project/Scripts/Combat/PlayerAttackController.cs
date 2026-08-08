@@ -22,17 +22,37 @@ namespace UnityRPG.Combat
         [Min(1)]
         private int maxComboCount = 3;
 
+        [SerializeField]
+        [Range(0f, 1f)]
+        private float hitNormalizedTime = 0.5f;
+
         private MeleeHitDetector hitDetector;
 
         private float remainingDuration;
         private int currentComboStep;
         private bool isNextAttackQueued;
+        private bool isHitApplied;
 
         public bool IsAttacking =>
             remainingDuration > 0f;
 
         public int CurrentComboStep =>
             currentComboStep;
+
+        public float NormalizedProgress
+        {
+            get
+            {
+                if (currentComboStep <= 0)
+                {
+                    return 0f;
+                }
+
+                return Mathf.Clamp01(
+                    1f -
+                    remainingDuration / attackDuration);
+            }
+        }
 
         private void Awake()
         {
@@ -62,6 +82,18 @@ namespace UnityRPG.Combat
                     0f,
                     remainingDuration - deltaTime);
 
+            float normalizedProgress =
+                1f -
+                remainingDuration / attackDuration;
+
+            if (!isHitApplied &&
+                normalizedProgress >= hitNormalizedTime)
+            {
+                ApplyHit();
+
+                isHitApplied = true;
+            }
+
             if (remainingDuration > 0f)
             {
                 return;
@@ -90,7 +122,8 @@ namespace UnityRPG.Combat
             isNextAttackQueued =
                 false;
 
-            ApplyHit();
+            isHitApplied =
+                false;
         }
 
         private void QueueNextAttack()

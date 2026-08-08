@@ -139,6 +139,9 @@ namespace UnityRPG.Character.Player
                 playerMotor.CurrentHorizontalSpeed,
                 playerMotor.IsSprinting,
                 isDodging,
+                attackController.IsAttacking,
+                attackController.CurrentComboStep,
+                attackController.NormalizedProgress,
                 lockOnController.IsLockedOn,
                 playerMotor.CurrentMoveDirection,
                 deltaTime);

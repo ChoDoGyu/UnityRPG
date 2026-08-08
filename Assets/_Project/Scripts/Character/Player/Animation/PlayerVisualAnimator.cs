@@ -144,6 +144,31 @@ namespace UnityRPG.Character.Player
         [Min(0f)]
         private float lockOnIdleHandForward = 0.06f;
 
+        [Header("Attack")]
+        [SerializeField]
+        [Min(0f)]
+        private float attackHandReach = 0.65f;
+
+        [SerializeField]
+        [Min(0f)]
+        private float attackHandSide = 0.75f;
+
+        [SerializeField]
+        [Min(0f)]
+        private float attackBodyTurn = 30f;
+
+        [SerializeField]
+        [Min(0f)]
+        private float attackBodyLean = 10f;
+
+        [SerializeField]
+        [Min(0f)]
+        private float attackLeftHandBack = 0.18f;
+
+        [SerializeField]
+        [Min(0f)]
+        private float thirdAttackHandLift = 0.8f;
+
         private Vector3 bodyBasePosition;
         private Vector3 leftHandBasePosition;
         private Vector3 rightHandBasePosition;
@@ -206,6 +231,9 @@ namespace UnityRPG.Character.Player
             float horizontalSpeed,
             bool isSprinting,
             bool isDodging,
+            bool isAttacking,
+            int comboStep,
+            float attackProgress,
             bool isLockedOn,
             Vector3 moveDirection,
             float deltaTime)
@@ -218,6 +246,16 @@ namespace UnityRPG.Character.Player
             if (isDodging)
             {
                 UpdateDodge(deltaTime);
+                return;
+            }
+
+            if (isAttacking)
+            {
+                UpdateAttack(
+                    comboStep,
+                    attackProgress,
+                    deltaTime);
+
                 return;
             }
 
@@ -695,6 +733,363 @@ namespace UnityRPG.Character.Player
                 Vector3.Lerp(
                     rightHand.localPosition,
                     rightHandTarget,
+                    smoothFactor);
+
+            leftFoot.localPosition =
+                Vector3.Lerp(
+                    leftFoot.localPosition,
+                    leftFootBasePosition,
+                    smoothFactor);
+
+            rightFoot.localPosition =
+                Vector3.Lerp(
+                    rightFoot.localPosition,
+                    rightFootBasePosition,
+                    smoothFactor);
+        }
+
+        private void UpdateAttack(
+            int comboStep,
+            float progress,
+            float deltaTime)
+        {
+            float t =
+                Mathf.Clamp01(progress);
+
+            switch (comboStep)
+            {
+                case 1:
+                    UpdateFirstAttack(
+                        t,
+                        deltaTime);
+                    break;
+
+                case 2:
+                    UpdateSecondAttack(
+                        t,
+                        deltaTime);
+                    break;
+
+                case 3:
+                    UpdateThirdAttack(
+                        t,
+                        deltaTime);
+                    break;
+            }
+        }
+
+        private void UpdateFirstAttack(
+            float progress,
+            float deltaTime)
+        {
+            Vector3 windupOffset =
+                new Vector3(
+                    attackHandSide,
+                    0.1f,
+                    -attackHandReach * 0.35f);
+
+            Vector3 strikeOffset =
+                new Vector3(
+                    -attackHandSide,
+                    -0.05f,
+                    attackHandReach);
+
+            Vector3 handOffset;
+            float bodyYaw;
+
+            if (progress < 0.25f)
+            {
+                float t =
+                    progress / 0.25f;
+
+                handOffset =
+                    Vector3.Lerp(
+                        Vector3.zero,
+                        windupOffset,
+                        t);
+
+                bodyYaw =
+                    Mathf.Lerp(
+                        0f,
+                        attackBodyTurn,
+                        t);
+            }
+            else if (progress < 0.7f)
+            {
+                float t =
+                    (progress - 0.25f) / 0.45f;
+
+                handOffset =
+                    Vector3.Lerp(
+                        windupOffset,
+                        strikeOffset,
+                        t);
+
+                bodyYaw =
+                    Mathf.Lerp(
+                        attackBodyTurn,
+                        -attackBodyTurn,
+                        t);
+            }
+            else
+            {
+                float t =
+                    (progress - 0.7f) / 0.3f;
+
+                handOffset =
+                    Vector3.Lerp(
+                        strikeOffset,
+                        Vector3.zero,
+                        t);
+
+                bodyYaw =
+                    Mathf.Lerp(
+                        -attackBodyTurn,
+                        0f,
+                        t);
+            }
+
+            Vector3 rightHandTarget =
+                rightHandBasePosition +
+                handOffset;
+
+            Vector3 leftHandTarget =
+                leftHandBasePosition +
+                Vector3.back *
+                attackLeftHandBack;
+
+            Quaternion bodyTargetRotation =
+                bodyBaseRotation *
+                Quaternion.Euler(
+                    attackBodyLean,
+                    bodyYaw,
+                    0f);
+
+            ApplyAttackPose(
+                rightHandTarget,
+                leftHandTarget,
+                bodyTargetRotation,
+                deltaTime);
+        }
+
+        private void UpdateSecondAttack(
+            float progress,
+            float deltaTime)
+        {
+            Vector3 windupOffset =
+                new Vector3(
+                    -attackHandSide,
+                    -0.05f,
+                    -attackHandReach * 0.25f);
+
+            Vector3 strikeOffset =
+                new Vector3(
+                    attackHandSide,
+                    0.15f,
+                    attackHandReach);
+
+            Vector3 handOffset;
+            float bodyYaw;
+
+            if (progress < 0.25f)
+            {
+                float t =
+                    progress / 0.25f;
+
+                handOffset =
+                    Vector3.Lerp(
+                        Vector3.zero,
+                        windupOffset,
+                        t);
+
+                bodyYaw =
+                    Mathf.Lerp(
+                        0f,
+                        -attackBodyTurn,
+                        t);
+            }
+            else if (progress < 0.7f)
+            {
+                float t =
+                    (progress - 0.25f) / 0.45f;
+
+                handOffset =
+                    Vector3.Lerp(
+                        windupOffset,
+                        strikeOffset,
+                        t);
+
+                bodyYaw =
+                    Mathf.Lerp(
+                        -attackBodyTurn,
+                        attackBodyTurn,
+                        t);
+            }
+            else
+            {
+                float t =
+                    (progress - 0.7f) / 0.3f;
+
+                handOffset =
+                    Vector3.Lerp(
+                        strikeOffset,
+                        Vector3.zero,
+                        t);
+
+                bodyYaw =
+                    Mathf.Lerp(
+                        attackBodyTurn,
+                        0f,
+                        t);
+            }
+
+            Vector3 rightHandTarget =
+                rightHandBasePosition +
+                handOffset;
+
+            Vector3 leftHandTarget =
+                leftHandBasePosition +
+                Vector3.back *
+                attackLeftHandBack;
+
+            Quaternion bodyTargetRotation =
+                bodyBaseRotation *
+                Quaternion.Euler(
+                    attackBodyLean,
+                    bodyYaw,
+                    0f);
+
+            ApplyAttackPose(
+                rightHandTarget,
+                leftHandTarget,
+                bodyTargetRotation,
+                deltaTime);
+        }
+
+        private void UpdateThirdAttack(
+            float progress,
+            float deltaTime)
+        {
+            Vector3 windupOffset =
+                new Vector3(
+                    0f,
+                    thirdAttackHandLift,
+                    -attackHandReach * 0.45f);
+
+            Vector3 strikeOffset =
+                new Vector3(
+                    0f,
+                    -0.3f,
+                    attackHandReach * 1.15f);
+
+            Vector3 handOffset;
+            float bodyPitch;
+
+            if (progress < 0.35f)
+            {
+                float t =
+                    progress / 0.35f;
+
+                handOffset =
+                    Vector3.Lerp(
+                        Vector3.zero,
+                        windupOffset,
+                        t);
+
+                bodyPitch =
+                    Mathf.Lerp(
+                        0f,
+                        -attackBodyLean,
+                        t);
+            }
+            else if (progress < 0.7f)
+            {
+                float t =
+                    (progress - 0.35f) / 0.35f;
+
+                handOffset =
+                    Vector3.Lerp(
+                        windupOffset,
+                        strikeOffset,
+                        t);
+
+                bodyPitch =
+                    Mathf.Lerp(
+                        -attackBodyLean,
+                        attackBodyLean * 1.5f,
+                        t);
+            }
+            else
+            {
+                float t =
+                    (progress - 0.7f) / 0.3f;
+
+                handOffset =
+                    Vector3.Lerp(
+                        strikeOffset,
+                        Vector3.zero,
+                        t);
+
+                bodyPitch =
+                    Mathf.Lerp(
+                        attackBodyLean * 1.5f,
+                        0f,
+                        t);
+            }
+
+            Vector3 rightHandTarget =
+                rightHandBasePosition +
+                handOffset;
+
+            Vector3 leftHandTarget =
+                leftHandBasePosition +
+                Vector3.back *
+                attackLeftHandBack;
+
+            Quaternion bodyTargetRotation =
+                bodyBaseRotation *
+                Quaternion.Euler(
+                    bodyPitch,
+                    0f,
+                    0f);
+
+            ApplyAttackPose(
+                rightHandTarget,
+                leftHandTarget,
+                bodyTargetRotation,
+                deltaTime);
+        }
+
+        private void ApplyAttackPose(
+            Vector3 rightHandTarget,
+            Vector3 leftHandTarget,
+            Quaternion bodyTargetRotation,
+            float deltaTime)
+        {
+            float smoothFactor = GetSmoothFactor(deltaTime);
+
+            body.localPosition =
+                Vector3.Lerp(
+                    body.localPosition,
+                    bodyBasePosition,
+                    smoothFactor);
+
+            body.localRotation =
+                Quaternion.Slerp(
+                    body.localRotation,
+                    bodyTargetRotation,
+                    smoothFactor);
+
+            rightHand.localPosition =
+                Vector3.Lerp(
+                    rightHand.localPosition,
+                    rightHandTarget,
+                    smoothFactor);
+
+            leftHand.localPosition =
+                Vector3.Lerp(
+                    leftHand.localPosition,
+                    leftHandTarget,
                     smoothFactor);
 
             leftFoot.localPosition =
