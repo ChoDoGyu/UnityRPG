@@ -7,6 +7,7 @@ namespace UnityRPG.Character.Player
     [RequireComponent(typeof(PlayerRotator))]
     [RequireComponent(typeof(PlayerCameraController))]
     [RequireComponent(typeof(PlayerVisualAnimator))]
+    [RequireComponent(typeof(PlayerStateController))]
     public sealed class PlayerController : MonoBehaviour
     {
         private PlayerInputReader inputReader;
@@ -14,6 +15,7 @@ namespace UnityRPG.Character.Player
         private PlayerRotator playerRotator;
         private PlayerCameraController playerCameraController;
         private PlayerVisualAnimator visualAnimator;
+        private PlayerStateController stateController;
 
         private void Awake()
         {
@@ -22,6 +24,7 @@ namespace UnityRPG.Character.Player
             playerRotator = GetComponent<PlayerRotator>();
             playerCameraController = GetComponent<PlayerCameraController>();
             visualAnimator = GetComponent<PlayerVisualAnimator>();
+            stateController = GetComponent<PlayerStateController>();
         }
 
         private void Update()
