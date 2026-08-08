@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityRPG.Combat;
 
 namespace UnityRPG.Character.Player
 {
@@ -9,8 +10,8 @@ namespace UnityRPG.Character.Player
     [RequireComponent(typeof(PlayerVisualAnimator))]
     [RequireComponent(typeof(PlayerStateController))]
     [RequireComponent(typeof(PlayerDodger))]
-
     [RequireComponent(typeof(PlayerLockOnController))]
+    [RequireComponent(typeof(PlayerAttackController))]
     public sealed class PlayerController : MonoBehaviour
     {
         private PlayerInputReader inputReader;
@@ -21,6 +22,7 @@ namespace UnityRPG.Character.Player
         private PlayerStateController stateController;
         private PlayerDodger playerDodger;
         private PlayerLockOnController lockOnController;
+        private PlayerAttackController attackController;
 
         private void Awake()
         {
@@ -32,6 +34,7 @@ namespace UnityRPG.Character.Player
             stateController = GetComponent<PlayerStateController>();
             playerDodger = GetComponent<PlayerDodger>();
             lockOnController = GetComponent<PlayerLockOnController>();
+            attackController = GetComponent<PlayerAttackController>();
         }
 
         private void Update()
@@ -39,10 +42,12 @@ namespace UnityRPG.Character.Player
             float deltaTime = Time.deltaTime;
 
             playerDodger.UpdateCooldown(deltaTime);
+            attackController.UpdateAttack(deltaTime);
 
             lockOnController.ValidateCurrentTarget();
 
             UpdateLockOn();
+            UpdateAttack();
             UpdateCamera(deltaTime);
 
             bool isDodging =
@@ -181,6 +186,16 @@ namespace UnityRPG.Character.Player
 
             lockOnController.ToggleLockOn(
                 playerCameraController.CameraTarget);
+        }
+
+        private void UpdateAttack()
+        {
+            if (!inputReader.WasAttackPressed)
+            {
+                return;
+            }
+
+            attackController.TryStartAttack();
         }
     }
 }
