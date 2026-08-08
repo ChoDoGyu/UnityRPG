@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace UnityRPG.Combat
 {
+    [DisallowMultipleComponent]
     public sealed class MeleeHitDetector : MonoBehaviour
     {
         [Header("Hit Detection")]

@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace UnityRPG.Combat
 {
+    [DisallowMultipleComponent]
     public sealed class TrainingDummyHealth :
         MonoBehaviour,
         IDamageable

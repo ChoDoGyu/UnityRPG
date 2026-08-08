@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace UnityRPG.Combat
 {
+    [DisallowMultipleComponent]
     [RequireComponent(typeof(MeleeHitDetector))]
     public sealed class PlayerAttackController : MonoBehaviour
     {
@@ -36,6 +37,7 @@ namespace UnityRPG.Combat
         private int currentComboStep;
         private bool isNextAttackQueued;
         private bool isHitApplied;
+        private bool isConfigured;
 
         public bool IsAttacking =>
             remainingDuration > 0f;
@@ -64,11 +66,28 @@ namespace UnityRPG.Combat
 
         private void Awake()
         {
-            hitDetector = GetComponent<MeleeHitDetector>();
+            hitDetector =
+                GetComponent<MeleeHitDetector>();
+
+            if (attackReference == null)
+            {
+                Debug.LogError(
+                    "[Combat] PlayerAttackController의 Attack Reference가 설정되지 않았습니다.",
+                    this);
+
+                return;
+            }
+
+            isConfigured = true;
         }
 
         public void RequestAttack()
         {
+            if (!isConfigured)
+            {
+                return;
+            }
+
             if (!IsAttacking)
             {
                 StartAttack(1);
@@ -152,14 +171,6 @@ namespace UnityRPG.Combat
 
         private void ApplyHit()
         {
-            if (attackReference == null)
-            {
-                Debug.LogError(
-                    "[Combat] PlayerAttackController의 Attack Reference가 설정되지 않았습니다.");
-
-                return;
-            }
-
             var targets =
                 hitDetector.FindTargets(
                     attackReference);

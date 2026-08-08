@@ -189,6 +189,12 @@ MonoBehaviour:
   lockOnHandSwing: 0.08
   lockOnBodyBob: 0.025
   lockOnIdleHandForward: 0.06
+  attackHandReach: 0.65
+  attackHandSide: 0.75
+  attackBodyTurn: 30
+  attackBodyLean: 10
+  attackLeftHandBack: 0.18
+  thirdAttackHandLift: 0.8
 --- !u!114 &5190169177384520186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -278,6 +284,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Combat.PlayerAttackController
   attackReference: {fileID: 4613765813261899622}
   attackDuration: 0.4
+  attackDamage: 10
+  maxComboCount: 3
+  hitNormalizedTime: 0.5
+  targetTrackingNormalizedTime: 0.25
 --- !u!1 &1000176733347427081
 GameObject:
   m_ObjectHideFlags: 0
