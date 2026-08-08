@@ -42,16 +42,20 @@ namespace UnityRPG.Character.Player
             float deltaTime = Time.deltaTime;
 
             playerDodger.UpdateCooldown(deltaTime);
+
             attackController.UpdateAttack(deltaTime);
+
+            UpdateAttackState();
 
             lockOnController.ValidateCurrentTarget();
 
             UpdateLockOn();
-            UpdateAttack();
             UpdateCamera(deltaTime);
 
             bool isDodging =
                 UpdateDodge(deltaTime);
+
+            UpdateAttackInput();
 
             if (!isDodging)
             {
@@ -73,16 +77,21 @@ namespace UnityRPG.Character.Player
 
         private void UpdateMovement(float deltaTime)
         {
-            if (!stateController.CanMove)
+            Transform cameraTarget = playerCameraController.CameraTarget;
+
+            if (cameraTarget == null)
             {
                 return;
             }
 
-            Transform cameraTarget =
-                playerCameraController.CameraTarget;
-
-            if (cameraTarget == null)
+            if (!stateController.CanMove)
             {
+                playerMotor.Move(
+                    Vector2.zero,
+                    false,
+                    cameraTarget,
+                    deltaTime);
+
                 return;
             }
 
@@ -188,11 +197,46 @@ namespace UnityRPG.Character.Player
                 playerCameraController.CameraTarget);
         }
 
-        private void UpdateAttack()
+        private void UpdateAttackState()
+        {
+            if (stateController.CurrentState !=
+                PlayerState.Attacking)
+            {
+                return;
+            }
+
+            if (attackController.IsAttacking)
+            {
+                return;
+            }
+
+            stateController.ExitAttack();
+        }
+
+        private void UpdateAttackInput()
         {
             if (!inputReader.WasAttackPressed)
             {
                 return;
+            }
+
+            if (!stateController.CanAttack)
+            {
+                return;
+            }
+
+            if (!playerMotor.IsGrounded)
+            {
+                return;
+            }
+
+            if (stateController.CurrentState ==
+                PlayerState.Normal)
+            {
+                if (!stateController.TryEnterAttack())
+                {
+                    return;
+                }
             }
 
             attackController.RequestAttack();

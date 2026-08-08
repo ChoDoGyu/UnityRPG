@@ -31,9 +31,6 @@ namespace UnityRPG.Combat
         public bool IsAttacking =>
             remainingDuration > 0f;
 
-        public bool CanAttack =>
-            !IsAttacking;
-
         public int CurrentComboStep =>
             currentComboStep;
 

@@ -15,9 +15,38 @@ namespace UnityRPG.Character.Player
         public bool CanDodge =>
             CurrentState == PlayerState.Normal;
 
+        public bool CanAttack =>
+            CurrentState == PlayerState.Normal ||
+            CurrentState == PlayerState.Attacking;
+
         private void Awake()
         {
-            CurrentState = PlayerState.Normal;
+            CurrentState =
+                PlayerState.Normal;
+        }
+
+        public bool TryEnterAttack()
+        {
+            if (CurrentState != PlayerState.Normal)
+            {
+                return false;
+            }
+
+            CurrentState =
+                PlayerState.Attacking;
+
+            return true;
+        }
+
+        public void ExitAttack()
+        {
+            if (CurrentState != PlayerState.Attacking)
+            {
+                return;
+            }
+
+            CurrentState =
+                PlayerState.Normal;
         }
 
         public bool TryEnterDodge()
@@ -27,7 +56,9 @@ namespace UnityRPG.Character.Player
                 return false;
             }
 
-            CurrentState = PlayerState.Dodging;
+            CurrentState =
+                PlayerState.Dodging;
+
             return true;
         }
 
@@ -38,7 +69,8 @@ namespace UnityRPG.Character.Player
                 return;
             }
 
-            CurrentState = PlayerState.Normal;
+            CurrentState =
+                PlayerState.Normal;
         }
     }
 }
