@@ -38,11 +38,11 @@ namespace UnityRPG.Character.Player
         {
             float deltaTime = Time.deltaTime;
 
-            playerDodger.UpdateCooldown(
-                deltaTime);
+            playerDodger.UpdateCooldown(deltaTime);
+
+            lockOnController.ValidateCurrentTarget();
 
             UpdateLockOn();
-
             UpdateCamera(deltaTime);
 
             bool isDodgeFrame =

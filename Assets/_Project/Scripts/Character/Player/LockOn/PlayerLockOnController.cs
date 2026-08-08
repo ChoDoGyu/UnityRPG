@@ -12,6 +12,10 @@ namespace UnityRPG.Character.Player
         public bool IsLockedOn =>
             CurrentTarget != null;
 
+        [SerializeField]
+        [Min(0f)]
+        private float maxLockDistance = 20f;
+
         private void Awake()
         {
             targetFinder =
@@ -61,6 +65,33 @@ namespace UnityRPG.Character.Player
         public void Unlock()
         {
             CurrentTarget = null;
+        }
+
+        public void ValidateCurrentTarget()
+        {
+            if (!IsLockedOn)
+            {
+                return;
+            }
+
+            if (!CurrentTarget.isActiveAndEnabled)
+            {
+                Unlock();
+                return;
+            }
+
+            float sqrDistance =
+                (CurrentTarget.transform.position -
+                 transform.position).sqrMagnitude;
+
+            float maxSqrDistance =
+                maxLockDistance *
+                maxLockDistance;
+
+            if (sqrDistance > maxSqrDistance)
+            {
+                Unlock();
+            }
         }
     }
 }
