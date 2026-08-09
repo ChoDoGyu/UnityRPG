@@ -327,6 +327,7 @@ MonoBehaviour:
   hitCount: 0
   lastDamageAmount: 0
   lastDamageSource: {fileID: 0}
+  lastHitWasCritical: 0
 --- !u!1 &389407450
 GameObject:
   m_ObjectHideFlags: 0
@@ -1428,6 +1429,7 @@ MonoBehaviour:
   hitCount: 0
   lastDamageAmount: 0
   lastDamageSource: {fileID: 0}
+  lastHitWasCritical: 0
 --- !u!1 &1434446127
 GameObject:
   m_ObjectHideFlags: 0
@@ -1493,6 +1495,7 @@ MonoBehaviour:
   hitCount: 0
   lastDamageAmount: 0
   lastDamageSource: {fileID: 0}
+  lastHitWasCritical: 0
 --- !u!1 &1672442407
 GameObject:
   m_ObjectHideFlags: 0

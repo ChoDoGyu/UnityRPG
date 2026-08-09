@@ -4,6 +4,7 @@ using UnityEngine;
 namespace UnityRPG.Skill
 {
     [DisallowMultipleComponent]
+    [RequireComponent(typeof(PlayerDashSlashSkill))]
     public sealed class PlayerSkillController : MonoBehaviour
     {
         [Header("Skill Definitions")]
@@ -24,12 +25,19 @@ namespace UnityRPG.Skill
 
         private bool isConfigured;
 
+        private PlayerDashSlashSkill dashSlashSkill;
+
+        public bool BlocksMovement =>
+            dashSlashSkill.IsActive;
+
         private void Awake()
         {
             if (!ValidateDefinitions())
             {
                 return;
             }
+
+            dashSlashSkill = GetComponent<PlayerDashSlashSkill>();
 
             AddRuntimeSkill(
                 dashSlashDefinition);
@@ -46,7 +54,7 @@ namespace UnityRPG.Skill
             isConfigured = true;
         }
 
-        public void UpdateCooldowns(
+        public void UpdateSkills(
             float deltaTime)
         {
             if (!isConfigured)
@@ -59,6 +67,9 @@ namespace UnityRPG.Skill
                 skill.UpdateCooldown(
                     deltaTime);
             }
+
+            dashSlashSkill.UpdateSkill(
+                deltaTime);
         }
 
         public bool TryUseSkill(
@@ -74,6 +85,19 @@ namespace UnityRPG.Skill
                     out RuntimeSkill skill))
             {
                 return false;
+            }
+
+            if (!skill.IsReady)
+            {
+                return false;
+            }
+
+            if (skillId == SkillId.DashSlash)
+            {
+                if (!dashSlashSkill.TryStart())
+                {
+                    return false;
+                }
             }
 
             return skill.TryStartCooldown();

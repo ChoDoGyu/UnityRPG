@@ -49,7 +49,7 @@ namespace UnityRPG.Character.Player
 
             attackController.UpdateAttack(deltaTime);
 
-            skillController.UpdateCooldowns(deltaTime);
+            skillController.UpdateSkills(deltaTime);
 
             UpdateAttackState();
 
@@ -68,7 +68,16 @@ namespace UnityRPG.Character.Player
 
             if (!isDodging)
             {
-                UpdateMovement(deltaTime);
+                if (skillController.BlocksMovement)
+                {
+                    UpdateMovementWithoutInput(
+                        deltaTime);
+                }
+                else
+                {
+                    UpdateMovement(
+                        deltaTime);
+                }
             }
 
             UpdateVisual(isDodging, deltaTime);
@@ -300,6 +309,23 @@ namespace UnityRPG.Character.Player
                 skillController.TryUseSkill(
                     SkillId.AttackBuff);
             }
+        }
+
+        private void UpdateMovementWithoutInput(float deltaTime)
+        {
+            Transform cameraTarget =
+                playerCameraController.CameraTarget;
+
+            if (cameraTarget == null)
+            {
+                return;
+            }
+
+            playerMotor.Move(
+                Vector2.zero,
+                false,
+                cameraTarget,
+                deltaTime);
         }
     }
 }

@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 7083225340647677956}
   - component: {fileID: 3175761624004211360}
   - component: {fileID: 4474347525841559597}
+  - component: {fileID: 5666379003978450568}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -331,6 +332,26 @@ MonoBehaviour:
   projectileDefinition: {fileID: 11400000, guid: 5bb86099aafdb664cb0cde378b93aa30, type: 2}
   spinAttackDefinition: {fileID: 11400000, guid: db52923fe5e56f145855bc79fc2bc703, type: 2}
   attackBuffDefinition: {fileID: 11400000, guid: d7b6f4c5dd8219743a85e5d12f8b6a85, type: 2}
+--- !u!114 &5666379003978450568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810838048693877344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2b2cd5765bf6b042be33ce7d1469b63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Skill.PlayerDashSlashSkill
+  directionReference: {fileID: 4613765813261899622}
+  dashDistance: 4
+  dashDuration: 0.25
+  hitRadius: 0.8
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  damage: 15
 --- !u!1 &1000176733347427081
 GameObject:
   m_ObjectHideFlags: 0
