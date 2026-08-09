@@ -28,6 +28,18 @@ namespace UnityRPG.Character.Player
         public bool WasAttackPressed =>
             inputActions.Player.Attack.WasPressedThisFrame();
 
+        public bool WasSkill1Pressed =>
+            inputActions.Player.Skill1.WasPressedThisFrame();
+
+        public bool WasSkill2Pressed =>
+            inputActions.Player.Skill2.WasPressedThisFrame();
+
+        public bool WasSkill3Pressed =>
+            inputActions.Player.Skill3.WasPressedThisFrame();
+
+        public bool WasSkill4Pressed =>
+            inputActions.Player.Skill4.WasPressedThisFrame();
+
         private void Awake()
         {
             inputActions = new PlayerInputActions();

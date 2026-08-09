@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityRPG.Combat;
+using UnityRPG.Skill;
 
 namespace UnityRPG.Character.Player
 {
@@ -12,6 +13,7 @@ namespace UnityRPG.Character.Player
     [RequireComponent(typeof(PlayerDodger))]
     [RequireComponent(typeof(PlayerLockOnController))]
     [RequireComponent(typeof(PlayerAttackController))]
+    [RequireComponent(typeof(PlayerSkillController))]
     public sealed class PlayerController : MonoBehaviour
     {
         private PlayerInputReader inputReader;
@@ -23,6 +25,7 @@ namespace UnityRPG.Character.Player
         private PlayerDodger playerDodger;
         private PlayerLockOnController lockOnController;
         private PlayerAttackController attackController;
+        private PlayerSkillController skillController;
 
         private void Awake()
         {
@@ -35,6 +38,7 @@ namespace UnityRPG.Character.Player
             playerDodger = GetComponent<PlayerDodger>();
             lockOnController = GetComponent<PlayerLockOnController>();
             attackController = GetComponent<PlayerAttackController>();
+            skillController = GetComponent<PlayerSkillController>();
         }
 
         private void Update()
@@ -44,6 +48,8 @@ namespace UnityRPG.Character.Player
             playerDodger.UpdateCooldown(deltaTime);
 
             attackController.UpdateAttack(deltaTime);
+
+            skillController.UpdateCooldowns(deltaTime);
 
             UpdateAttackState();
 
@@ -55,6 +61,8 @@ namespace UnityRPG.Character.Player
             bool isDodging = UpdateDodge(deltaTime);
 
             UpdateAttackInput();
+
+            UpdateSkillInput();
 
             UpdateAttackRotation(deltaTime);
 
@@ -265,6 +273,33 @@ namespace UnityRPG.Character.Player
             playerRotator.Rotate(
                 targetDirection,
                 deltaTime);
+        }
+
+        private void UpdateSkillInput()
+        {
+            if (inputReader.WasSkill1Pressed)
+            {
+                skillController.TryUseSkill(
+                    SkillId.DashSlash);
+            }
+
+            if (inputReader.WasSkill2Pressed)
+            {
+                skillController.TryUseSkill(
+                    SkillId.Projectile);
+            }
+
+            if (inputReader.WasSkill3Pressed)
+            {
+                skillController.TryUseSkill(
+                    SkillId.SpinAttack);
+            }
+
+            if (inputReader.WasSkill4Pressed)
+            {
+                skillController.TryUseSkill(
+                    SkillId.AttackBuff);
+            }
         }
     }
 }

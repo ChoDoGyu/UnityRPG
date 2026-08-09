@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 3811925040633698544}
   - component: {fileID: 7083225340647677956}
   - component: {fileID: 3175761624004211360}
+  - component: {fileID: 4474347525841559597}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -109,8 +110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a26452e8e22c047b2602bbe01532f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Character.Player.PlayerMotor
-  moveSpeed: 5
-  sprintSpeed: 8
+  sprintMultiplier: 1.6
   gravity: -20
   groundedVerticalVelocity: -2
 --- !u!114 &7362338317362497582
@@ -315,6 +315,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Character.Player.PlayerHealth
   currentHealth: 0
+--- !u!114 &4474347525841559597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810838048693877344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ddf3863a424db14a97c6cc6941b3703, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Skill.PlayerSkillController
+  dashSlashDefinition: {fileID: 11400000, guid: 6792a0b239695f743813ff4f01a80541, type: 2}
+  projectileDefinition: {fileID: 11400000, guid: 5bb86099aafdb664cb0cde378b93aa30, type: 2}
+  spinAttackDefinition: {fileID: 11400000, guid: db52923fe5e56f145855bc79fc2bc703, type: 2}
+  attackBuffDefinition: {fileID: 11400000, guid: d7b6f4c5dd8219743a85e5d12f8b6a85, type: 2}
 --- !u!1 &1000176733347427081
 GameObject:
   m_ObjectHideFlags: 0
