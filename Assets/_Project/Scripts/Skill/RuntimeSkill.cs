@@ -25,8 +25,7 @@ namespace UnityRPG.Skill
             }
         }
 
-        public RuntimeSkill(
-            SkillDefinition definition)
+        public RuntimeSkill(SkillDefinition definition)
         {
             Definition =
                 definition ??

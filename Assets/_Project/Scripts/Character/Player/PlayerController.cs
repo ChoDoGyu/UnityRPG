@@ -312,10 +312,19 @@ namespace UnityRPG.Character.Player
 
         private bool TryUseSkill(SkillId skillId)
         {
+            RuntimeSkill runtimeSkill = skillController.GetSkill(skillId);
+
+            if (runtimeSkill == null || !runtimeSkill.IsReady)
+            {
+                return false;
+            }
+
             if (!stateController.TryEnterSkill())
             {
                 return false;
             }
+
+            UpdateSkillFacing(skillId);
 
             if (!skillController.TryUseSkill(skillId))
             {
@@ -325,6 +334,32 @@ namespace UnityRPG.Character.Player
             }
 
             return true;
+        }
+
+        private void UpdateSkillFacing(SkillId skillId)
+        {
+            if (skillId != SkillId.DashSlash && skillId != SkillId.Projectile)
+            {
+                return;
+            }
+
+            var target = lockOnController.CurrentTarget;
+
+            if (target == null)
+            {
+                return;
+            }
+
+            Vector3 direction = target.transform.position - transform.position;
+
+            direction.y = 0f;
+
+            if (direction.sqrMagnitude <= 0.001f)
+            {
+                return;
+            }
+
+            playerRotator.SetFacingDirection(direction.normalized);
         }
     }
 }
