@@ -27,6 +27,7 @@ GameObject:
   - component: {fileID: 4474347525841559597}
   - component: {fileID: 5666379003978450568}
   - component: {fileID: 7025670843452615858}
+  - component: {fileID: 6108543259105645243}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -375,6 +376,23 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 65
   damage: 20
+--- !u!114 &6108543259105645243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810838048693877344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12fe818e40a8a0849bd2769b5f6ecb23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Skill.PlayerSpinAttackSkill
+  attackRadius: 3
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  damage: 25
 --- !u!1 &1000176733347427081
 GameObject:
   m_ObjectHideFlags: 0

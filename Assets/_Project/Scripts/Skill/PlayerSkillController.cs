@@ -6,6 +6,7 @@ namespace UnityRPG.Skill
     [DisallowMultipleComponent]
     [RequireComponent(typeof(PlayerDashSlashSkill))]
     [RequireComponent(typeof(PlayerProjectileSkill))]
+    [RequireComponent(typeof(PlayerSpinAttackSkill))]
     public sealed class PlayerSkillController : MonoBehaviour
     {
         [Header("Skill Definitions")]
@@ -28,6 +29,7 @@ namespace UnityRPG.Skill
 
         private PlayerDashSlashSkill dashSlashSkill;
         private PlayerProjectileSkill projectileSkill;
+        private PlayerSpinAttackSkill spinAttackSkill;
 
         public bool BlocksMovement =>
             dashSlashSkill.IsActive;
@@ -41,6 +43,7 @@ namespace UnityRPG.Skill
 
             dashSlashSkill = GetComponent<PlayerDashSlashSkill>();
             projectileSkill = GetComponent<PlayerProjectileSkill>();
+            spinAttackSkill = GetComponent<PlayerSpinAttackSkill>();
 
             AddRuntimeSkill(
                 dashSlashDefinition);
@@ -106,6 +109,14 @@ namespace UnityRPG.Skill
             if (skillId == SkillId.Projectile)
             {
                 if (!projectileSkill.TryStart())
+                {
+                    return false;
+                }
+            }
+
+            if (skillId == SkillId.SpinAttack)
+            {
+                if (!spinAttackSkill.TryStart())
                 {
                     return false;
                 }
