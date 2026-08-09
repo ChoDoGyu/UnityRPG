@@ -11,9 +11,8 @@ namespace UnityRPG.Skill
         private float speed;
         private float remainingLifetime;
         private float hitRadius;
-        private float damage;
         private LayerMask collisionMask;
-        private GameObject source;
+        private DamageInfo damageInfo;
 
         private bool isInitialized;
 
@@ -23,29 +22,19 @@ namespace UnityRPG.Skill
             float lifetime,
             float hitRadius,
             LayerMask collisionMask,
-            float damage,
-            GameObject source)
+            DamageInfo damageInfo)
         {
-            this.direction =
-                direction.normalized;
+            this.direction = direction.normalized;
 
-            this.speed =
-                speed;
+            this.speed = speed;
 
-            remainingLifetime =
-                lifetime;
+            remainingLifetime = lifetime;
 
-            this.hitRadius =
-                hitRadius;
+            this.hitRadius = hitRadius;
 
-            this.collisionMask =
-                collisionMask;
+            this.collisionMask = collisionMask;
 
-            this.damage =
-                damage;
-
-            this.source =
-                source;
+            this.damageInfo = damageInfo;
 
             isInitialized = true;
         }
@@ -57,19 +46,16 @@ namespace UnityRPG.Skill
                 return;
             }
 
-            float deltaTime =
-                Time.deltaTime;
+            float deltaTime = Time.deltaTime;
 
-            float moveDistance =
-                speed * deltaTime;
+            float moveDistance = speed * deltaTime;
 
             if (MoveProjectile(moveDistance))
             {
                 return;
             }
 
-            remainingLifetime -=
-                deltaTime;
+            remainingLifetime -= deltaTime;
 
             if (remainingLifetime <= 0f)
             {
@@ -77,8 +63,7 @@ namespace UnityRPG.Skill
             }
         }
 
-        private bool MoveProjectile(
-            float moveDistance)
+        private bool MoveProjectile(float moveDistance)
         {
             RaycastHit[] hits =
                 Physics.SphereCastAll(
@@ -97,8 +82,7 @@ namespace UnityRPG.Skill
 
             foreach (RaycastHit hit in hits)
             {
-                if (IsSourceCollider(
-                        hit.collider))
+                if (IsSourceCollider(hit.collider))
                 {
                     continue;
                 }
@@ -107,16 +91,11 @@ namespace UnityRPG.Skill
                     hit.point -
                     direction * hitRadius;
 
-                IDamageable damageable =
-                    hit.collider
-                        .GetComponentInParent<IDamageable>();
+                IDamageable damageable = hit.collider.GetComponentInParent<IDamageable>();
 
                 if (damageable != null)
                 {
-                    damageable.TakeDamage(
-                        new DamageInfo(
-                            damage,
-                            source));
+                    damageable.TakeDamage(damageInfo);
                 }
 
                 Destroy(gameObject);
@@ -124,28 +103,26 @@ namespace UnityRPG.Skill
                 return true;
             }
 
-            transform.position +=
-                direction * moveDistance;
+            transform.position += direction * moveDistance;
 
             return false;
         }
 
-        private bool IsSourceCollider(
-            Collider collider)
+        private bool IsSourceCollider(Collider collider)
         {
+            GameObject source = damageInfo.Source;
+
             if (source == null)
             {
                 return false;
             }
 
-            Transform colliderTransform =
-                collider.transform;
+            Transform colliderTransform = collider.transform;
 
             return
                 colliderTransform ==
                 source.transform ||
-                colliderTransform.IsChildOf(
-                    source.transform);
+                colliderTransform.IsChildOf(source.transform);
         }
     }
 }

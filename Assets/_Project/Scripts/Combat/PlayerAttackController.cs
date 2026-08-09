@@ -178,29 +178,17 @@ namespace UnityRPG.Combat
                 hitDetector.FindTargets(
                     attackReference);
 
-            bool isCritical =
-                Random.value <
-                playerStats.CritChance;
-
-            float damage =
-                playerStats.Attack;
-
-            if (isCritical)
-            {
-                damage *=
-                    playerStats.CritDamage;
-            }
-
             DamageInfo damageInfo =
-                new DamageInfo(
-                    damage,
-                    gameObject,
-                    isCritical);
+                DamageCalculator.CreateAttackDamage(
+                    playerStats.Attack,
+                    1f,
+                    playerStats.CritChance,
+                    playerStats.CritDamage,
+                    gameObject);
 
             foreach (IDamageable target in targets)
             {
-                target.TakeDamage(
-                    damageInfo);
+                target.TakeDamage(damageInfo);
             }
         }
     }

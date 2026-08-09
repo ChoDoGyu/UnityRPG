@@ -1,8 +1,11 @@
 using UnityEngine;
+using UnityRPG.Character.Stats;
+using UnityRPG.Combat;
 
 namespace UnityRPG.Skill
 {
     [DisallowMultipleComponent]
+    [RequireComponent(typeof(PlayerStats))]
     public sealed class PlayerProjectileSkill :
         MonoBehaviour
     {
@@ -35,7 +38,7 @@ namespace UnityRPG.Skill
         [Header("Damage")]
         [SerializeField]
         [Min(0f)]
-        private float damage = 20f;
+        private float damageMultiplier = 2f;
 
         [Header("Action")]
         [SerializeField]
@@ -46,6 +49,8 @@ namespace UnityRPG.Skill
             actionDuration;
 
         private bool isConfigured;
+
+        private PlayerStats playerStats;
 
         private void Awake()
         {
@@ -59,6 +64,8 @@ namespace UnityRPG.Skill
 
                 return;
             }
+
+            playerStats = GetComponent<PlayerStats>();
 
             isConfigured = true;
         }
@@ -89,14 +96,21 @@ namespace UnityRPG.Skill
                     Quaternion.LookRotation(
                         direction));
 
+            DamageInfo damageInfo =
+                DamageCalculator.CreateAttackDamage(
+                    playerStats.Attack,
+                    damageMultiplier,
+                    playerStats.CritChance,
+                    playerStats.CritDamage,
+                    gameObject);
+
             projectile.Initialize(
                 direction,
                 projectileSpeed,
                 projectileLifetime,
                 hitRadius,
                 collisionMask,
-                damage,
-                gameObject);
+                damageInfo);
 
             return true;
         }

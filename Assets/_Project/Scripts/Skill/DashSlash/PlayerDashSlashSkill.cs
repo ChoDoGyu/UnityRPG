@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityRPG.Combat;
+using UnityRPG.Character.Stats;
 
 namespace UnityRPG.Skill
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(CharacterController))]
+    [RequireComponent(typeof(PlayerStats))]
     public sealed class PlayerDashSlashSkill : MonoBehaviour
     {
         [Header("Reference")]
@@ -29,14 +31,16 @@ namespace UnityRPG.Skill
         [SerializeField]
         private LayerMask targetLayer;
 
+        [Header("Damage")]
         [SerializeField]
         [Min(0f)]
-        private float damage = 15f;
+        private float damageMultiplier = 1.5f;
 
         private readonly HashSet<IDamageable> hitTargets =
             new HashSet<IDamageable>();
 
         private CharacterController characterController;
+        private PlayerStats playerStats;
 
         private Vector3 dashDirection;
         private float remainingDuration;
@@ -51,8 +55,8 @@ namespace UnityRPG.Skill
 
         private void Awake()
         {
-            characterController =
-                GetComponent<CharacterController>();
+            characterController = GetComponent<CharacterController>();
+            playerStats = GetComponent<PlayerStats>();
 
             if (directionReference == null)
             {
@@ -78,8 +82,7 @@ namespace UnityRPG.Skill
                 return false;
             }
 
-            dashDirection =
-                directionReference.forward;
+            dashDirection = directionReference.forward;
 
             dashDirection.y = 0f;
 
@@ -90,11 +93,9 @@ namespace UnityRPG.Skill
 
             dashDirection.Normalize();
 
-            dashSpeed =
-                dashDistance / dashDuration;
+            dashSpeed = dashDistance / dashDuration;
 
-            remainingDuration =
-                dashDuration;
+            remainingDuration = dashDuration;
 
             hitTargets.Clear();
 
@@ -110,41 +111,29 @@ namespace UnityRPG.Skill
                 return;
             }
 
-            float moveTime =
-                Mathf.Min(
-                    deltaTime,
-                    remainingDuration);
+            float moveTime = Mathf.Min(deltaTime, remainingDuration);
 
-            characterController.Move(
-                dashDirection *
-                dashSpeed *
-                moveTime);
+            characterController.Move(dashDirection * dashSpeed * moveTime);
 
             CheckHitTargets();
 
-            remainingDuration =
-                Mathf.Max(
-                    0f,
-                    remainingDuration - moveTime);
+            remainingDuration = Mathf.Max(0f, remainingDuration - moveTime);
         }
 
         private void CheckHitTargets()
         {
-            Vector3 center =
-                transform.TransformPoint(
-                    characterController.center);
+            Vector3 center = transform.TransformPoint(characterController.center);
 
-            Collider[] hits =
+            Collider[] hits = 
                 Physics.OverlapSphere(
-                    center,
-                    hitRadius,
+                    center, 
+                    hitRadius, 
                     targetLayer,
                     QueryTriggerInteraction.Ignore);
 
             foreach (Collider hit in hits)
             {
-                IDamageable damageable =
-                    hit.GetComponentInParent<IDamageable>();
+                IDamageable damageable = hit.GetComponentInParent<IDamageable>();
 
                 if (damageable == null)
                 {
@@ -156,10 +145,15 @@ namespace UnityRPG.Skill
                     continue;
                 }
 
-                damageable.TakeDamage(
-                    new DamageInfo(
-                        damage,
-                        gameObject));
+                DamageInfo damageInfo =
+                    DamageCalculator.CreateAttackDamage(
+                        playerStats.Attack,
+                        damageMultiplier,
+                        playerStats.CritChance,
+                        playerStats.CritDamage,
+                        gameObject);
+
+                damageable.TakeDamage(damageInfo);
             }
         }
     }
