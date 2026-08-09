@@ -61,10 +61,15 @@ namespace UnityRPG.Character.Player
                 return;
             }
 
+            float finalDamage =
+                DamageCalculator.CalculateAfterDefense(
+                    damageInfo.Amount,
+                    playerStats.Defense);
+
             currentHealth =
                 Mathf.Max(
                     0f,
-                    currentHealth - damageInfo.Amount);
+                    currentHealth - finalDamage);
         }
     }
 }
