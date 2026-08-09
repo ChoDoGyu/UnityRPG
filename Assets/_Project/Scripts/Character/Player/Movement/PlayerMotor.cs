@@ -1,20 +1,18 @@
 using UnityEngine;
+using UnityRPG.Character.Stats;
 
 namespace UnityRPG.Character.Player
 {
     [RequireComponent(typeof(CharacterController))]
+    [RequireComponent(typeof(PlayerStats))]
     public sealed class PlayerMotor : MonoBehaviour
     {
         private const float MovingSpeedThreshold = 0.15f;
 
         [Header("Movement")]
         [SerializeField]
-        [Min(0f)]
-        private float moveSpeed = 5f;
-
-        [SerializeField]
-        [Min(0f)]
-        private float sprintSpeed = 8f;
+        [Min(1f)]
+        private float sprintMultiplier = 1.6f;
 
         [Header("Gravity")]
         [SerializeField]
@@ -25,6 +23,7 @@ namespace UnityRPG.Character.Player
 
         private CharacterController characterController;
         private float verticalVelocity;
+        private PlayerStats playerStats;
 
         public Vector3 CurrentMoveDirection { get; private set; }
 
@@ -42,6 +41,9 @@ namespace UnityRPG.Character.Player
         {
             characterController =
                 GetComponent<CharacterController>();
+
+            playerStats =
+                GetComponent<PlayerStats>();
         }
 
         public void Move(
@@ -56,13 +58,17 @@ namespace UnityRPG.Character.Player
 
             UpdateGravity(deltaTime);
 
-            float currentSpeed =
-                sprintRequested
-                    ? sprintSpeed
-                    : moveSpeed;
+            float speed =
+                playerStats.MoveSpeed;
+
+            if (sprintRequested)
+            {
+                speed *=
+                    sprintMultiplier;
+            }
 
             Vector3 velocity =
-                CurrentMoveDirection * currentSpeed;
+                CurrentMoveDirection * speed;
 
             velocity.y = verticalVelocity;
 
