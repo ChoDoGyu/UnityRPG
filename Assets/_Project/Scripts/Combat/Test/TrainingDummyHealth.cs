@@ -25,6 +25,9 @@ namespace UnityRPG.Combat
         [SerializeField]
         private GameObject lastDamageSource;
 
+        [SerializeField]
+        private bool lastHitWasCritical;
+
         public float CurrentHealth =>
             currentHealth;
 
@@ -64,6 +67,9 @@ namespace UnityRPG.Combat
 
             lastDamageSource =
                 damageInfo.Source;
+
+            lastHitWasCritical =
+                damageInfo.IsCritical;
         }
 
         [ContextMenu("Reset Health")]
@@ -77,6 +83,8 @@ namespace UnityRPG.Combat
             lastDamageAmount = 0f;
 
             lastDamageSource = null;
+
+            lastHitWasCritical = false;
         }
     }
 }
