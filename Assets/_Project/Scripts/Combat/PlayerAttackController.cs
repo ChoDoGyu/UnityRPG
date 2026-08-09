@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityRPG.Character.Stats;
 
 namespace UnityRPG.Combat
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(MeleeHitDetector))]
+    [RequireComponent(typeof(PlayerStats))]
     public sealed class PlayerAttackController : MonoBehaviour
     {
         [Header("Reference")]
@@ -14,10 +16,6 @@ namespace UnityRPG.Combat
         [SerializeField]
         [Min(0.01f)]
         private float attackDuration = 0.4f;
-
-        [SerializeField]
-        [Min(0f)]
-        private float attackDamage = 10f;
 
         [SerializeField]
         [Min(1)]
@@ -38,6 +36,8 @@ namespace UnityRPG.Combat
         private bool isNextAttackQueued;
         private bool isHitApplied;
         private bool isConfigured;
+
+        private PlayerStats playerStats;
 
         public bool IsAttacking =>
             remainingDuration > 0f;
@@ -68,6 +68,9 @@ namespace UnityRPG.Combat
         {
             hitDetector =
                 GetComponent<MeleeHitDetector>();
+
+            playerStats =
+                GetComponent<PlayerStats>();
 
             if (attackReference == null)
             {
@@ -177,7 +180,7 @@ namespace UnityRPG.Combat
 
             DamageInfo damageInfo =
                 new DamageInfo(
-                    attackDamage,
+                    playerStats.Attack,
                     gameObject);
 
             foreach (IDamageable target in targets)
