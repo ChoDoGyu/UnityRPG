@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace UnityRPG.Character.Player
 {
+    [DisallowMultipleComponent]
     public sealed class PlayerStateController : MonoBehaviour
     {
         public PlayerState CurrentState { get; private set; }

@@ -47,6 +47,12 @@ namespace UnityRPG.Skill
 
         public bool TryStart()
         {
+            if (playerStats == null ||
+                !playerStats.IsConfigured)
+            {
+                return false;
+            }
+
             if (remainingDuration > 0f)
             {
                 return false;

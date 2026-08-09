@@ -72,7 +72,9 @@ namespace UnityRPG.Skill
 
         public bool TryStart()
         {
-            if (!isConfigured)
+            if (!isConfigured ||
+                playerStats == null ||
+                !playerStats.IsConfigured)
             {
                 return false;
             }

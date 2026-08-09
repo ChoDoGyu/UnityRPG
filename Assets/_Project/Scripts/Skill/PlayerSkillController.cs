@@ -44,6 +44,7 @@ namespace UnityRPG.Skill
             currentSkillId;
 
         public bool IsAttackBuffActive =>
+            attackBuffSkill != null &&
             attackBuffSkill.IsActive;
 
         public float ActionNormalizedProgress

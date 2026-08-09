@@ -62,9 +62,9 @@ namespace UnityRPG.Character.Player
 
             bool isDodging = UpdateDodge(deltaTime);
 
-            UpdateAttackInput();
-
             UpdateSkillInput();
+
+            UpdateAttackInput();
 
             UpdateAttackRotation(deltaTime);
 
@@ -354,7 +354,7 @@ namespace UnityRPG.Character.Player
                 return;
             }
 
-            Vector3 direction = target.transform.position - transform.position;
+            Vector3 direction = target.AimPosition - transform.position;
 
             direction.y = 0f;
 

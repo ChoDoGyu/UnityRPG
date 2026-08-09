@@ -72,7 +72,9 @@ namespace UnityRPG.Skill
 
         public bool TryStart()
         {
-            if (!isConfigured)
+            if (!isConfigured ||
+                playerStats == null ||
+                !playerStats.IsConfigured)
             {
                 return false;
             }
@@ -82,7 +84,8 @@ namespace UnityRPG.Skill
                 return false;
             }
 
-            dashDirection = directionReference.forward;
+            dashDirection =
+                directionReference.forward;
 
             dashDirection.y = 0f;
 
@@ -93,9 +96,12 @@ namespace UnityRPG.Skill
 
             dashDirection.Normalize();
 
-            dashSpeed = dashDistance / dashDuration;
+            dashSpeed =
+                dashDistance /
+                dashDuration;
 
-            remainingDuration = dashDuration;
+            remainingDuration =
+                dashDuration;
 
             hitTargets.Clear();
 
