@@ -37,6 +37,14 @@ namespace UnityRPG.Skill
         [Min(0f)]
         private float damage = 20f;
 
+        [Header("Action")]
+        [SerializeField]
+        [Min(0.01f)]
+        private float actionDuration = 0.3f;
+
+        public float ActionDuration =>
+            actionDuration;
+
         private bool isConfigured;
 
         private void Awake()

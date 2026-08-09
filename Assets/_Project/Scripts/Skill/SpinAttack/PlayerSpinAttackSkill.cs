@@ -21,6 +21,14 @@ namespace UnityRPG.Skill
         [Min(0f)]
         private float damage = 25f;
 
+        [Header("Action")]
+        [SerializeField]
+        [Min(0.01f)]
+        private float actionDuration = 0.45f;
+
+        public float ActionDuration =>
+            actionDuration;
+
         public bool TryStart()
         {
             ApplyAreaDamage();

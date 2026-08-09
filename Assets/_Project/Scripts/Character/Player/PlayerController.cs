@@ -51,6 +51,8 @@ namespace UnityRPG.Character.Player
 
             skillController.UpdateSkills(deltaTime);
 
+            UpdateSkillState();
+
             UpdateAttackState();
 
             lockOnController.ValidateCurrentTarget();
@@ -68,16 +70,7 @@ namespace UnityRPG.Character.Player
 
             if (!isDodging)
             {
-                if (skillController.BlocksMovement)
-                {
-                    UpdateMovementWithoutInput(
-                        deltaTime);
-                }
-                else
-                {
-                    UpdateMovement(
-                        deltaTime);
-                }
+                UpdateMovement(deltaTime);
             }
 
             UpdateVisual(isDodging, deltaTime);
@@ -147,9 +140,7 @@ namespace UnityRPG.Character.Player
                 deltaTime);
         }
 
-        private void UpdateVisual(
-            bool isDodging,
-            float deltaTime)
+        private void UpdateVisual(bool isDodging, float deltaTime)
         {
             visualAnimator.UpdateAnimation(
                 playerMotor.CurrentHorizontalSpeed,
@@ -188,14 +179,12 @@ namespace UnityRPG.Character.Player
                 }
             }
 
-            if (stateController.CurrentState !=
-                PlayerState.Dodging)
+            if (stateController.CurrentState != PlayerState.Dodging)
             {
                 return false;
             }
 
-            playerDodger.UpdateDodge(
-                deltaTime);
+            playerDodger.UpdateDodge(deltaTime);
 
             if (!playerDodger.IsDodging)
             {
@@ -212,14 +201,12 @@ namespace UnityRPG.Character.Player
                 return;
             }
 
-            lockOnController.ToggleLockOn(
-                playerCameraController.CameraTarget);
+            lockOnController.ToggleLockOn(playerCameraController.CameraTarget);
         }
 
         private void UpdateAttackState()
         {
-            if (stateController.CurrentState !=
-                PlayerState.Attacking)
+            if (stateController.CurrentState != PlayerState.Attacking)
             {
                 return;
             }
@@ -249,8 +236,7 @@ namespace UnityRPG.Character.Player
                 return;
             }
 
-            if (stateController.CurrentState ==
-                PlayerState.Normal)
+            if (stateController.CurrentState == PlayerState.Normal)
             {
                 if (!stateController.TryEnterAttack())
                 {
@@ -279,53 +265,66 @@ namespace UnityRPG.Character.Player
 
             targetDirection.y = 0f;
 
-            playerRotator.Rotate(
-                targetDirection,
-                deltaTime);
+            playerRotator.Rotate(targetDirection, deltaTime);
         }
 
         private void UpdateSkillInput()
         {
-            if (inputReader.WasSkill1Pressed)
-            {
-                skillController.TryUseSkill(
-                    SkillId.DashSlash);
-            }
-
-            if (inputReader.WasSkill2Pressed)
-            {
-                skillController.TryUseSkill(
-                    SkillId.Projectile);
-            }
-
-            if (inputReader.WasSkill3Pressed)
-            {
-                skillController.TryUseSkill(
-                    SkillId.SpinAttack);
-            }
-
-            if (inputReader.WasSkill4Pressed)
-            {
-                skillController.TryUseSkill(
-                    SkillId.AttackBuff);
-            }
-        }
-
-        private void UpdateMovementWithoutInput(float deltaTime)
-        {
-            Transform cameraTarget =
-                playerCameraController.CameraTarget;
-
-            if (cameraTarget == null)
+            if (inputReader.WasSkill1Pressed &&
+                TryUseSkill(SkillId.DashSlash))
             {
                 return;
             }
 
-            playerMotor.Move(
-                Vector2.zero,
-                false,
-                cameraTarget,
-                deltaTime);
+            if (inputReader.WasSkill2Pressed &&
+                TryUseSkill(SkillId.Projectile))
+            {
+                return;
+            }
+
+            if (inputReader.WasSkill3Pressed &&
+                TryUseSkill(SkillId.SpinAttack))
+            {
+                return;
+            }
+
+            if (inputReader.WasSkill4Pressed)
+            {
+                TryUseSkill(SkillId.AttackBuff);
+            }
+        }
+
+        private void UpdateSkillState()
+        {
+            if (stateController.CurrentState !=
+                PlayerState.UsingSkill)
+            {
+                return;
+            }
+
+            if (skillController.IsUsingSkill)
+            {
+                return;
+            }
+
+            stateController.ExitSkill();
+        }
+
+        private bool TryUseSkill(SkillId skillId)
+        {
+            if (!stateController.TryEnterSkill())
+            {
+                return false;
+            }
+
+            if (!skillController.TryUseSkill(skillId))
+            {
+                stateController.ExitSkill();
+
+                return false;
+            }
+
+            return true;
         }
     }
 }

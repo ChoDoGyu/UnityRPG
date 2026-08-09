@@ -46,6 +46,9 @@ namespace UnityRPG.Skill
         public bool IsActive =>
             remainingDuration > 0f;
 
+        public float ActionDuration =>
+            dashDuration;
+
         private void Awake()
         {
             characterController =

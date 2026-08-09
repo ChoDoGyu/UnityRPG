@@ -4,6 +4,7 @@ namespace UnityRPG.Character.Player
     {
         Normal,
         Attacking,
-        Dodging
+        Dodging,
+        UsingSkill
     }
 }

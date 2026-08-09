@@ -17,11 +17,19 @@ namespace UnityRPG.Skill
         [Min(0.01f)]
         private float duration = 5f;
 
+        [Header("Action")]
+        [SerializeField]
+        [Min(0.01f)]
+        private float actionDuration = 0.3f;
+
         private PlayerStats playerStats;
         private float remainingDuration;
 
         public bool IsActive =>
             remainingDuration > 0f;
+
+        public float ActionDuration =>
+            actionDuration;
 
         private void Awake()
         {

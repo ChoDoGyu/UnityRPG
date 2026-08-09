@@ -33,8 +33,10 @@ namespace UnityRPG.Skill
         private PlayerSpinAttackSkill spinAttackSkill;
         private PlayerAttackBuffSkill attackBuffSkill;
 
-        public bool BlocksMovement =>
-            dashSlashSkill.IsActive;
+        private float remainingActionDuration;
+
+        public bool IsUsingSkill =>
+            remainingActionDuration > 0f;
 
         private void Awake()
         {
@@ -63,8 +65,7 @@ namespace UnityRPG.Skill
             isConfigured = true;
         }
 
-        public void UpdateSkills(
-            float deltaTime)
+        public void UpdateSkills(float deltaTime)
         {
             if (!isConfigured)
             {
@@ -77,24 +78,21 @@ namespace UnityRPG.Skill
                     deltaTime);
             }
 
-            dashSlashSkill.UpdateSkill(
-                deltaTime);
+            dashSlashSkill.UpdateSkill(deltaTime);
 
-            attackBuffSkill.UpdateSkill(
-                deltaTime);
+            attackBuffSkill.UpdateSkill(deltaTime);
+
+            UpdateActionDuration(deltaTime);
         }
 
-        public bool TryUseSkill(
-            SkillId skillId)
+        public bool TryUseSkill(SkillId skillId)
         {
             if (!isConfigured)
             {
                 return false;
             }
 
-            if (!skills.TryGetValue(
-                    skillId,
-                    out RuntimeSkill skill))
+            if (!skills.TryGetValue(skillId, out RuntimeSkill skill))
             {
                 return false;
             }
@@ -104,12 +102,16 @@ namespace UnityRPG.Skill
                 return false;
             }
 
+            float actionDuration = 0f;
+
             if (skillId == SkillId.DashSlash)
             {
                 if (!dashSlashSkill.TryStart())
                 {
                     return false;
                 }
+
+                actionDuration = dashSlashSkill.ActionDuration;
             }
 
             if (skillId == SkillId.Projectile)
@@ -118,6 +120,8 @@ namespace UnityRPG.Skill
                 {
                     return false;
                 }
+
+                actionDuration = projectileSkill.ActionDuration;
             }
 
             if (skillId == SkillId.SpinAttack)
@@ -126,6 +130,8 @@ namespace UnityRPG.Skill
                 {
                     return false;
                 }
+
+                actionDuration = spinAttackSkill.ActionDuration;
             }
 
             if (skillId == SkillId.AttackBuff)
@@ -134,9 +140,18 @@ namespace UnityRPG.Skill
                 {
                     return false;
                 }
+
+                actionDuration = attackBuffSkill.ActionDuration;
             }
 
-            return skill.TryStartCooldown();
+            if (!skill.TryStartCooldown())
+            {
+                return false;
+            }
+
+            remainingActionDuration = actionDuration;
+
+            return true;
         }
 
         public RuntimeSkill GetSkill(
@@ -190,6 +205,25 @@ namespace UnityRPG.Skill
             }
 
             return true;
+        }
+
+        private void UpdateActionDuration(float deltaTime)
+        {
+            if (remainingActionDuration <= 0f)
+            {
+                return;
+            }
+
+            if (deltaTime <= 0f)
+            {
+                return;
+            }
+
+            remainingActionDuration =
+                Mathf.Max(
+                    0f,
+                    remainingActionDuration -
+                    deltaTime);
         }
     }
 }

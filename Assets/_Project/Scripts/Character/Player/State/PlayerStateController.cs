@@ -6,18 +6,21 @@ namespace UnityRPG.Character.Player
     {
         public PlayerState CurrentState { get; private set; }
 
-        public bool CanMove =>
+        public bool CanMove => 
             CurrentState == PlayerState.Normal;
 
-        public bool CanRotate =>
+        public bool CanRotate => 
             CurrentState == PlayerState.Normal;
 
-        public bool CanDodge =>
+        public bool CanDodge => 
             CurrentState == PlayerState.Normal;
 
         public bool CanAttack =>
             CurrentState == PlayerState.Normal ||
             CurrentState == PlayerState.Attacking;
+
+        public bool CanUseSkill =>
+            CurrentState == PlayerState.Normal;
 
         private void Awake()
         {
@@ -65,6 +68,31 @@ namespace UnityRPG.Character.Player
         public void ExitDodge()
         {
             if (CurrentState != PlayerState.Dodging)
+            {
+                return;
+            }
+
+            CurrentState =
+                PlayerState.Normal;
+        }
+
+        public bool TryEnterSkill()
+        {
+            if (!CanUseSkill)
+            {
+                return false;
+            }
+
+            CurrentState =
+                PlayerState.UsingSkill;
+
+            return true;
+        }
+
+        public void ExitSkill()
+        {
+            if (CurrentState !=
+                PlayerState.UsingSkill)
             {
                 return;
             }
