@@ -26,6 +26,7 @@ GameObject:
   - component: {fileID: 3175761624004211360}
   - component: {fileID: 4474347525841559597}
   - component: {fileID: 5666379003978450568}
+  - component: {fileID: 7025670843452615858}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -352,6 +353,28 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   damage: 15
+--- !u!114 &7025670843452615858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810838048693877344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf06ac83b3f26444d8f98f5959eda7fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Skill.PlayerProjectileSkill
+  spawnPoint: {fileID: 4920325080510119197}
+  directionReference: {fileID: 4613765813261899622}
+  projectilePrefab: {fileID: 1395662899675779215, guid: 93b86122365c39646bff79c1294b9f1b, type: 3}
+  projectileSpeed: 12
+  projectileLifetime: 2.5
+  hitRadius: 0.2
+  collisionMask:
+    serializedVersion: 2
+    m_Bits: 65
+  damage: 20
 --- !u!1 &1000176733347427081
 GameObject:
   m_ObjectHideFlags: 0
@@ -382,6 +405,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7417113505253281969}
+  - {fileID: 4920325080510119197}
   m_Father: {fileID: 3171799723806331505}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1261079225517037679
@@ -474,6 +498,37 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &2149945175881056703
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4920325080510119197}
+  m_Layer: 0
+  m_Name: ProjectileSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4920325080510119197
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2149945175881056703}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.2, z: 0.7}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4613765813261899622}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4880694897370436440
 GameObject:
   m_ObjectHideFlags: 0
