@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityRPG.Skill;
 
 namespace UnityRPG.Character.Player
 {
@@ -169,6 +170,13 @@ namespace UnityRPG.Character.Player
         [Min(0f)]
         private float thirdAttackHandLift = 0.8f;
 
+        [Header("Skill")]
+        [SerializeField]
+        private Transform modelRoot;
+
+        private Quaternion modelRootBaseRotation;
+        private Vector3 modelRootBaseScale;
+
         private Vector3 bodyBasePosition;
         private Vector3 leftHandBasePosition;
         private Vector3 rightHandBasePosition;
@@ -206,12 +214,19 @@ namespace UnityRPG.Character.Player
             bodyBaseRotation =
                 body.localRotation;
 
+            modelRootBaseRotation =
+                modelRoot.localRotation;
+
+            modelRootBaseScale =
+                modelRoot.localScale;
+
             isConfigured = true;
         }
 
         private bool ValidateParts()
         {
             if (movementReference == null ||
+                modelRoot == null ||
                 body == null ||
                 leftHand == null ||
                 rightHand == null ||
@@ -219,7 +234,8 @@ namespace UnityRPG.Character.Player
                 rightFoot == null)
             {
                 Debug.LogError(
-                    "[Player] PlayerVisualAnimator의 캐릭터 파츠 또는 이동 기준 참조가 누락되었습니다.");
+                    "[Player] PlayerVisualAnimator의 캐릭터 파츠 또는 이동 기준 참조가 누락되었습니다.",
+                    this);
 
                 return false;
             }
@@ -236,16 +252,37 @@ namespace UnityRPG.Character.Player
             float attackProgress,
             bool isLockedOn,
             Vector3 moveDirection,
-            float deltaTime)
+            float deltaTime,
+            bool isUsingSkill,
+            SkillId currentSkillId,
+            float skillProgress,
+            bool isAttackBuffActive)
         {
             if (!isConfigured)
             {
                 return;
             }
 
+            ResetModelRootVisual();
+
+            UpdateAttackBuffVisual(
+                isAttackBuffActive);
+
             if (isDodging)
             {
-                UpdateDodge(deltaTime);
+                UpdateDodge(
+                    deltaTime);
+
+                return;
+            }
+
+            if (isUsingSkill)
+            {
+                UpdateSkillAnimation(
+                    currentSkillId,
+                    skillProgress,
+                    deltaTime);
+
                 return;
             }
 
@@ -260,29 +297,33 @@ namespace UnityRPG.Character.Player
             }
 
             bool isMoving =
-                horizontalSpeed > movingSpeedThreshold;
+                horizontalSpeed >
+                movingSpeedThreshold;
 
             bool isRunning =
                 isMoving &&
                 isSprinting &&
-                horizontalSpeed > runSpeedThreshold;
+                horizontalSpeed >
+                runSpeedThreshold;
 
             float cycleSpeed;
 
             if (!isMoving)
             {
-                cycleSpeed = idleCycleSpeed;
+                cycleSpeed =
+                    idleCycleSpeed;
             }
             else
             {
                 cycleSpeed =
                     isRunning
-                        ? runCycleSpeed
-                        : walkCycleSpeed;
+                    ? runCycleSpeed
+                    : walkCycleSpeed;
             }
 
             cycle +=
-                cycleSpeed * deltaTime;
+                cycleSpeed *
+                deltaTime;
 
             if (isLockedOn)
             {
@@ -296,7 +337,9 @@ namespace UnityRPG.Character.Player
 
             if (!isMoving)
             {
-                UpdateIdle(deltaTime);
+                UpdateIdle(
+                    deltaTime);
+
                 return;
             }
 
@@ -305,30 +348,319 @@ namespace UnityRPG.Character.Player
                 deltaTime);
         }
 
-        private void UpdateIdle(float deltaTime)
+        private void ResetModelRootVisual()
         {
-            float bodyBob =
-                Mathf.Sin(cycle) *
-                idleBodyBob;
+            modelRoot.localRotation =
+                modelRootBaseRotation;
 
-            float handBob =
-                Mathf.Sin(cycle) *
-                idleHandBob;
+            modelRoot.localScale =
+                modelRootBaseScale;
+        }
 
-            float smoothFactor =
-                GetSmoothFactor(deltaTime);
+        private void UpdateAttackBuffVisual(
+            bool isActive)
+        {
+            if (!isActive)
+            {
+                return;
+            }
+
+            float pulse =
+                1f +
+                Mathf.Sin(
+                    Time.time * 8f) *
+                0.03f;
+
+            modelRoot.localScale =
+                modelRootBaseScale *
+                pulse;
+        }
+
+        private void UpdateSkillAnimation(
+            SkillId skillId,
+            float progress,
+            float deltaTime)
+        {
+            progress =
+                Mathf.Clamp01(
+                    progress);
+
+            switch (skillId)
+            {
+                case SkillId.DashSlash:
+                    UpdateDashSlashAnimation(
+                        progress,
+                        deltaTime);
+                    break;
+
+                case SkillId.Projectile:
+                    UpdateProjectileSkillAnimation(
+                        progress,
+                        deltaTime);
+                    break;
+
+                case SkillId.SpinAttack:
+                    UpdateSpinAttackAnimation(
+                        progress,
+                        deltaTime);
+                    break;
+
+                case SkillId.AttackBuff:
+                    UpdateAttackBuffCastAnimation(
+                        progress,
+                        deltaTime);
+                    break;
+            }
+        }
+
+        private void UpdateDashSlashAnimation(
+            float progress,
+            float deltaTime)
+        {
+            float weight =
+                Mathf.Sin(
+                    progress *
+                    Mathf.PI);
 
             Vector3 bodyTarget =
                 bodyBasePosition +
-                Vector3.up * bodyBob;
+                new Vector3(
+                    0f,
+                    -0.05f,
+                    0.12f) *
+                weight;
 
-            Vector3 leftHandTarget =
-                leftHandBasePosition +
-                Vector3.up * handBob;
+            Quaternion bodyRotationTarget =
+                bodyBaseRotation *
+                Quaternion.Euler(
+                    18f * weight,
+                    0f,
+                    0f);
 
             Vector3 rightHandTarget =
                 rightHandBasePosition +
-                Vector3.up * handBob;
+                new Vector3(
+                    0.15f,
+                    0.05f,
+                    0.5f) *
+                weight;
+
+            Vector3 leftHandTarget =
+                leftHandBasePosition +
+                new Vector3(
+                    -0.1f,
+                    0f,
+                    -0.2f) *
+                weight;
+
+            ApplySkillPose(
+                bodyTarget,
+                bodyRotationTarget,
+                leftHandTarget,
+                rightHandTarget,
+                deltaTime);
+        }
+
+        private void UpdateProjectileSkillAnimation(
+            float progress,
+            float deltaTime)
+        {
+            float weight =
+                Mathf.Sin(
+                    progress *
+                    Mathf.PI);
+
+            Vector3 bodyTarget =
+                bodyBasePosition +
+                Vector3.forward *
+                0.05f *
+                weight;
+
+            Quaternion bodyRotationTarget =
+                bodyBaseRotation *
+                Quaternion.Euler(
+                    8f * weight,
+                    0f,
+                    0f);
+
+            Vector3 rightHandTarget =
+                rightHandBasePosition +
+                new Vector3(
+                    0f,
+                    0.1f,
+                    0.55f) *
+                weight;
+
+            Vector3 leftHandTarget =
+                leftHandBasePosition +
+                new Vector3(
+                    0f,
+                    0.05f,
+                    -0.15f) *
+                weight;
+
+            ApplySkillPose(
+                bodyTarget,
+                bodyRotationTarget,
+                leftHandTarget,
+                rightHandTarget,
+                deltaTime);
+        }
+
+        private void UpdateSpinAttackAnimation(
+            float progress,
+            float deltaTime)
+        {
+            float weight =
+                Mathf.Sin(
+                    progress *
+                    Mathf.PI);
+
+            modelRoot.localRotation =
+                modelRootBaseRotation *
+                Quaternion.Euler(
+                    0f,
+                    360f * progress,
+                    0f);
+
+            Vector3 rightHandTarget =
+                rightHandBasePosition +
+                Vector3.right *
+                0.4f *
+                weight;
+
+            Vector3 leftHandTarget =
+                leftHandBasePosition +
+                Vector3.left *
+                0.4f *
+                weight;
+
+            ApplySkillPose(
+                bodyBasePosition,
+                bodyBaseRotation,
+                leftHandTarget,
+                rightHandTarget,
+                deltaTime);
+        }
+
+        private void UpdateAttackBuffCastAnimation(
+            float progress,
+            float deltaTime)
+        {
+            float weight =
+                Mathf.Sin(
+                    progress *
+                    Mathf.PI);
+
+            Vector3 bodyTarget =
+                bodyBasePosition +
+                Vector3.up *
+                0.05f *
+                weight;
+
+            Vector3 rightHandTarget =
+                rightHandBasePosition +
+                new Vector3(
+                    0.1f,
+                    0.4f,
+                    0f) *
+                weight;
+
+            Vector3 leftHandTarget =
+                leftHandBasePosition +
+                new Vector3(
+                    -0.1f,
+                    0.4f,
+                    0f) *
+                weight;
+
+            ApplySkillPose(
+                bodyTarget,
+                bodyBaseRotation,
+                leftHandTarget,
+                rightHandTarget,
+                deltaTime);
+        }
+
+        private void ApplySkillPose(
+            Vector3 bodyTarget,
+            Quaternion bodyRotationTarget,
+            Vector3 leftHandTarget,
+            Vector3 rightHandTarget,
+            float deltaTime)
+        {
+            float smoothFactor =
+                GetSmoothFactor(
+                    deltaTime);
+
+            body.localPosition =
+                Vector3.Lerp(
+                    body.localPosition,
+                    bodyTarget,
+                    smoothFactor);
+
+            body.localRotation =
+                Quaternion.Slerp(
+                    body.localRotation,
+                    bodyRotationTarget,
+                    smoothFactor);
+
+            leftHand.localPosition =
+                Vector3.Lerp(
+                    leftHand.localPosition,
+                    leftHandTarget,
+                    smoothFactor);
+
+            rightHand.localPosition =
+                Vector3.Lerp(
+                    rightHand.localPosition,
+                    rightHandTarget,
+                    smoothFactor);
+
+            leftFoot.localPosition =
+                Vector3.Lerp(
+                    leftFoot.localPosition,
+                    leftFootBasePosition,
+                    smoothFactor);
+
+            rightFoot.localPosition =
+                Vector3.Lerp(
+                    rightFoot.localPosition,
+                    rightFootBasePosition,
+                    smoothFactor);
+        }
+
+        private void UpdateIdle(
+            float deltaTime)
+        {
+            float bodyBob =
+                Mathf.Sin(
+                    cycle) *
+                idleBodyBob;
+
+            float handBob =
+                Mathf.Sin(
+                    cycle) *
+                idleHandBob;
+
+            float smoothFactor =
+                GetSmoothFactor(
+                    deltaTime);
+
+            Vector3 bodyTarget =
+                bodyBasePosition +
+                Vector3.up *
+                bodyBob;
+
+            Vector3 leftHandTarget =
+                leftHandBasePosition +
+                Vector3.up *
+                handBob;
+
+            Vector3 rightHandTarget =
+                rightHandBasePosition +
+                Vector3.up *
+                handBob;
 
             body.localPosition =
                 Vector3.Lerp(
@@ -373,42 +705,50 @@ namespace UnityRPG.Character.Player
         {
             float stepDistance =
                 isRunning
-                    ? runStepDistance
-                    : walkStepDistance;
+                ? runStepDistance
+                : walkStepDistance;
 
             float footLift =
                 isRunning
-                    ? runFootLift
-                    : walkFootLift;
+                ? runFootLift
+                : walkFootLift;
 
             float handSwing =
                 isRunning
-                    ? runHandSwing
-                    : walkHandSwing;
+                ? runHandSwing
+                : walkHandSwing;
 
             float bodyBobAmount =
                 isRunning
-                    ? runBodyBob
-                    : walkBodyBob;
+                ? runBodyBob
+                : walkBodyBob;
 
             float bodyLean =
                 isRunning
-                    ? runBodyLean
-                    : walkBodyLean;
+                ? runBodyLean
+                : walkBodyLean;
 
             float swing =
-                Mathf.Sin(cycle);
+                Mathf.Sin(
+                    cycle);
 
             float leftLift =
-                Mathf.Max(0f, swing) *
+                Mathf.Max(
+                    0f,
+                    swing) *
                 footLift;
 
             float rightLift =
-                Mathf.Max(0f, -swing) *
+                Mathf.Max(
+                    0f,
+                    -swing) *
                 footLift;
 
             float bodyBob =
-                (Mathf.Abs(Mathf.Cos(cycle)) - 0.5f) *
+                (Mathf.Abs(
+                    Mathf.Cos(
+                        cycle)) -
+                 0.5f) *
                 2f *
                 bodyBobAmount;
 
@@ -417,28 +757,33 @@ namespace UnityRPG.Character.Player
                 new Vector3(
                     0f,
                     leftLift,
-                    swing * stepDistance);
+                    swing *
+                    stepDistance);
 
             Vector3 rightFootTarget =
                 rightFootBasePosition +
                 new Vector3(
                     0f,
                     rightLift,
-                    -swing * stepDistance);
+                    -swing *
+                    stepDistance);
 
             Vector3 leftHandTarget =
                 leftHandBasePosition +
                 Vector3.forward *
-                (-swing * handSwing);
+                (-swing *
+                 handSwing);
 
             Vector3 rightHandTarget =
                 rightHandBasePosition +
                 Vector3.forward *
-                (swing * handSwing);
+                (swing *
+                 handSwing);
 
             Vector3 bodyTarget =
                 bodyBasePosition +
-                Vector3.up * bodyBob;
+                Vector3.up *
+                bodyBob;
 
             Quaternion bodyRotationTarget =
                 bodyBaseRotation *
@@ -448,7 +793,8 @@ namespace UnityRPG.Character.Player
                     0f);
 
             float smoothFactor =
-                GetSmoothFactor(deltaTime);
+                GetSmoothFactor(
+                    deltaTime);
 
             body.localPosition =
                 Vector3.Lerp(
@@ -487,22 +833,27 @@ namespace UnityRPG.Character.Player
                     smoothFactor);
         }
 
-        private float GetSmoothFactor(float deltaTime)
+        private float GetSmoothFactor(
+            float deltaTime)
         {
-            return 1f -
+            return
+                1f -
                 Mathf.Exp(
                     -transitionSpeed *
                     deltaTime);
         }
 
-        private void UpdateDodge(float deltaTime)
+        private void UpdateDodge(
+            float deltaTime)
         {
             float smoothFactor =
-                GetSmoothFactor(deltaTime);
+                GetSmoothFactor(
+                    deltaTime);
 
             Vector3 bodyTarget =
                 bodyBasePosition +
-                Vector3.down * dodgeBodyDrop;
+                Vector3.down *
+                dodgeBodyDrop;
 
             Quaternion bodyRotationTarget =
                 bodyBaseRotation *
@@ -513,19 +864,23 @@ namespace UnityRPG.Character.Player
 
             Vector3 leftHandTarget =
                 leftHandBasePosition +
-                Vector3.back * dodgeHandBack;
+                Vector3.back *
+                dodgeHandBack;
 
             Vector3 rightHandTarget =
                 rightHandBasePosition +
-                Vector3.back * dodgeHandBack;
+                Vector3.back *
+                dodgeHandBack;
 
             Vector3 leftFootTarget =
                 leftFootBasePosition +
-                Vector3.forward * dodgeFootSpread;
+                Vector3.forward *
+                dodgeFootSpread;
 
             Vector3 rightFootTarget =
                 rightFootBasePosition +
-                Vector3.back * dodgeFootSpread;
+                Vector3.back *
+                dodgeFootSpread;
 
             body.localPosition =
                 Vector3.Lerp(
@@ -571,30 +926,39 @@ namespace UnityRPG.Character.Player
         {
             if (!isMoving)
             {
-                UpdateLockOnIdle(deltaTime);
+                UpdateLockOnIdle(
+                    deltaTime);
+
                 return;
             }
 
             Vector3 localDirection =
-                movementReference.InverseTransformDirection(
-                    worldMoveDirection);
+                movementReference
+                    .InverseTransformDirection(
+                        worldMoveDirection);
 
             localDirection.y = 0f;
 
-            if (localDirection.sqrMagnitude > 0.001f)
+            if (localDirection.sqrMagnitude >
+                0.001f)
             {
                 localDirection.Normalize();
             }
 
             float swing =
-                Mathf.Sin(cycle);
+                Mathf.Sin(
+                    cycle);
 
             float leftLift =
-                Mathf.Max(0f, swing) *
+                Mathf.Max(
+                    0f,
+                    swing) *
                 lockOnFootLift;
 
             float rightLift =
-                Mathf.Max(0f, -swing) *
+                Mathf.Max(
+                    0f,
+                    -swing) *
                 lockOnFootLift;
 
             float forwardOffset =
@@ -625,9 +989,11 @@ namespace UnityRPG.Character.Player
                 new Vector3(
                     -sideOffset,
                     0f,
-                    -forwardOffset).normalized *
+                    -forwardOffset)
+                    .normalized *
                 lockOnHandSwing *
-                Mathf.Abs(swing);
+                Mathf.Abs(
+                    swing);
 
             Vector3 leftHandTarget =
                 leftHandBasePosition +
@@ -638,17 +1004,23 @@ namespace UnityRPG.Character.Player
                 handSwing;
 
             float bodyBob =
-                (Mathf.Abs(Mathf.Cos(cycle)) - 0.5f) *
+                (Mathf.Abs(
+                    Mathf.Cos(
+                        cycle)) -
+                 0.5f) *
                 2f *
                 lockOnBodyBob;
 
             Vector3 bodyTarget =
                 bodyBasePosition +
-                Vector3.down * lockOnBodyDrop +
-                Vector3.up * bodyBob;
+                Vector3.down *
+                lockOnBodyDrop +
+                Vector3.up *
+                bodyBob;
 
             float smoothFactor =
-                GetSmoothFactor(deltaTime);
+                GetSmoothFactor(
+                    deltaTime);
 
             body.localPosition =
                 Vector3.Lerp(
@@ -687,16 +1059,20 @@ namespace UnityRPG.Character.Player
                     smoothFactor);
         }
 
-        private void UpdateLockOnIdle(float deltaTime)
+        private void UpdateLockOnIdle(
+            float deltaTime)
         {
             float idleBob =
-                Mathf.Sin(cycle) *
+                Mathf.Sin(
+                    cycle) *
                 idleBodyBob;
 
             Vector3 bodyTarget =
                 bodyBasePosition +
-                Vector3.down * lockOnBodyDrop +
-                Vector3.up * idleBob;
+                Vector3.down *
+                lockOnBodyDrop +
+                Vector3.up *
+                idleBob;
 
             Vector3 leftHandTarget =
                 leftHandBasePosition +
@@ -709,7 +1085,8 @@ namespace UnityRPG.Character.Player
                 lockOnIdleHandForward;
 
             float smoothFactor =
-                GetSmoothFactor(deltaTime);
+                GetSmoothFactor(
+                    deltaTime);
 
             body.localPosition =
                 Vector3.Lerp(
@@ -754,7 +1131,8 @@ namespace UnityRPG.Character.Player
             float deltaTime)
         {
             float t =
-                Mathf.Clamp01(progress);
+                Mathf.Clamp01(
+                    progress);
 
             switch (comboStep)
             {
@@ -786,7 +1164,8 @@ namespace UnityRPG.Character.Player
                 new Vector3(
                     attackHandSide,
                     0.1f,
-                    -attackHandReach * 0.35f);
+                    -attackHandReach *
+                    0.35f);
 
             Vector3 strikeOffset =
                 new Vector3(
@@ -800,7 +1179,8 @@ namespace UnityRPG.Character.Player
             if (progress < 0.25f)
             {
                 float t =
-                    progress / 0.25f;
+                    progress /
+                    0.25f;
 
                 handOffset =
                     Vector3.Lerp(
@@ -817,7 +1197,8 @@ namespace UnityRPG.Character.Player
             else if (progress < 0.7f)
             {
                 float t =
-                    (progress - 0.25f) / 0.45f;
+                    (progress - 0.25f) /
+                    0.45f;
 
                 handOffset =
                     Vector3.Lerp(
@@ -834,7 +1215,8 @@ namespace UnityRPG.Character.Player
             else
             {
                 float t =
-                    (progress - 0.7f) / 0.3f;
+                    (progress - 0.7f) /
+                    0.3f;
 
                 handOffset =
                     Vector3.Lerp(
@@ -880,7 +1262,8 @@ namespace UnityRPG.Character.Player
                 new Vector3(
                     -attackHandSide,
                     -0.05f,
-                    -attackHandReach * 0.25f);
+                    -attackHandReach *
+                    0.25f);
 
             Vector3 strikeOffset =
                 new Vector3(
@@ -894,7 +1277,8 @@ namespace UnityRPG.Character.Player
             if (progress < 0.25f)
             {
                 float t =
-                    progress / 0.25f;
+                    progress /
+                    0.25f;
 
                 handOffset =
                     Vector3.Lerp(
@@ -911,7 +1295,8 @@ namespace UnityRPG.Character.Player
             else if (progress < 0.7f)
             {
                 float t =
-                    (progress - 0.25f) / 0.45f;
+                    (progress - 0.25f) /
+                    0.45f;
 
                 handOffset =
                     Vector3.Lerp(
@@ -928,7 +1313,8 @@ namespace UnityRPG.Character.Player
             else
             {
                 float t =
-                    (progress - 0.7f) / 0.3f;
+                    (progress - 0.7f) /
+                    0.3f;
 
                 handOffset =
                     Vector3.Lerp(
@@ -974,13 +1360,15 @@ namespace UnityRPG.Character.Player
                 new Vector3(
                     0f,
                     thirdAttackHandLift,
-                    -attackHandReach * 0.45f);
+                    -attackHandReach *
+                    0.45f);
 
             Vector3 strikeOffset =
                 new Vector3(
                     0f,
                     -0.3f,
-                    attackHandReach * 1.15f);
+                    attackHandReach *
+                    1.15f);
 
             Vector3 handOffset;
             float bodyPitch;
@@ -988,7 +1376,8 @@ namespace UnityRPG.Character.Player
             if (progress < 0.35f)
             {
                 float t =
-                    progress / 0.35f;
+                    progress /
+                    0.35f;
 
                 handOffset =
                     Vector3.Lerp(
@@ -1005,7 +1394,8 @@ namespace UnityRPG.Character.Player
             else if (progress < 0.7f)
             {
                 float t =
-                    (progress - 0.35f) / 0.35f;
+                    (progress - 0.35f) /
+                    0.35f;
 
                 handOffset =
                     Vector3.Lerp(
@@ -1016,13 +1406,15 @@ namespace UnityRPG.Character.Player
                 bodyPitch =
                     Mathf.Lerp(
                         -attackBodyLean,
-                        attackBodyLean * 1.5f,
+                        attackBodyLean *
+                        1.5f,
                         t);
             }
             else
             {
                 float t =
-                    (progress - 0.7f) / 0.3f;
+                    (progress - 0.7f) /
+                    0.3f;
 
                 handOffset =
                     Vector3.Lerp(
@@ -1032,7 +1424,8 @@ namespace UnityRPG.Character.Player
 
                 bodyPitch =
                     Mathf.Lerp(
-                        attackBodyLean * 1.5f,
+                        attackBodyLean *
+                        1.5f,
                         0f,
                         t);
             }
@@ -1066,7 +1459,9 @@ namespace UnityRPG.Character.Player
             Quaternion bodyTargetRotation,
             float deltaTime)
         {
-            float smoothFactor = GetSmoothFactor(deltaTime);
+            float smoothFactor =
+                GetSmoothFactor(
+                    deltaTime);
 
             body.localPosition =
                 Vector3.Lerp(

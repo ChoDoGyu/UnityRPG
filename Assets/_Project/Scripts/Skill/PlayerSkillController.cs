@@ -34,9 +34,32 @@ namespace UnityRPG.Skill
         private PlayerAttackBuffSkill attackBuffSkill;
 
         private float remainingActionDuration;
+        private SkillId currentSkillId;
+        private float currentActionDuration;
 
         public bool IsUsingSkill =>
             remainingActionDuration > 0f;
+
+        public SkillId CurrentSkillId =>
+            currentSkillId;
+
+        public bool IsAttackBuffActive =>
+            attackBuffSkill.IsActive;
+
+        public float ActionNormalizedProgress
+        {
+            get
+            {
+                if (!IsUsingSkill || currentActionDuration <= 0f)
+                {
+                    return 1f;
+                }
+
+                return 1f -
+                    remainingActionDuration /
+                    currentActionDuration;
+            }
+        }
 
         private void Awake()
         {
@@ -50,17 +73,13 @@ namespace UnityRPG.Skill
             spinAttackSkill = GetComponent<PlayerSpinAttackSkill>();
             attackBuffSkill = GetComponent<PlayerAttackBuffSkill>();
 
-            AddRuntimeSkill(
-                dashSlashDefinition);
+            AddRuntimeSkill(dashSlashDefinition);
 
-            AddRuntimeSkill(
-                projectileDefinition);
+            AddRuntimeSkill(projectileDefinition);
 
-            AddRuntimeSkill(
-                spinAttackDefinition);
+            AddRuntimeSkill(spinAttackDefinition);
 
-            AddRuntimeSkill(
-                attackBuffDefinition);
+            AddRuntimeSkill(attackBuffDefinition);
 
             isConfigured = true;
         }
@@ -74,11 +93,12 @@ namespace UnityRPG.Skill
 
             foreach (RuntimeSkill skill in skills.Values)
             {
-                skill.UpdateCooldown(
-                    deltaTime);
+                skill.UpdateCooldown(deltaTime);
             }
 
             dashSlashSkill.UpdateSkill(deltaTime);
+
+            spinAttackSkill.UpdateSkill(deltaTime);
 
             attackBuffSkill.UpdateSkill(deltaTime);
 
@@ -149,7 +169,11 @@ namespace UnityRPG.Skill
                 return false;
             }
 
-            remainingActionDuration = actionDuration;
+            currentSkillId = skillId;
+
+            currentActionDuration = Mathf.Max(0.01f, actionDuration);
+
+            remainingActionDuration = currentActionDuration;
 
             return true;
         }

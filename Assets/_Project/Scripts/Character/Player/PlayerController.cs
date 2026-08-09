@@ -151,7 +151,11 @@ namespace UnityRPG.Character.Player
                 attackController.NormalizedProgress,
                 lockOnController.IsLockedOn,
                 playerMotor.CurrentMoveDirection,
-                deltaTime);
+                deltaTime,
+                skillController.IsUsingSkill,
+                skillController.CurrentSkillId,
+                skillController.ActionNormalizedProgress,
+                skillController.IsAttackBuffActive);
         }
 
         private bool UpdateDodge(float deltaTime)

@@ -28,6 +28,13 @@ namespace UnityRPG.Skill
         [Min(0.01f)]
         private float actionDuration = 0.45f;
 
+        [SerializeField]
+        [Range(0f, 1f)]
+        private float hitNormalizedTime = 0.5f;
+
+        private float remainingDuration;
+        private bool isHitApplied;
+
         public float ActionDuration =>
             actionDuration;
 
@@ -40,7 +47,16 @@ namespace UnityRPG.Skill
 
         public bool TryStart()
         {
-            ApplyAreaDamage();
+            if (remainingDuration > 0f)
+            {
+                return false;
+            }
+
+            remainingDuration =
+                actionDuration;
+
+            isHitApplied =
+                false;
 
             return true;
         }
@@ -79,6 +95,39 @@ namespace UnityRPG.Skill
                         gameObject);
 
                 damageable.TakeDamage(damageInfo);
+            }
+        }
+
+        public void UpdateSkill(float deltaTime)
+        {
+            if (remainingDuration <= 0f)
+            {
+                return;
+            }
+
+            if (deltaTime <= 0f)
+            {
+                return;
+            }
+
+            remainingDuration =
+                Mathf.Max(
+                    0f,
+                    remainingDuration -
+                    deltaTime);
+
+            float progress =
+                1f -
+                remainingDuration /
+                actionDuration;
+
+            if (!isHitApplied &&
+                progress >= hitNormalizedTime)
+            {
+                ApplyAreaDamage();
+
+                isHitApplied =
+                    true;
             }
         }
     }
