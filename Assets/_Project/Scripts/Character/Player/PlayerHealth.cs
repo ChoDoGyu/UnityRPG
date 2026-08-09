@@ -37,8 +37,12 @@ namespace UnityRPG.Character.Player
 
         private void Start()
         {
-            currentHealth =
-                playerStats.MaxHealth;
+            if (!playerStats.IsConfigured)
+            {
+                return;
+            }
+
+            currentHealth = playerStats.MaxHealth;
 
             isInitialized = true;
         }

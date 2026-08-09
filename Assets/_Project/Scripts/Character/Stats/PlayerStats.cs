@@ -34,6 +34,9 @@ namespace UnityRPG.Character.Stats
         public float MoveSpeed =>
             GetValue(StatType.MoveSpeed);
 
+        public bool IsConfigured => 
+            isConfigured;
+
         private void Awake()
         {
             if (definition == null)
@@ -64,7 +67,9 @@ namespace UnityRPG.Character.Stats
                 return 0f;
             }
 
-            return stat.Value;
+            return ClampValue(
+                statType,
+                stat.Value);
         }
 
         public void AddModifier(
@@ -138,6 +143,36 @@ namespace UnityRPG.Character.Stats
 
                 default:
                     return 0f;
+            }
+        }
+
+        private static float ClampValue(StatType statType, float value)
+        {
+            switch (statType)
+            {
+                case StatType.MaxHealth:
+                    return Mathf.Max(
+                        1f,
+                        value);
+
+                case StatType.Attack:
+                case StatType.Defense:
+                case StatType.MoveSpeed:
+                    return Mathf.Max(
+                        0f,
+                        value);
+
+                case StatType.CritChance:
+                    return Mathf.Clamp01(
+                        value);
+
+                case StatType.CritDamage:
+                    return Mathf.Max(
+                        1f,
+                        value);
+
+                default:
+                    return value;
             }
         }
     }
