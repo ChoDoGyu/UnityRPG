@@ -4,20 +4,19 @@ using UnityRPG.Combat;
 namespace UnityRPG.AI
 {
     [DisallowMultipleComponent]
+    [RequireComponent(typeof(EnemyContext))]
     public sealed class EnemyHealth :
         MonoBehaviour,
         IDamageable
     {
-        [Header("Definition")]
-        [SerializeField]
-        private EnemyDefinition definition;
+        private EnemyContext context;
 
         private float currentHealth;
         private bool isConfigured;
 
         public float MaxHealth =>
-            definition != null
-                ? definition.MaxHealth
+            isConfigured
+                ? context.Definition.MaxHealth
                 : 0f;
 
         public float CurrentHealth =>
@@ -29,17 +28,16 @@ namespace UnityRPG.AI
 
         private void Awake()
         {
-            if (definition == null)
-            {
-                Debug.LogError(
-                    "[Enemy] EnemyHealth의 Enemy Definition이 설정되지 않았습니다.",
-                    this);
+            context =
+                GetComponent<EnemyContext>();
 
+            if (!context.IsConfigured)
+            {
                 return;
             }
 
             currentHealth =
-                definition.MaxHealth;
+                context.Definition.MaxHealth;
 
             isConfigured = true;
         }
@@ -56,7 +54,7 @@ namespace UnityRPG.AI
             float finalDamage =
                 DamageCalculator.CalculateAfterDefense(
                     damageInfo.Amount,
-                    definition.Defense);
+                    context.Definition.Defense);
 
             currentHealth =
                 Mathf.Max(

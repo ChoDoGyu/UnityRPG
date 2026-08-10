@@ -99,8 +99,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 80039246139343020}
-  - component: {fileID: 1735844532463591462}
-  - component: {fileID: 2733207553187960184}
   m_Layer: 6
   m_Name: Visual
   m_TagString: Untagged
@@ -124,32 +122,6 @@ Transform:
   - {fileID: 4087072629953050013}
   m_Father: {fileID: 8654634966398241387}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1735844532463591462
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3256356219596154198}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 064d767533d003441aad677f4c825d9c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Character.Player.LockOnTarget
-  aimPoint: {fileID: 7475591917472625991}
---- !u!114 &2733207553187960184
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3256356219596154198}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25229ea8e2832de42bb7cb4e6d67a343, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyHealth
-  definition: {fileID: 11400000, guid: 4c88ae538b226774e9812ab8ec627f68, type: 2}
 --- !u!1 &4871250424725364811
 GameObject:
   m_ObjectHideFlags: 0
@@ -164,6 +136,9 @@ GameObject:
   - component: {fileID: 7429879917861697073}
   - component: {fileID: 3314754416715401508}
   - component: {fileID: 6412947809764146740}
+  - component: {fileID: 5612188383025458697}
+  - component: {fileID: 736348677188494881}
+  - component: {fileID: 7162600723491723941}
   m_Layer: 6
   m_Name: Enemy_Ranged
   m_TagString: Untagged
@@ -258,7 +233,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25229ea8e2832de42bb7cb4e6d67a343, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyHealth
-  definition: {fileID: 11400000, guid: 7c20fd782a557f64e9754331249e3993, type: 2}
 --- !u!114 &6412947809764146740
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -271,7 +245,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d43b5d0917c5884799d4f16a70592d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyMotor
+--- !u!114 &5612188383025458697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4871250424725364811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bef220afe277eab4e9bdc47e72a919c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyContext
   definition: {fileID: 11400000, guid: 7c20fd782a557f64e9754331249e3993, type: 2}
+--- !u!114 &736348677188494881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4871250424725364811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4261a557d9bfe8d4bb5d6f6fea69efc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyTargetDetector
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  currentTarget: {fileID: 0}
+--- !u!114 &7162600723491723941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4871250424725364811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb41b35f4e0dce646a7e7a151bd21b56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyController
+  currentState: 0
 --- !u!1 &7134579856954534203
 GameObject:
   m_ObjectHideFlags: 0

@@ -46,6 +46,9 @@ GameObject:
   - component: {fileID: 3564311632851421344}
   - component: {fileID: 5860515699061845200}
   - component: {fileID: 6038697992055042079}
+  - component: {fileID: 5291716286270905215}
+  - component: {fileID: 1804061095463544092}
+  - component: {fileID: 3100967739776701668}
   m_Layer: 6
   m_Name: Enemy_Melee
   m_TagString: Untagged
@@ -140,7 +143,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25229ea8e2832de42bb7cb4e6d67a343, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyHealth
-  definition: {fileID: 11400000, guid: 4c88ae538b226774e9812ab8ec627f68, type: 2}
 --- !u!114 &6038697992055042079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,7 +155,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d43b5d0917c5884799d4f16a70592d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyMotor
+--- !u!114 &5291716286270905215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2278680056077728918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bef220afe277eab4e9bdc47e72a919c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyContext
   definition: {fileID: 11400000, guid: 4c88ae538b226774e9812ab8ec627f68, type: 2}
+--- !u!114 &1804061095463544092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2278680056077728918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4261a557d9bfe8d4bb5d6f6fea69efc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyTargetDetector
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  currentTarget: {fileID: 0}
+--- !u!114 &3100967739776701668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2278680056077728918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb41b35f4e0dce646a7e7a151bd21b56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyController
+  currentState: 0
 --- !u!1 &5710613824781483818
 GameObject:
   m_ObjectHideFlags: 0

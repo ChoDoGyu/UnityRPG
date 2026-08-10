@@ -29,7 +29,7 @@ GameObject:
   - component: {fileID: 7025670843452615858}
   - component: {fileID: 6108543259105645243}
   - component: {fileID: 888765474829304046}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -201,6 +201,7 @@ MonoBehaviour:
   attackBodyLean: 10
   attackLeftHandBack: 0.18
   thirdAttackHandLift: 0.8
+  modelRoot: {fileID: 7417113505253281969}
 --- !u!114 &5190169177384520186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -354,7 +355,7 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 64
-  damage: 15
+  damageMultiplier: 1.5
 --- !u!114 &7025670843452615858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -376,7 +377,8 @@ MonoBehaviour:
   collisionMask:
     serializedVersion: 2
     m_Bits: 65
-  damage: 20
+  damageMultiplier: 2
+  actionDuration: 0.3
 --- !u!114 &6108543259105645243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -393,7 +395,9 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 64
-  damage: 25
+  damageMultiplier: 2.5
+  actionDuration: 0.45
+  hitNormalizedTime: 0.5
 --- !u!114 &888765474829304046
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -408,6 +412,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Skill.PlayerAttackBuffSkill
   attackBonus: 5
   duration: 5
+  actionDuration: 0.3
 --- !u!1 &1000176733347427081
 GameObject:
   m_ObjectHideFlags: 0
@@ -417,7 +422,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4613765813261899622}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -452,7 +457,7 @@ GameObject:
   - component: {fileID: 3872828570310627575}
   - component: {fileID: 6542736006235430573}
   - component: {fileID: 6577602822430620572}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Foot_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -540,7 +545,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4920325080510119197}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ProjectileSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -571,7 +576,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3497543309489052081}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: CameraTarget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -602,7 +607,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7417113505253281969}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ModelRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -640,7 +645,7 @@ GameObject:
   - component: {fileID: 5407447716279387780}
   - component: {fileID: 2659133298800643918}
   - component: {fileID: 1593220467741066611}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -730,7 +735,7 @@ GameObject:
   - component: {fileID: 8529852344938373409}
   - component: {fileID: 6112667480553995003}
   - component: {fileID: 498280455110724154}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Hand_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -820,7 +825,7 @@ GameObject:
   - component: {fileID: 5138645430008665280}
   - component: {fileID: 4455368876025636447}
   - component: {fileID: 6401533982090850611}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Hand_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -910,7 +915,7 @@ GameObject:
   - component: {fileID: 3719458725875533608}
   - component: {fileID: 5846030318865497180}
   - component: {fileID: 3790052580459469185}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Foot_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}

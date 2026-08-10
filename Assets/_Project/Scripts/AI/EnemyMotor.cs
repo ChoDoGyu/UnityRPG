@@ -5,17 +5,18 @@ namespace UnityRPG.AI
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(NavMeshAgent))]
-    public sealed class EnemyMotor : MonoBehaviour
+    [RequireComponent(typeof(EnemyContext))]
+    public sealed class EnemyMotor :
+        MonoBehaviour
     {
-        [Header("Definition")]
-        [SerializeField]
-        private EnemyDefinition definition;
-
         private NavMeshAgent agent;
+        private EnemyContext context;
+
         private bool isConfigured;
 
         public bool IsMoving =>
             isConfigured &&
+            agent.enabled &&
             agent.isOnNavMesh &&
             agent.velocity.sqrMagnitude > 0.01f;
 
@@ -29,17 +30,16 @@ namespace UnityRPG.AI
             agent =
                 GetComponent<NavMeshAgent>();
 
-            if (definition == null)
-            {
-                Debug.LogError(
-                    "[Enemy] EnemyMotor의 Enemy Definition이 설정되지 않았습니다.",
-                    this);
+            context =
+                GetComponent<EnemyContext>();
 
+            if (!context.IsConfigured)
+            {
                 return;
             }
 
             agent.speed =
-                definition.MoveSpeed;
+                context.Definition.MoveSpeed;
 
             isConfigured = true;
         }
