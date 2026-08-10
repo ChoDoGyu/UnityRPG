@@ -70,6 +70,12 @@ namespace UnityRPG.AI
                 return;
             }
 
+            if (agent.isStopped &&
+                !agent.hasPath)
+            {
+                return;
+            }
+
             agent.isStopped =
                 true;
 

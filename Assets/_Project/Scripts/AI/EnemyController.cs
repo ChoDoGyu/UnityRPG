@@ -5,8 +5,8 @@ namespace UnityRPG.AI
     [DisallowMultipleComponent]
     [RequireComponent(typeof(EnemyContext))]
     [RequireComponent(typeof(EnemyTargetDetector))]
-    public sealed class EnemyController :
-        MonoBehaviour
+    [RequireComponent(typeof(EnemyMotor))]
+    public sealed class EnemyController : MonoBehaviour
     {
         [Header("Runtime State")]
         [SerializeField]
@@ -15,6 +15,7 @@ namespace UnityRPG.AI
 
         private EnemyContext context;
         private EnemyTargetDetector targetDetector;
+        private EnemyMotor enemyMotor;
 
         private bool isConfigured;
 
@@ -33,6 +34,8 @@ namespace UnityRPG.AI
 
             targetDetector =
                 GetComponent<EnemyTargetDetector>();
+
+            enemyMotor = GetComponent<EnemyMotor>();
 
             if (!context.IsConfigured)
             {
@@ -55,6 +58,8 @@ namespace UnityRPG.AI
             targetDetector.UpdateDetection();
 
             UpdateState();
+
+            UpdateBehavior();
         }
 
         private void UpdateState()
@@ -91,6 +96,40 @@ namespace UnityRPG.AI
 
             currentState =
                 EnemyState.Chase;
+        }
+
+        private void UpdateBehavior()
+        {
+            switch (currentState)
+            {
+                case EnemyState.Idle:
+                    enemyMotor.Stop();
+                    break;
+
+                case EnemyState.Chase:
+                    UpdateChase();
+                    break;
+
+                case EnemyState.Attack:
+                    enemyMotor.Stop();
+                    break;
+            }
+        }
+
+        private void UpdateChase()
+        {
+            Transform target =
+                targetDetector.CurrentTarget;
+
+            if (target == null)
+            {
+                enemyMotor.Stop();
+
+                return;
+            }
+
+            enemyMotor.TrySetDestination(
+                target.position);
         }
     }
 }
