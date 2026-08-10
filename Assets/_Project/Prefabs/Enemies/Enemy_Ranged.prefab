@@ -139,6 +139,8 @@ GameObject:
   - component: {fileID: 5612188383025458697}
   - component: {fileID: 736348677188494881}
   - component: {fileID: 7162600723491723941}
+  - component: {fileID: 7820976941850242715}
+  - component: {fileID: 1569134870124456487}
   m_Layer: 6
   m_Name: Enemy_Ranged
   m_TagString: Untagged
@@ -161,6 +163,7 @@ Transform:
   m_Children:
   - {fileID: 7475591917472625991}
   - {fileID: 80039246139343020}
+  - {fileID: 5533965187734399033}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &4799985846912676370
@@ -287,6 +290,69 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyController
   currentState: 0
+--- !u!114 &7820976941850242715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4871250424725364811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6487fcdbea8876d4b8d64b84da97028d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyAttackController
+--- !u!114 &1569134870124456487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4871250424725364811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca30cea77ef0c3c4399af993266be0af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyRangedAttack
+  spawnPoint: {fileID: 5533965187734399033}
+  projectilePrefab: {fileID: 187554515862477172, guid: 360844e73ea595641b918ba07a15e70e, type: 3}
+  projectileSpeed: 10
+  projectileLifetime: 3
+  hitRadius: 0.2
+  collisionMask:
+    serializedVersion: 2
+    m_Bits: 136
+--- !u!1 &6167405587449617448
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5533965187734399033}
+  m_Layer: 6
+  m_Name: ProjectileSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5533965187734399033
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6167405587449617448}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.2, z: 0.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8654634966398241387}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7134579856954534203
 GameObject:
   m_ObjectHideFlags: 0

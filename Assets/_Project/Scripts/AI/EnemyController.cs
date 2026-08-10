@@ -6,6 +6,7 @@ namespace UnityRPG.AI
     [RequireComponent(typeof(EnemyContext))]
     [RequireComponent(typeof(EnemyTargetDetector))]
     [RequireComponent(typeof(EnemyMotor))]
+    [RequireComponent(typeof(EnemyAttackController))]
     public sealed class EnemyController : MonoBehaviour
     {
         [Header("Runtime State")]
@@ -16,6 +17,7 @@ namespace UnityRPG.AI
         private EnemyContext context;
         private EnemyTargetDetector targetDetector;
         private EnemyMotor enemyMotor;
+        private EnemyAttackController attackController;
 
         private bool isConfigured;
 
@@ -29,13 +31,10 @@ namespace UnityRPG.AI
 
         private void Awake()
         {
-            context =
-                GetComponent<EnemyContext>();
-
-            targetDetector =
-                GetComponent<EnemyTargetDetector>();
-
+            context = GetComponent<EnemyContext>();
+            targetDetector = GetComponent<EnemyTargetDetector>();
             enemyMotor = GetComponent<EnemyMotor>();
+            attackController = GetComponent<EnemyAttackController>();
 
             if (!context.IsConfigured)
             {
@@ -60,6 +59,8 @@ namespace UnityRPG.AI
             UpdateState();
 
             UpdateBehavior();
+
+            attackController.UpdateCooldown(Time.deltaTime);
         }
 
         private void UpdateState()
@@ -112,6 +113,7 @@ namespace UnityRPG.AI
 
                 case EnemyState.Attack:
                     enemyMotor.Stop();
+                    UpdateAttack();
                     break;
             }
         }
@@ -130,6 +132,18 @@ namespace UnityRPG.AI
 
             enemyMotor.TrySetDestination(
                 target.position);
+        }
+
+        private void UpdateAttack()
+        {
+            Transform target = targetDetector.CurrentTarget;
+
+            if (target == null)
+            {
+                return;
+            }
+
+            attackController.TryAttack(target);
         }
     }
 }
