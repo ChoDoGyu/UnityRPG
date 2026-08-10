@@ -141,6 +141,7 @@ GameObject:
   - component: {fileID: 7162600723491723941}
   - component: {fileID: 7820976941850242715}
   - component: {fileID: 1569134870124456487}
+  - component: {fileID: 3104975225200431123}
   m_Layer: 6
   m_Name: Enemy_Ranged
   m_TagString: Untagged
@@ -322,6 +323,27 @@ MonoBehaviour:
   collisionMask:
     serializedVersion: 2
     m_Bits: 136
+--- !u!114 &3104975225200431123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4871250424725364811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ceec9110f3016d4cb276bc93d40f72c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyVisualAnimator
+  modelRoot: {fileID: 4087072629953050013}
+  body: {fileID: 8014136273667850332}
+  idleCycleSpeed: 2
+  idleBob: 0.025
+  moveCycleSpeed: 7
+  moveBob: 0.05
+  moveLean: 6
+  attackVisualDuration: 0.25
+  transitionSpeed: 12
 --- !u!1 &6167405587449617448
 GameObject:
   m_ObjectHideFlags: 0

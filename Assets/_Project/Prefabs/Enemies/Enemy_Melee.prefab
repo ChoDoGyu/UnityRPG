@@ -51,6 +51,7 @@ GameObject:
   - component: {fileID: 3100967739776701668}
   - component: {fileID: 6574357442000136684}
   - component: {fileID: 6117997722158681928}
+  - component: {fileID: 4978355971520167727}
   m_Layer: 6
   m_Name: Enemy_Melee
   m_TagString: Untagged
@@ -223,6 +224,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7400d03953d8a424992d04198322798b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyMeleeAttack
+--- !u!114 &4978355971520167727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2278680056077728918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ceec9110f3016d4cb276bc93d40f72c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyVisualAnimator
+  modelRoot: {fileID: 855920434353212014}
+  body: {fileID: 8529174882251710338}
+  idleCycleSpeed: 2
+  idleBob: 0.025
+  moveCycleSpeed: 7
+  moveBob: 0.05
+  moveLean: 6
+  attackVisualDuration: 0.25
+  transitionSpeed: 12
 --- !u!1 &5710613824781483818
 GameObject:
   m_ObjectHideFlags: 0

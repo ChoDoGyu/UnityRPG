@@ -7,22 +7,22 @@ namespace UnityRPG.AI
     [RequireComponent(typeof(EnemyTargetDetector))]
     [RequireComponent(typeof(EnemyMotor))]
     [RequireComponent(typeof(EnemyAttackController))]
+    [RequireComponent(typeof(EnemyVisualAnimator))]
     public sealed class EnemyController : MonoBehaviour
     {
         [Header("Runtime State")]
         [SerializeField]
-        private EnemyState currentState =
-            EnemyState.Idle;
+        private EnemyState currentState = EnemyState.Idle;
 
         private EnemyContext context;
         private EnemyTargetDetector targetDetector;
         private EnemyMotor enemyMotor;
         private EnemyAttackController attackController;
+        private EnemyVisualAnimator visualAnimator;
 
         private bool isConfigured;
 
-        public EnemyState CurrentState =>
-            currentState;
+        public EnemyState CurrentState => currentState;
 
         public Transform CurrentTarget =>
             targetDetector != null
@@ -35,15 +35,14 @@ namespace UnityRPG.AI
             targetDetector = GetComponent<EnemyTargetDetector>();
             enemyMotor = GetComponent<EnemyMotor>();
             attackController = GetComponent<EnemyAttackController>();
+            visualAnimator = GetComponent<EnemyVisualAnimator>();
 
             if (!context.IsConfigured)
             {
                 return;
             }
 
-            currentState =
-                EnemyState.Idle;
-
+            currentState = EnemyState.Idle;
             isConfigured = true;
         }
 
@@ -54,52 +53,45 @@ namespace UnityRPG.AI
                 return;
             }
 
-            targetDetector.UpdateDetection();
+            float deltaTime = Time.deltaTime;
 
+            targetDetector.UpdateDetection();
             UpdateState();
 
-            UpdateBehavior();
+            attackController.UpdateCooldown(deltaTime);
 
-            attackController.UpdateCooldown(Time.deltaTime);
+            UpdateBehavior(deltaTime);
+
+            visualAnimator.UpdateAnimation(
+                enemyMotor.IsMoving,
+                deltaTime);
         }
 
         private void UpdateState()
         {
-            Transform target =
-                targetDetector.CurrentTarget;
+            Transform target = targetDetector.CurrentTarget;
 
             if (target == null)
             {
-                currentState =
-                    EnemyState.Idle;
-
+                currentState = EnemyState.Idle;
                 return;
             }
 
-            Vector3 direction =
-                target.position -
-                transform.position;
-
+            Vector3 direction = target.position - transform.position;
             direction.y = 0f;
 
-            float attackRange =
-                context.Definition.AttackRange;
+            float attackRange = context.Definition.AttackRange;
 
-            if (direction.sqrMagnitude <=
-                attackRange *
-                attackRange)
+            if (direction.sqrMagnitude <= attackRange * attackRange)
             {
-                currentState =
-                    EnemyState.Attack;
-
+                currentState = EnemyState.Attack;
                 return;
             }
 
-            currentState =
-                EnemyState.Chase;
+            currentState = EnemyState.Chase;
         }
 
-        private void UpdateBehavior()
+        private void UpdateBehavior(float deltaTime)
         {
             switch (currentState)
             {
@@ -113,6 +105,7 @@ namespace UnityRPG.AI
 
                 case EnemyState.Attack:
                     enemyMotor.Stop();
+                    UpdateAttackFacing(deltaTime);
                     UpdateAttack();
                     break;
             }
@@ -120,18 +113,31 @@ namespace UnityRPG.AI
 
         private void UpdateChase()
         {
-            Transform target =
-                targetDetector.CurrentTarget;
+            Transform target = targetDetector.CurrentTarget;
 
             if (target == null)
             {
                 enemyMotor.Stop();
-
                 return;
             }
 
-            enemyMotor.TrySetDestination(
-                target.position);
+            enemyMotor.TrySetDestination(target.position);
+        }
+
+        private void UpdateAttackFacing(float deltaTime)
+        {
+            Transform target = targetDetector.CurrentTarget;
+
+            if (target == null)
+            {
+                return;
+            }
+
+            Vector3 direction = target.position - transform.position;
+
+            enemyMotor.RotateTowards(
+                direction,
+                deltaTime);
         }
 
         private void UpdateAttack()
@@ -143,7 +149,13 @@ namespace UnityRPG.AI
                 return;
             }
 
-            attackController.TryAttack(target);
+            if (!attackController.TryAttack(target))
+            {
+                return;
+            }
+
+            visualAnimator.PlayAttack(
+                context.Definition.EnemyType);
         }
     }
 }

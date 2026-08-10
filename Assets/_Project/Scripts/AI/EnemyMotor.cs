@@ -6,8 +6,7 @@ namespace UnityRPG.AI
     [DisallowMultipleComponent]
     [RequireComponent(typeof(NavMeshAgent))]
     [RequireComponent(typeof(EnemyContext))]
-    public sealed class EnemyMotor :
-        MonoBehaviour
+    public sealed class EnemyMotor : MonoBehaviour
     {
         private NavMeshAgent agent;
         private EnemyContext context;
@@ -27,25 +26,19 @@ namespace UnityRPG.AI
 
         private void Awake()
         {
-            agent =
-                GetComponent<NavMeshAgent>();
-
-            context =
-                GetComponent<EnemyContext>();
+            agent = GetComponent<NavMeshAgent>();
+            context = GetComponent<EnemyContext>();
 
             if (!context.IsConfigured)
             {
                 return;
             }
 
-            agent.speed =
-                context.Definition.MoveSpeed;
-
+            agent.speed = context.Definition.MoveSpeed;
             isConfigured = true;
         }
 
-        public bool TrySetDestination(
-            Vector3 destination)
+        public bool TrySetDestination(Vector3 destination)
         {
             if (!isConfigured ||
                 !agent.enabled ||
@@ -54,11 +47,9 @@ namespace UnityRPG.AI
                 return false;
             }
 
-            agent.isStopped =
-                false;
+            agent.isStopped = false;
 
-            return agent.SetDestination(
-                destination);
+            return agent.SetDestination(destination);
         }
 
         public void Stop()
@@ -70,16 +61,32 @@ namespace UnityRPG.AI
                 return;
             }
 
-            if (agent.isStopped &&
-                !agent.hasPath)
+            if (agent.isStopped && !agent.hasPath)
             {
                 return;
             }
 
-            agent.isStopped =
-                true;
-
+            agent.isStopped = true;
             agent.ResetPath();
+        }
+
+        public void RotateTowards(Vector3 direction, float deltaTime)
+        {
+            direction.y = 0f;
+
+            if (!isConfigured || direction.sqrMagnitude <= 0.001f)
+            {
+                return;
+            }
+
+            Quaternion targetRotation = Quaternion.LookRotation(
+                direction,
+                Vector3.up);
+
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation,
+                targetRotation,
+                agent.angularSpeed * deltaTime);
         }
     }
 }
