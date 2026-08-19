@@ -39,7 +39,8 @@ namespace UnityRPG.AI
 
             if (!context.IsConfigured ||
                 spawnPoint == null ||
-                projectilePrefab == null)
+                projectilePrefab == null ||
+                collisionMask.value == 0)
             {
                 Debug.LogError(
                     "[Enemy] EnemyRangedAttack의 설정이 올바르지 않습니다.",

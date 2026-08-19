@@ -291,6 +291,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyController
   currentState: 0
+  corpseLifetime: 3
 --- !u!114 &7820976941850242715
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -344,6 +345,7 @@ MonoBehaviour:
   moveLean: 6
   attackVisualDuration: 0.25
   transitionSpeed: 12
+  deathDuration: 0.4
 --- !u!1 &6167405587449617448
 GameObject:
   m_ObjectHideFlags: 0

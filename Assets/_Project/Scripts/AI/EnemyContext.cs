@@ -10,8 +10,7 @@ namespace UnityRPG.AI
         [SerializeField]
         private EnemyDefinition definition;
 
-        public EnemyDefinition Definition =>
-            definition;
+        public EnemyDefinition Definition => definition;
 
         public bool IsConfigured =>
             definition != null;

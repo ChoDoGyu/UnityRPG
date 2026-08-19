@@ -4,7 +4,7 @@ namespace UnityRPG.AI
 {
     [CreateAssetMenu(
         fileName = "EnemyDefinition",
-        menuName = "UnityRPG/Enemies/Enemy Definition")]
+        menuName = "UnityRPG/Enemy Definition")]
     public sealed class EnemyDefinition : ScriptableObject
     {
         [Header("Identity")]
@@ -38,37 +38,30 @@ namespace UnityRPG.AI
 
         [SerializeField]
         [Min(0f)]
-        private float attackRange = 2f;
+        private float attackRange = 1.8f;
 
         [SerializeField]
         [Min(0.01f)]
         private float attackCooldown = 1.2f;
 
-        public EnemyType EnemyType =>
-            enemyType;
+        public EnemyType EnemyType => enemyType;
+        public string DisplayName => displayName;
+        public float MaxHealth => maxHealth;
+        public float Attack => attack;
+        public float Defense => defense;
+        public float MoveSpeed => moveSpeed;
+        public float DetectionRange => detectionRange;
+        public float AttackRange => attackRange;
+        public float AttackCooldown => attackCooldown;
 
-        public string DisplayName =>
-            displayName;
-
-        public float MaxHealth =>
-            maxHealth;
-
-        public float Attack =>
-            attack;
-
-        public float Defense =>
-            defense;
-
-        public float MoveSpeed =>
-            moveSpeed;
-
-        public float DetectionRange =>
-            detectionRange;
-
-        public float AttackRange =>
-            attackRange;
-
-        public float AttackCooldown =>
-            attackCooldown;
+        private void OnValidate()
+        {
+            if (attackRange > detectionRange)
+            {
+                Debug.LogWarning(
+                    $"[Enemy] {name}: Attack Range가 Detection Range보다 큽니다.",
+                    this);
+            }
+        }
     }
 }

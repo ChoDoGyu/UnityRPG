@@ -26,6 +26,31 @@ namespace UnityRPG.AI
                 return;
             }
 
+            switch (context.Definition.EnemyType)
+            {
+                case EnemyType.Melee:
+                    if (meleeAttack == null || !meleeAttack.isActiveAndEnabled)
+                    {
+                        Debug.LogError(
+                            "[Enemy] Melee Enemy의 EnemyMeleeAttack이 없거나 비활성화되어 있습니다.",
+                            this);
+
+                        return;
+                    }
+                    break;
+
+                case EnemyType.Ranged:
+                    if (rangedAttack == null || !rangedAttack.isActiveAndEnabled)
+                    {
+                        Debug.LogError(
+                            "[Enemy] Ranged Enemy의 EnemyRangedAttack이 없거나 비활성화되어 있습니다.",
+                            this);
+
+                        return;
+                    }
+                    break;
+            }
+
             isConfigured = true;
         }
 
@@ -51,7 +76,7 @@ namespace UnityRPG.AI
             switch (context.Definition.EnemyType)
             {
                 case EnemyType.Melee:
-                    if (meleeAttack == null)
+                    if (meleeAttack == null || !meleeAttack.isActiveAndEnabled)
                     {
                         return false;
                     }
@@ -60,7 +85,7 @@ namespace UnityRPG.AI
                     break;
 
                 case EnemyType.Ranged:
-                    if (rangedAttack == null)
+                    if (rangedAttack == null || !rangedAttack.isActiveAndEnabled)
                     {
                         return false;
                     }

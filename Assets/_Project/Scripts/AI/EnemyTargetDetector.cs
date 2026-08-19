@@ -16,25 +16,31 @@ namespace UnityRPG.AI
         [SerializeField]
         private Transform currentTarget;
 
-        private readonly Collider[] detectionBuffer =
-            new Collider[8];
+        private readonly Collider[] detectionBuffer = new Collider[8];
 
         private EnemyContext context;
         private bool isConfigured;
 
-        public Transform CurrentTarget =>
-            currentTarget;
+        public Transform CurrentTarget => currentTarget;
 
         public bool HasTarget =>
             currentTarget != null;
 
         private void Awake()
         {
-            context =
-                GetComponent<EnemyContext>();
+            context = GetComponent<EnemyContext>();
 
             if (!context.IsConfigured)
             {
+                return;
+            }
+
+            if (targetLayer.value == 0)
+            {
+                Debug.LogError(
+                    "[Enemy] EnemyTargetDetector의 Target Layer가 설정되지 않았습니다.",
+                    this);
+
                 return;
             }
 
