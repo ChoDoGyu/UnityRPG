@@ -79,7 +79,7 @@ namespace UnityRPG.AI
             switch (context.Definition.EnemyType)
             {
                 case EnemyType.Melee:
-                    if (meleeAttack == null || !meleeAttack.isActiveAndEnabled)
+                    if (meleeAttack == null || !meleeAttack.enabled)
                     {
                         Debug.LogError(
                             "[Enemy] Melee Enemy의 EnemyMeleeAttack이 없거나 비활성화되어 있습니다.",
@@ -87,11 +87,10 @@ namespace UnityRPG.AI
 
                         return;
                     }
-
                     break;
 
                 case EnemyType.Ranged:
-                    if (rangedAttack == null || !rangedAttack.isActiveAndEnabled)
+                    if (rangedAttack == null || !rangedAttack.enabled)
                     {
                         Debug.LogError(
                             "[Enemy] Ranged Enemy의 EnemyRangedAttack이 없거나 비활성화되어 있습니다.",
@@ -99,7 +98,6 @@ namespace UnityRPG.AI
 
                         return;
                     }
-
                     break;
             }
 
