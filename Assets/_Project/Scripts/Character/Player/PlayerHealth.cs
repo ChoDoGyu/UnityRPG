@@ -7,6 +7,7 @@ namespace UnityRPG.Character.Player
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(PlayerStats))]
+    [RequireComponent(typeof(PlayerDodger))]
     public sealed class PlayerHealth : MonoBehaviour, IDamageable
     {
         [Header("Runtime")]
@@ -14,6 +15,7 @@ namespace UnityRPG.Character.Player
         private float currentHealth;
 
         private PlayerStats playerStats;
+        private PlayerDodger playerDodger;
         private bool isInitialized;
 
         public event Action Died;
@@ -32,6 +34,7 @@ namespace UnityRPG.Character.Player
         private void Awake()
         {
             playerStats = GetComponent<PlayerStats>();
+            playerDodger = GetComponent<PlayerDodger>();
         }
 
         private void Start()
@@ -48,6 +51,11 @@ namespace UnityRPG.Character.Player
         public void TakeDamage(DamageInfo damageInfo)
         {
             if (!isInitialized || IsDead)
+            {
+                return;
+            }
+
+            if (playerDodger.IsInvulnerable)
             {
                 return;
             }

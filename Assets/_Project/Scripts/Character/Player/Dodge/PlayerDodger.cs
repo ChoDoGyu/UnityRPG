@@ -22,36 +22,86 @@ namespace UnityRPG.Character.Player
         [Min(0f)]
         private float dodgeCooldown = 0.5f;
 
+        [Header("Invulnerability")]
+        [SerializeField]
+        [Min(0f)]
+        private float invulnerabilityStart = 0.05f;
+
+        [SerializeField]
+        [Min(0f)]
+        private float invulnerabilityEnd = 0.2f;
+
         private CharacterController characterController;
 
         private Vector3 dodgeDirection;
         private float remainingDuration;
-        private bool isConfigured;
         private float cooldownRemaining;
+        private bool isConfigured;
 
-        public bool IsDodging =>
-            remainingDuration > 0f;
+        public bool IsDodging => remainingDuration > 0f;
 
-        public Vector3 DodgeDirection =>
-            dodgeDirection;
+        public Vector3 DodgeDirection => dodgeDirection;
 
         public bool CanDodge =>
-            !IsDodging && cooldownRemaining <= 0f;
+            !IsDodging &&
+            cooldownRemaining <= 0f;
+
+        public float NormalizedProgress
+        {
+            get
+            {
+                if (!IsDodging || dodgeDuration <= 0f)
+                {
+                    return 0f;
+                }
+
+                return 1f - Mathf.Clamp01(remainingDuration / dodgeDuration);
+            }
+        }
+
+        public bool IsInvulnerable
+        {
+            get
+            {
+                if (!IsDodging)
+                {
+                    return false;
+                }
+
+                float elapsedTime = dodgeDuration - remainingDuration;
+
+                return elapsedTime >= invulnerabilityStart &&
+                       elapsedTime <= invulnerabilityEnd;
+            }
+        }
 
         private void Awake()
         {
-            characterController =
-                GetComponent<CharacterController>();
+            characterController = GetComponent<CharacterController>();
 
             if (facingReference == null)
             {
                 Debug.LogError(
-                    "[Player] PlayerDodger의 Facing Reference가 설정되지 않았습니다.");
+                    "[Player] PlayerDodger의 Facing Reference가 설정되지 않았습니다.",
+                    this);
 
                 return;
             }
 
             isConfigured = true;
+        }
+
+        private void OnValidate()
+        {
+            invulnerabilityStart = Mathf.Clamp(
+                invulnerabilityStart,
+                0f,
+                dodgeDuration);
+
+            invulnerabilityEnd = Mathf.Clamp(
+                invulnerabilityEnd,
+                invulnerabilityStart,
+                dodgeDuration);
         }
 
         public bool TryStartDodge(
@@ -65,13 +115,11 @@ namespace UnityRPG.Character.Player
                 return false;
             }
 
-            dodgeDirection =
-                CalculateDodgeDirection(
-                    moveInput,
-                    cameraReference);
+            dodgeDirection = CalculateDodgeDirection(
+                moveInput,
+                cameraReference);
 
             remainingDuration = dodgeDuration;
-
             cooldownRemaining = dodgeCooldown;
 
             return true;
@@ -85,30 +133,23 @@ namespace UnityRPG.Character.Player
             }
 
             characterController.Move(
-                dodgeDirection *
-                dodgeSpeed *
-                deltaTime);
+                dodgeDirection * dodgeSpeed * deltaTime);
 
-            remainingDuration =
-                Mathf.Max(
-                    0f,
-                    remainingDuration - deltaTime);
+            remainingDuration = Mathf.Max(
+                0f,
+                remainingDuration - deltaTime);
         }
 
         private Vector3 CalculateDodgeDirection(
             Vector2 moveInput,
             Transform cameraReference)
         {
-            Vector2 clampedInput =
-                Vector2.ClampMagnitude(
-                    moveInput,
-                    1f);
+            Vector2 clampedInput = Vector2.ClampMagnitude(
+                moveInput,
+                1f);
 
-            Vector3 cameraForward =
-                cameraReference.forward;
-
-            Vector3 cameraRight =
-                cameraReference.right;
+            Vector3 cameraForward = cameraReference.forward;
+            Vector3 cameraRight = cameraReference.right;
 
             cameraForward.y = 0f;
             cameraRight.y = 0f;
@@ -125,9 +166,7 @@ namespace UnityRPG.Character.Player
                 return inputDirection.normalized;
             }
 
-            Vector3 facingDirection =
-                facingReference.forward;
-
+            Vector3 facingDirection = facingReference.forward;
             facingDirection.y = 0f;
 
             return facingDirection.normalized;
@@ -140,10 +179,9 @@ namespace UnityRPG.Character.Player
                 return;
             }
 
-            cooldownRemaining =
-                Mathf.Max(
-                    0f,
-                    cooldownRemaining - deltaTime);
+            cooldownRemaining = Mathf.Max(
+                0f,
+                cooldownRemaining - deltaTime);
         }
     }
 }
