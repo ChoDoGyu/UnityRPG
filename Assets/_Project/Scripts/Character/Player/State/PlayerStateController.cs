@@ -7,13 +7,13 @@ namespace UnityRPG.Character.Player
     {
         public PlayerState CurrentState { get; private set; }
 
-        public bool CanMove => 
+        public bool CanMove =>
             CurrentState == PlayerState.Normal;
 
-        public bool CanRotate => 
+        public bool CanRotate =>
             CurrentState == PlayerState.Normal;
 
-        public bool CanDodge => 
+        public bool CanDodge =>
             CurrentState == PlayerState.Normal;
 
         public bool CanAttack =>
@@ -25,8 +25,7 @@ namespace UnityRPG.Character.Player
 
         private void Awake()
         {
-            CurrentState =
-                PlayerState.Normal;
+            CurrentState = PlayerState.Normal;
         }
 
         public bool TryEnterAttack()
@@ -36,9 +35,7 @@ namespace UnityRPG.Character.Player
                 return false;
             }
 
-            CurrentState =
-                PlayerState.Attacking;
-
+            CurrentState = PlayerState.Attacking;
             return true;
         }
 
@@ -49,8 +46,7 @@ namespace UnityRPG.Character.Player
                 return;
             }
 
-            CurrentState =
-                PlayerState.Normal;
+            CurrentState = PlayerState.Normal;
         }
 
         public bool TryEnterDodge()
@@ -60,9 +56,7 @@ namespace UnityRPG.Character.Player
                 return false;
             }
 
-            CurrentState =
-                PlayerState.Dodging;
-
+            CurrentState = PlayerState.Dodging;
             return true;
         }
 
@@ -73,8 +67,7 @@ namespace UnityRPG.Character.Player
                 return;
             }
 
-            CurrentState =
-                PlayerState.Normal;
+            CurrentState = PlayerState.Normal;
         }
 
         public bool TryEnterSkill()
@@ -84,22 +77,23 @@ namespace UnityRPG.Character.Player
                 return false;
             }
 
-            CurrentState =
-                PlayerState.UsingSkill;
-
+            CurrentState = PlayerState.UsingSkill;
             return true;
         }
 
         public void ExitSkill()
         {
-            if (CurrentState !=
-                PlayerState.UsingSkill)
+            if (CurrentState != PlayerState.UsingSkill)
             {
                 return;
             }
 
-            CurrentState =
-                PlayerState.Normal;
+            CurrentState = PlayerState.Normal;
+        }
+
+        public void EnterDead()
+        {
+            CurrentState = PlayerState.Dead;
         }
     }
 }

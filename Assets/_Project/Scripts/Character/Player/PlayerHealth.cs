@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityRPG.Character.Stats;
 using UnityRPG.Combat;
@@ -6,9 +7,7 @@ namespace UnityRPG.Character.Player
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(PlayerStats))]
-    public sealed class PlayerHealth :
-        MonoBehaviour,
-        IDamageable
+    public sealed class PlayerHealth : MonoBehaviour, IDamageable
     {
         [Header("Runtime")]
         [SerializeField]
@@ -17,13 +16,14 @@ namespace UnityRPG.Character.Player
         private PlayerStats playerStats;
         private bool isInitialized;
 
+        public event Action Died;
+
         public float MaxHealth =>
             playerStats != null
                 ? playerStats.MaxHealth
                 : 0f;
 
-        public float CurrentHealth =>
-            currentHealth;
+        public float CurrentHealth => currentHealth;
 
         public bool IsDead =>
             isInitialized &&
@@ -31,8 +31,7 @@ namespace UnityRPG.Character.Player
 
         private void Awake()
         {
-            playerStats =
-                GetComponent<PlayerStats>();
+            playerStats = GetComponent<PlayerStats>();
         }
 
         private void Start()
@@ -43,19 +42,12 @@ namespace UnityRPG.Character.Player
             }
 
             currentHealth = playerStats.MaxHealth;
-
             isInitialized = true;
         }
 
-        public void TakeDamage(
-            DamageInfo damageInfo)
+        public void TakeDamage(DamageInfo damageInfo)
         {
-            if (!isInitialized)
-            {
-                return;
-            }
-
-            if (IsDead)
+            if (!isInitialized || IsDead)
             {
                 return;
             }
@@ -65,15 +57,18 @@ namespace UnityRPG.Character.Player
                 return;
             }
 
-            float finalDamage =
-                DamageCalculator.CalculateAfterDefense(
-                    damageInfo.Amount,
-                    playerStats.Defense);
+            float finalDamage = DamageCalculator.CalculateAfterDefense(
+                damageInfo.Amount,
+                playerStats.Defense);
 
-            currentHealth =
-                Mathf.Max(
-                    0f,
-                    currentHealth - finalDamage);
+            currentHealth = Mathf.Max(
+                0f,
+                currentHealth - finalDamage);
+
+            if (currentHealth <= 0f)
+            {
+                Died?.Invoke();
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityRPG.Character.Player;
 
 namespace UnityRPG.AI
 {
@@ -107,7 +108,7 @@ namespace UnityRPG.AI
 
         public bool TryStartAttack(Transform target)
         {
-            if (!isConfigured || !IsReady || target == null)
+            if (!isConfigured || !IsReady || !IsTargetAlive(target))
             {
                 return false;
             }
@@ -125,6 +126,12 @@ namespace UnityRPG.AI
                 currentPhase == EnemyAttackPhase.Ready ||
                 deltaTime <= 0f)
             {
+                return;
+            }
+
+            if (IsActionLocked && !IsTargetAlive(currentTarget))
+            {
+                CancelAttackCycle();
                 return;
             }
 
@@ -154,7 +161,7 @@ namespace UnityRPG.AI
 
         private void ExecuteAttack()
         {
-            if (currentTarget == null)
+            if (!IsTargetAlive(currentTarget))
             {
                 return;
             }
@@ -177,6 +184,25 @@ namespace UnityRPG.AI
 
                     break;
             }
+        }
+
+        private bool IsTargetAlive(Transform target)
+        {
+            if (target == null)
+            {
+                return false;
+            }
+
+            PlayerHealth playerHealth = target.GetComponent<PlayerHealth>();
+
+            return playerHealth != null && !playerHealth.IsDead;
+        }
+
+        private void CancelAttackCycle()
+        {
+            currentPhase = EnemyAttackPhase.Ready;
+            remainingPhaseTime = 0f;
+            currentTarget = null;
         }
 
         private void StartRecovery()

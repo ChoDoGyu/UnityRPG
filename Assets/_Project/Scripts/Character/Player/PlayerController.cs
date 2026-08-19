@@ -14,6 +14,7 @@ namespace UnityRPG.Character.Player
     [RequireComponent(typeof(PlayerLockOnController))]
     [RequireComponent(typeof(PlayerAttackController))]
     [RequireComponent(typeof(PlayerSkillController))]
+    [RequireComponent(typeof(PlayerHealth))]
     public sealed class PlayerController : MonoBehaviour
     {
         private PlayerInputReader inputReader;
@@ -26,6 +27,7 @@ namespace UnityRPG.Character.Player
         private PlayerLockOnController lockOnController;
         private PlayerAttackController attackController;
         private PlayerSkillController skillController;
+        private PlayerHealth playerHealth;
 
         private void Awake()
         {
@@ -39,20 +41,26 @@ namespace UnityRPG.Character.Player
             lockOnController = GetComponent<PlayerLockOnController>();
             attackController = GetComponent<PlayerAttackController>();
             skillController = GetComponent<PlayerSkillController>();
+            playerHealth = GetComponent<PlayerHealth>();
+
+            playerHealth.Died += HandleDied;
         }
 
         private void Update()
         {
             float deltaTime = Time.deltaTime;
 
+            if (stateController.CurrentState == PlayerState.Dead)
+            {
+                UpdateCamera(deltaTime);
+                return;
+            }
+
             playerDodger.UpdateCooldown(deltaTime);
-
             attackController.UpdateAttack(deltaTime);
-
             skillController.UpdateSkills(deltaTime);
 
             UpdateSkillState();
-
             UpdateAttackState();
 
             lockOnController.ValidateCurrentTarget();
@@ -63,7 +71,6 @@ namespace UnityRPG.Character.Player
             bool isDodging = UpdateDodge(deltaTime);
 
             UpdateSkillInput();
-
             UpdateAttackInput();
 
             UpdateAttackRotation(deltaTime);
@@ -364,6 +371,20 @@ namespace UnityRPG.Character.Player
             }
 
             playerRotator.SetFacingDirection(direction.normalized);
+        }
+
+        private void OnDestroy()
+        {
+            if (playerHealth != null)
+            {
+                playerHealth.Died -= HandleDied;
+            }
+        }
+
+        private void HandleDied()
+        {
+            stateController.EnterDead();
+            visualAnimator.PlayDeath();
         }
     }
 }

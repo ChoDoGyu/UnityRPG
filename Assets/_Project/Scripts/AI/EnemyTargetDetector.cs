@@ -5,8 +5,7 @@ namespace UnityRPG.AI
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(EnemyContext))]
-    public sealed class EnemyTargetDetector :
-        MonoBehaviour
+    public sealed class EnemyTargetDetector : MonoBehaviour
     {
         [Header("Detection")]
         [SerializeField]
@@ -23,8 +22,7 @@ namespace UnityRPG.AI
 
         public Transform CurrentTarget => currentTarget;
 
-        public bool HasTarget =>
-            currentTarget != null;
+        public bool HasTarget => currentTarget != null;
 
         private void Awake()
         {
@@ -52,14 +50,13 @@ namespace UnityRPG.AI
             if (!isConfigured)
             {
                 currentTarget = null;
-
                 return;
             }
 
             if (currentTarget != null)
             {
-                if (IsTargetInDetectionRange(
-                    currentTarget))
+                if (IsTargetAlive(currentTarget) &&
+                    IsTargetInDetectionRange(currentTarget))
                 {
                     return;
                 }
@@ -72,26 +69,19 @@ namespace UnityRPG.AI
 
         private void FindTarget()
         {
-            int hitCount =
-                Physics.OverlapSphereNonAlloc(
-                    transform.position,
-                    context.Definition.DetectionRange,
-                    detectionBuffer,
-                    targetLayer,
-                    QueryTriggerInteraction.Ignore);
+            int hitCount = Physics.OverlapSphereNonAlloc(
+                transform.position,
+                context.Definition.DetectionRange,
+                detectionBuffer,
+                targetLayer,
+                QueryTriggerInteraction.Ignore);
 
-            float closestSqrDistance =
-                float.MaxValue;
+            float closestSqrDistance = float.MaxValue;
+            Transform closestTarget = null;
 
-            Transform closestTarget =
-                null;
-
-            for (int i = 0;
-                 i < hitCount;
-                 i++)
+            for (int i = 0; i < hitCount; i++)
             {
-                Collider hit =
-                    detectionBuffer[i];
+                Collider hit = detectionBuffer[i];
 
                 if (hit == null)
                 {
@@ -106,34 +96,44 @@ namespace UnityRPG.AI
                     continue;
                 }
 
+                if (!IsTargetAlive(player.transform))
+                {
+                    continue;
+                }
+
                 Vector3 direction =
                     player.transform.position -
                     transform.position;
 
                 direction.y = 0f;
 
-                float sqrDistance =
-                    direction.sqrMagnitude;
+                float sqrDistance = direction.sqrMagnitude;
 
-                if (sqrDistance >=
-                    closestSqrDistance)
+                if (sqrDistance >= closestSqrDistance)
                 {
                     continue;
                 }
 
-                closestSqrDistance =
-                    sqrDistance;
-
-                closestTarget =
-                    player.transform;
+                closestSqrDistance = sqrDistance;
+                closestTarget = player.transform;
             }
 
-            currentTarget =
-                closestTarget;
+            currentTarget = closestTarget;
         }
 
-        private bool IsTargetInDetectionRange(
-            Transform target)
+        private bool IsTargetAlive(Transform target)
+        {
+            if (target == null)
+            {
+                return false;
+            }
+
+            PlayerHealth playerHealth = target.GetComponent<PlayerHealth>();
+
+            return playerHealth != null && !playerHealth.IsDead;
+        }
+
+        private bool IsTargetInDetectionRange(Transform target)
         {
             Vector3 direction =
                 target.position -
@@ -141,12 +141,10 @@ namespace UnityRPG.AI
 
             direction.y = 0f;
 
-            float detectionRange =
-                context.Definition.DetectionRange;
+            float detectionRange = context.Definition.DetectionRange;
 
             return direction.sqrMagnitude <=
-                detectionRange *
-                detectionRange;
+                detectionRange * detectionRange;
         }
     }
 }
