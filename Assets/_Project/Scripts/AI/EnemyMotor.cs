@@ -88,5 +88,21 @@ namespace UnityRPG.AI
                 targetRotation,
                 agent.angularSpeed * deltaTime);
         }
+
+        public void Disable()
+        {
+            if (!isConfigured || !agent.enabled)
+            {
+                return;
+            }
+
+            if (agent.isOnNavMesh)
+            {
+                agent.isStopped = true;
+                agent.ResetPath();
+            }
+
+            agent.enabled = false;
+        }
     }
 }

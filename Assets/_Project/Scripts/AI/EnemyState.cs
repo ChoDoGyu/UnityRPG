@@ -4,6 +4,7 @@ namespace UnityRPG.AI
     {
         Idle,
         Chase,
-        Attack
+        Attack,
+        Dead
     }
 }

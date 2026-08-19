@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityRPG.Character.Player;
 
 namespace UnityRPG.AI
 {
@@ -8,19 +9,29 @@ namespace UnityRPG.AI
     [RequireComponent(typeof(EnemyMotor))]
     [RequireComponent(typeof(EnemyAttackController))]
     [RequireComponent(typeof(EnemyVisualAnimator))]
+    [RequireComponent(typeof(EnemyHealth))]
     public sealed class EnemyController : MonoBehaviour
     {
         [Header("Runtime State")]
         [SerializeField]
         private EnemyState currentState = EnemyState.Idle;
 
+        [Header("Death")]
+        [SerializeField]
+        [Min(0f)]
+        private float corpseLifetime = 3f;
+
         private EnemyContext context;
         private EnemyTargetDetector targetDetector;
         private EnemyMotor enemyMotor;
         private EnemyAttackController attackController;
         private EnemyVisualAnimator visualAnimator;
+        private EnemyHealth enemyHealth;
+        private LockOnTarget lockOnTarget;
+        private Collider bodyCollider;
 
         private bool isConfigured;
+        private bool isDead;
 
         public EnemyState CurrentState => currentState;
 
@@ -36,6 +47,9 @@ namespace UnityRPG.AI
             enemyMotor = GetComponent<EnemyMotor>();
             attackController = GetComponent<EnemyAttackController>();
             visualAnimator = GetComponent<EnemyVisualAnimator>();
+            enemyHealth = GetComponent<EnemyHealth>();
+            lockOnTarget = GetComponent<LockOnTarget>();
+            bodyCollider = GetComponent<Collider>();
 
             if (!context.IsConfigured)
             {
@@ -44,11 +58,13 @@ namespace UnityRPG.AI
 
             currentState = EnemyState.Idle;
             isConfigured = true;
+
+            enemyHealth.Died += HandleDied;
         }
 
         private void Update()
         {
-            if (!isConfigured)
+            if (!isConfigured || isDead)
             {
                 return;
             }
@@ -156,6 +172,40 @@ namespace UnityRPG.AI
 
             visualAnimator.PlayAttack(
                 context.Definition.EnemyType);
+        }
+
+        private void OnDestroy()
+        {
+            if (enemyHealth != null)
+            {
+                enemyHealth.Died -= HandleDied;
+            }
+        }
+
+        private void HandleDied()
+        {
+            if (isDead)
+            {
+                return;
+            }
+
+            isDead = true;
+            currentState = EnemyState.Dead;
+
+            enemyMotor.Disable();
+            visualAnimator.PlayDeath();
+
+            if (lockOnTarget != null)
+            {
+                lockOnTarget.enabled = false;
+            }
+
+            if (bodyCollider != null)
+            {
+                bodyCollider.enabled = false;
+            }
+
+            Destroy(gameObject, corpseLifetime);
         }
     }
 }

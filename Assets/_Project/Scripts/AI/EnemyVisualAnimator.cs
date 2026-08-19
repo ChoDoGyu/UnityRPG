@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 namespace UnityRPG.AI
 {
@@ -43,16 +44,25 @@ namespace UnityRPG.AI
         [Min(0f)]
         private float transitionSpeed = 12f;
 
+        [Header("Death")]
+        [SerializeField]
+        [Min(0.01f)]
+        private float deathDuration = 0.4f;
+
         private Vector3 bodyBasePosition;
-        private Quaternion bodyBaseRotation;
         private Vector3 modelRootBaseScale;
 
-        private float cycle;
+        private Quaternion bodyBaseRotation;
+        private Quaternion modelRootBaseRotation;
+        
 
+        private float cycle;
         private float remainingAttackVisualDuration;
+
         private EnemyType currentAttackType;
 
         private bool isConfigured;
+        private bool isDead;
 
         private void Awake()
         {
@@ -68,13 +78,14 @@ namespace UnityRPG.AI
             bodyBasePosition = body.localPosition;
             bodyBaseRotation = body.localRotation;
             modelRootBaseScale = modelRoot.localScale;
+            modelRootBaseRotation = modelRoot.localRotation;
 
             isConfigured = true;
         }
 
         public void UpdateAnimation(bool isMoving, float deltaTime)
         {
-            if (!isConfigured)
+            if (!isConfigured || isDead)
             {
                 return;
             }
@@ -232,6 +243,44 @@ namespace UnityRPG.AI
         private float GetSmoothFactor(float deltaTime)
         {
             return 1f - Mathf.Exp(-transitionSpeed * deltaTime);
+        }
+
+        public void PlayDeath()
+        {
+            if (!isConfigured || isDead)
+            {
+                return;
+            }
+
+            isDead = true;
+            remainingAttackVisualDuration = 0f;
+
+            StartCoroutine(DeathRoutine());
+        }
+
+        private IEnumerator DeathRoutine()
+        {
+            float elapsedTime = 0f;
+
+            Quaternion startRotation = modelRoot.localRotation;
+            Quaternion targetRotation =
+                modelRootBaseRotation * Quaternion.Euler(0f, 0f, 90f);
+
+            while (elapsedTime < deathDuration)
+            {
+                elapsedTime += Time.deltaTime;
+
+                float progress = Mathf.Clamp01(elapsedTime / deathDuration);
+
+                modelRoot.localRotation = Quaternion.Slerp(
+                    startRotation,
+                    targetRotation,
+                    progress);
+
+                yield return null;
+            }
+
+            modelRoot.localRotation = targetRotation;
         }
     }
 }
