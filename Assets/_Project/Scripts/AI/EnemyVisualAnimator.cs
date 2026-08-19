@@ -1,5 +1,5 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 namespace UnityRPG.AI
 {
@@ -34,32 +34,23 @@ namespace UnityRPG.AI
         [SerializeField]
         private float moveLean = 6f;
 
-        [Header("Attack")]
+        [Header("Death")]
         [SerializeField]
         [Min(0.01f)]
-        private float attackVisualDuration = 0.25f;
+        private float deathDuration = 0.4f;
 
         [Header("Transition")]
         [SerializeField]
         [Min(0f)]
         private float transitionSpeed = 12f;
 
-        [Header("Death")]
-        [SerializeField]
-        [Min(0.01f)]
-        private float deathDuration = 0.4f;
-
         private Vector3 bodyBasePosition;
-        private Vector3 modelRootBaseScale;
-
         private Quaternion bodyBaseRotation;
+
+        private Vector3 modelRootBaseScale;
         private Quaternion modelRootBaseRotation;
-        
 
         private float cycle;
-        private float remainingAttackVisualDuration;
-
-        private EnemyType currentAttackType;
 
         private bool isConfigured;
         private bool isDead;
@@ -77,13 +68,19 @@ namespace UnityRPG.AI
 
             bodyBasePosition = body.localPosition;
             bodyBaseRotation = body.localRotation;
+
             modelRootBaseScale = modelRoot.localScale;
             modelRootBaseRotation = modelRoot.localRotation;
 
             isConfigured = true;
         }
 
-        public void UpdateAnimation(bool isMoving, float deltaTime)
+        public void UpdateAnimation(
+            bool isMoving,
+            EnemyAttackPhase attackPhase,
+            float attackProgress,
+            EnemyType enemyType,
+            float deltaTime)
         {
             if (!isConfigured || isDead)
             {
@@ -92,9 +89,15 @@ namespace UnityRPG.AI
 
             modelRoot.localScale = modelRootBaseScale;
 
-            if (remainingAttackVisualDuration > 0f)
+            if (attackPhase == EnemyAttackPhase.Windup)
             {
-                UpdateAttack(deltaTime);
+                UpdateWindup(enemyType, attackProgress, deltaTime);
+                return;
+            }
+
+            if (attackPhase == EnemyAttackPhase.Recovery)
+            {
+                UpdateRecovery(enemyType, attackProgress, deltaTime);
                 return;
             }
 
@@ -107,15 +110,116 @@ namespace UnityRPG.AI
             UpdateIdle(deltaTime);
         }
 
-        public void PlayAttack(EnemyType enemyType)
+        public void PlayDeath()
         {
-            if (!isConfigured)
+            if (!isConfigured || isDead)
             {
                 return;
             }
 
-            currentAttackType = enemyType;
-            remainingAttackVisualDuration = attackVisualDuration;
+            isDead = true;
+            StartCoroutine(DeathRoutine());
+        }
+
+        private void UpdateWindup(
+            EnemyType enemyType,
+            float progress,
+            float deltaTime)
+        {
+            progress = Mathf.Clamp01(progress);
+
+            switch (enemyType)
+            {
+                case EnemyType.Melee:
+                    UpdateMeleeWindup(progress, deltaTime);
+                    break;
+
+                case EnemyType.Ranged:
+                    UpdateRangedWindup(progress, deltaTime);
+                    break;
+            }
+        }
+
+        private void UpdateRecovery(
+            EnemyType enemyType,
+            float progress,
+            float deltaTime)
+        {
+            progress = Mathf.Clamp01(progress);
+
+            switch (enemyType)
+            {
+                case EnemyType.Melee:
+                    UpdateMeleeRecovery(progress, deltaTime);
+                    break;
+
+                case EnemyType.Ranged:
+                    UpdateRangedRecovery(progress, deltaTime);
+                    break;
+            }
+        }
+
+        private void UpdateMeleeWindup(float progress, float deltaTime)
+        {
+            Vector3 bodyTarget =
+                bodyBasePosition +
+                Vector3.back * 0.4f * progress;
+
+            Quaternion rotationTarget =
+                bodyBaseRotation *
+                Quaternion.Euler(-25f * progress, 0f, 0f);
+
+            ApplyBodyPose(bodyTarget, rotationTarget, deltaTime);
+        }
+
+        private void UpdateMeleeRecovery(float progress, float deltaTime)
+        {
+            float weight = 1f - progress;
+
+            Vector3 bodyTarget =
+                bodyBasePosition +
+                Vector3.forward * 0.35f * weight;
+
+            Quaternion rotationTarget =
+                bodyBaseRotation *
+                Quaternion.Euler(18f * weight, 0f, 0f);
+
+            ApplyBodyPose(bodyTarget, rotationTarget, deltaTime);
+        }
+
+        private void UpdateRangedWindup(float progress, float deltaTime)
+        {
+            Vector3 bodyTarget =
+                bodyBasePosition +
+                Vector3.forward * 0.18f * progress +
+                Vector3.down * 0.12f * progress;
+
+            Quaternion rotationTarget =
+                bodyBaseRotation *
+                Quaternion.Euler(18f * progress, 0f, 0f);
+
+            float scale = 1f - 0.1f * progress;
+            modelRoot.localScale = modelRootBaseScale * scale;
+
+            ApplyBodyPose(bodyTarget, rotationTarget, deltaTime);
+        }
+
+        private void UpdateRangedRecovery(float progress, float deltaTime)
+        {
+            float weight = 1f - progress;
+
+            Vector3 bodyTarget =
+                bodyBasePosition +
+                Vector3.back * 0.18f * weight;
+
+            Quaternion rotationTarget =
+                bodyBaseRotation *
+                Quaternion.Euler(-10f * weight, 0f, 0f);
+
+            float scale = 1f + 0.05f * weight;
+            modelRoot.localScale = modelRootBaseScale * scale;
+
+            ApplyBodyPose(bodyTarget, rotationTarget, deltaTime);
         }
 
         private void UpdateIdle(float deltaTime)
@@ -123,7 +227,11 @@ namespace UnityRPG.AI
             cycle += idleCycleSpeed * deltaTime;
 
             float bob = Mathf.Sin(cycle) * idleBob;
-            Vector3 bodyTarget = bodyBasePosition + Vector3.up * bob;
+
+            Vector3 bodyTarget =
+                bodyBasePosition +
+                Vector3.up * bob;
+
             float smoothFactor = GetSmoothFactor(deltaTime);
 
             body.localPosition = Vector3.Lerp(
@@ -143,7 +251,9 @@ namespace UnityRPG.AI
 
             float bob = Mathf.Abs(Mathf.Sin(cycle)) * moveBob;
 
-            Vector3 bodyTarget = bodyBasePosition + Vector3.up * bob;
+            Vector3 bodyTarget =
+                bodyBasePosition +
+                Vector3.up * bob;
 
             Quaternion rotationTarget =
                 bodyBaseRotation *
@@ -162,67 +272,7 @@ namespace UnityRPG.AI
                 smoothFactor);
         }
 
-        private void UpdateAttack(float deltaTime)
-        {
-            remainingAttackVisualDuration = Mathf.Max(
-                0f,
-                remainingAttackVisualDuration - deltaTime);
-
-            float progress =
-                1f -
-                remainingAttackVisualDuration /
-                attackVisualDuration;
-
-            float weight = Mathf.Sin(progress * Mathf.PI);
-
-            switch (currentAttackType)
-            {
-                case EnemyType.Melee:
-                    UpdateMeleeAttack(weight, deltaTime);
-                    break;
-
-                case EnemyType.Ranged:
-                    UpdateRangedAttack(weight, deltaTime);
-                    break;
-            }
-        }
-
-        private void UpdateMeleeAttack(float weight, float deltaTime)
-        {
-            Vector3 bodyTarget =
-                bodyBasePosition +
-                Vector3.forward * 0.35f * weight;
-
-            Quaternion rotationTarget =
-                bodyBaseRotation *
-                Quaternion.Euler(18f * weight, 0f, 0f);
-
-            ApplyAttackPose(
-                bodyTarget,
-                rotationTarget,
-                deltaTime);
-        }
-
-        private void UpdateRangedAttack(float weight, float deltaTime)
-        {
-            Vector3 bodyTarget =
-                bodyBasePosition +
-                Vector3.back * 0.15f * weight;
-
-            Quaternion rotationTarget =
-                bodyBaseRotation *
-                Quaternion.Euler(-8f * weight, 0f, 0f);
-
-            float pulse = 1f + 0.05f * weight;
-            modelRoot.localScale = modelRootBaseScale * pulse;
-
-            ApplyAttackPose(
-                bodyTarget,
-                rotationTarget,
-                deltaTime);
-        }
-
-        private void ApplyAttackPose(
+        private void ApplyBodyPose(
             Vector3 bodyTarget,
             Quaternion rotationTarget,
             float deltaTime)
@@ -245,32 +295,21 @@ namespace UnityRPG.AI
             return 1f - Mathf.Exp(-transitionSpeed * deltaTime);
         }
 
-        public void PlayDeath()
-        {
-            if (!isConfigured || isDead)
-            {
-                return;
-            }
-
-            isDead = true;
-            remainingAttackVisualDuration = 0f;
-
-            StartCoroutine(DeathRoutine());
-        }
-
         private IEnumerator DeathRoutine()
         {
             float elapsedTime = 0f;
 
             Quaternion startRotation = modelRoot.localRotation;
             Quaternion targetRotation =
-                modelRootBaseRotation * Quaternion.Euler(0f, 0f, 90f);
+                modelRootBaseRotation *
+                Quaternion.Euler(0f, 0f, 90f);
 
             while (elapsedTime < deathDuration)
             {
                 elapsedTime += Time.deltaTime;
 
-                float progress = Mathf.Clamp01(elapsedTime / deathDuration);
+                float progress =
+                    Mathf.Clamp01(elapsedTime / deathDuration);
 
                 modelRoot.localRotation = Quaternion.Slerp(
                     startRotation,

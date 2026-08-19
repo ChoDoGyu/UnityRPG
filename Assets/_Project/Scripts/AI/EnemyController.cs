@@ -74,12 +74,15 @@ namespace UnityRPG.AI
             targetDetector.UpdateDetection();
             UpdateState();
 
-            attackController.UpdateCooldown(deltaTime);
+            attackController.UpdateAttack(deltaTime);
 
             UpdateBehavior(deltaTime);
 
             visualAnimator.UpdateAnimation(
                 enemyMotor.IsMoving,
+                attackController.CurrentPhase,
+                attackController.PhaseNormalizedProgress,
+                context.Definition.EnemyType,
                 deltaTime);
         }
 
@@ -90,6 +93,12 @@ namespace UnityRPG.AI
             if (target == null)
             {
                 currentState = EnemyState.Idle;
+                return;
+            }
+
+            if (attackController.IsActionLocked)
+            {
+                currentState = EnemyState.Attack;
                 return;
             }
 
@@ -160,18 +169,12 @@ namespace UnityRPG.AI
         {
             Transform target = targetDetector.CurrentTarget;
 
-            if (target == null)
+            if (target == null || !attackController.IsReady)
             {
                 return;
             }
 
-            if (!attackController.TryAttack(target))
-            {
-                return;
-            }
-
-            visualAnimator.PlayAttack(
-                context.Definition.EnemyType);
+            attackController.TryStartAttack(target);
         }
 
         private void OnDestroy()

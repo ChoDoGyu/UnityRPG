@@ -21,6 +21,16 @@ namespace UnityRPG.AI
                 return false;
             }
 
+            Vector3 direction = target.position - transform.position;
+            direction.y = 0f;
+
+            float attackRange = context.Definition.AttackRange;
+
+            if (direction.sqrMagnitude > attackRange * attackRange)
+            {
+                return false;
+            }
+
             IDamageable damageable = target.GetComponentInParent<IDamageable>();
 
             if (damageable == null)

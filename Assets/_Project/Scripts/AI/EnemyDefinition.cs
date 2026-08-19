@@ -41,6 +41,14 @@ namespace UnityRPG.AI
         private float attackRange = 1.8f;
 
         [SerializeField]
+        [Min(0f)]
+        private float attackWindup = 0.35f;
+
+        [SerializeField]
+        [Min(0f)]
+        private float attackRecovery = 0.4f;
+
+        [SerializeField]
         [Min(0.01f)]
         private float attackCooldown = 1.2f;
 
@@ -53,6 +61,8 @@ namespace UnityRPG.AI
         public float DetectionRange => detectionRange;
         public float AttackRange => attackRange;
         public float AttackCooldown => attackCooldown;
+        public float AttackWindup => attackWindup;
+        public float AttackRecovery => attackRecovery;
 
         private void OnValidate()
         {

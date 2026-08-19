@@ -20,4 +20,6 @@ MonoBehaviour:
   moveSpeed: 3
   detectionRange: 14
   attackRange: 8
+  attackWindup: 0.8
+  attackRecovery: 0.4
   attackCooldown: 1.8

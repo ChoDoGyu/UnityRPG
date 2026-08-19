@@ -6,14 +6,63 @@ namespace UnityRPG.AI
     [RequireComponent(typeof(EnemyContext))]
     public sealed class EnemyAttackController : MonoBehaviour
     {
+        [Header("Runtime")]
+        [SerializeField]
+        private EnemyAttackPhase currentPhase = EnemyAttackPhase.Ready;
+
         private EnemyContext context;
         private EnemyMeleeAttack meleeAttack;
         private EnemyRangedAttack rangedAttack;
 
-        private float remainingCooldown;
+        private Transform currentTarget;
+        private float remainingPhaseTime;
         private bool isConfigured;
 
-        public bool IsReady => remainingCooldown <= 0f;
+        public EnemyAttackPhase CurrentPhase => currentPhase;
+
+        public float PhaseNormalizedProgress
+        {
+            get
+            {
+                if (!isConfigured)
+                {
+                    return 0f;
+                }
+
+                float duration;
+
+                switch (currentPhase)
+                {
+                    case EnemyAttackPhase.Windup:
+                        duration = context.Definition.AttackWindup;
+                        break;
+
+                    case EnemyAttackPhase.Recovery:
+                        duration = context.Definition.AttackRecovery;
+                        break;
+
+                    case EnemyAttackPhase.Cooldown:
+                        duration = context.Definition.AttackCooldown;
+                        break;
+
+                    default:
+                        return 0f;
+                }
+
+                if (duration <= 0f)
+                {
+                    return 1f;
+                }
+
+                return 1f - Mathf.Clamp01(remainingPhaseTime / duration);
+            }
+        }
+
+        public bool IsReady => currentPhase == EnemyAttackPhase.Ready;
+
+        public bool IsActionLocked =>
+            currentPhase == EnemyAttackPhase.Windup ||
+            currentPhase == EnemyAttackPhase.Recovery;
 
         private void Awake()
         {
@@ -37,6 +86,7 @@ namespace UnityRPG.AI
 
                         return;
                     }
+
                     break;
 
                 case EnemyType.Ranged:
@@ -48,62 +98,104 @@ namespace UnityRPG.AI
 
                         return;
                     }
+
                     break;
             }
 
             isConfigured = true;
         }
 
-        public void UpdateCooldown(float deltaTime)
-        {
-            if (!isConfigured || IsReady || deltaTime <= 0f)
-            {
-                return;
-            }
-
-            remainingCooldown = Mathf.Max(0f, remainingCooldown - deltaTime);
-        }
-
-        public bool TryAttack(Transform target)
+        public bool TryStartAttack(Transform target)
         {
             if (!isConfigured || !IsReady || target == null)
             {
                 return false;
             }
 
-            bool started;
+            currentTarget = target;
+            currentPhase = EnemyAttackPhase.Windup;
+            remainingPhaseTime = context.Definition.AttackWindup;
+
+            return true;
+        }
+
+        public void UpdateAttack(float deltaTime)
+        {
+            if (!isConfigured ||
+                currentPhase == EnemyAttackPhase.Ready ||
+                deltaTime <= 0f)
+            {
+                return;
+            }
+
+            remainingPhaseTime = Mathf.Max(0f, remainingPhaseTime - deltaTime);
+
+            if (remainingPhaseTime > 0f)
+            {
+                return;
+            }
+
+            switch (currentPhase)
+            {
+                case EnemyAttackPhase.Windup:
+                    ExecuteAttack();
+                    StartRecovery();
+                    break;
+
+                case EnemyAttackPhase.Recovery:
+                    StartCooldown();
+                    break;
+
+                case EnemyAttackPhase.Cooldown:
+                    FinishAttackCycle();
+                    break;
+            }
+        }
+
+        private void ExecuteAttack()
+        {
+            if (currentTarget == null)
+            {
+                return;
+            }
 
             switch (context.Definition.EnemyType)
             {
                 case EnemyType.Melee:
-                    if (meleeAttack == null || !meleeAttack.isActiveAndEnabled)
+                    if (meleeAttack != null && meleeAttack.isActiveAndEnabled)
                     {
-                        return false;
+                        meleeAttack.TryAttack(currentTarget);
                     }
 
-                    started = meleeAttack.TryAttack(target);
                     break;
 
                 case EnemyType.Ranged:
-                    if (rangedAttack == null || !rangedAttack.isActiveAndEnabled)
+                    if (rangedAttack != null && rangedAttack.isActiveAndEnabled)
                     {
-                        return false;
+                        rangedAttack.TryAttack(currentTarget);
                     }
 
-                    started = rangedAttack.TryAttack(target);
                     break;
-
-                default:
-                    return false;
             }
+        }
 
-            if (!started)
-            {
-                return false;
-            }
+        private void StartRecovery()
+        {
+            currentPhase = EnemyAttackPhase.Recovery;
+            remainingPhaseTime = context.Definition.AttackRecovery;
+        }
 
-            remainingCooldown = context.Definition.AttackCooldown;
-            return true;
+        private void StartCooldown()
+        {
+            currentPhase = EnemyAttackPhase.Cooldown;
+            remainingPhaseTime = context.Definition.AttackCooldown;
+            currentTarget = null;
+        }
+
+        private void FinishAttackCycle()
+        {
+            currentPhase = EnemyAttackPhase.Ready;
+            remainingPhaseTime = 0f;
         }
     }
 }
