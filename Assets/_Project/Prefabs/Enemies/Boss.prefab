@@ -389,7 +389,6 @@ MonoBehaviour:
   patternInterval: 0.6
   phase2IntervalMultiplier: 0.85
   currentPhase: 0
-  currentPattern: 0
 --- !u!114 &3468797575737810211
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -481,10 +480,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df7b32e2e83d46b42912da76935edfea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.BossShockwaveAttack
-  windup: 0
+  windup: 1.1
   activeDuration: 0.1
-  recovery: 0
-  cooldown: 0
+  recovery: 0.7
+  cooldown: 4
   currentPhase: 0
   minimumStartRange: 5
   maximumStartRange: 12
@@ -496,7 +495,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: -3594085347441653515, guid: 7acfa5aa79d1c584a85473c263ef7f42, type: 3}
   collisionMask:
     serializedVersion: 2
-    m_Bits: 136
+    m_Bits: 8
 --- !u!114 &3415832689803851325
 MonoBehaviour:
   m_ObjectHideFlags: 0

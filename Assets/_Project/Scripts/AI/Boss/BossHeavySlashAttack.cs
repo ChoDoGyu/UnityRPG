@@ -21,8 +21,6 @@ namespace UnityRPG.AI
         protected override BossPatternType PatternType =>
             BossPatternType.HeavySlash;
 
-        public float Range => range;
-
         protected override bool CanStartPattern(Transform target)
         {
             Vector3 direction =

@@ -44,9 +44,6 @@ namespace UnityRPG.AI
         protected override BossPatternType PatternType =>
             BossPatternType.Shockwave;
 
-        public float MinimumStartRange => minimumStartRange;
-        public float MaximumStartRange => maximumStartRange;
-
         protected override bool IsAvailableInPhase(BossPhase bossPhase)
         {
             return bossPhase == BossPhase.Phase2;

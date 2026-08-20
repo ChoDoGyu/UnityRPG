@@ -21,8 +21,6 @@ namespace UnityRPG.AI
         protected override BossPatternType PatternType =>
             BossPatternType.GroundSlam;
 
-        public float Range => range;
-
         protected override bool ValidatePatternConfiguration()
         {
             return telegraphObject != null;

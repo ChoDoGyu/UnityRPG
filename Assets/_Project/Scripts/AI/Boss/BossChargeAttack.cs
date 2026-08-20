@@ -50,9 +50,6 @@ namespace UnityRPG.AI
         public override bool ShouldStopMotor =>
             CurrentPhase != BossPatternPhase.Active;
 
-        public float MinimumStartRange => minimumStartRange;
-        public float MaximumStartRange => maximumStartRange;
-
         protected override void Awake()
         {
             enemyMotor = GetComponent<EnemyMotor>();

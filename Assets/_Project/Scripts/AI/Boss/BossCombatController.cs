@@ -25,9 +25,6 @@ namespace UnityRPG.AI
         [SerializeField]
         private BossPhase currentPhase = BossPhase.Phase1;
 
-        [SerializeField]
-        private BossPatternType currentPattern = BossPatternType.None;
-
         private EnemyHealth enemyHealth;
 
         private BossPatternBase[] patterns;
@@ -41,7 +38,8 @@ namespace UnityRPG.AI
 
         public BossPhase CurrentPhase => currentPhase;
 
-        public BossPatternType CurrentPattern => currentPattern;
+        public BossPatternType CurrentPattern =>
+            activePattern != null ? activePattern.Type : BossPatternType.None;
 
         public bool HasActivePattern =>
             activePattern != null;
@@ -83,7 +81,6 @@ namespace UnityRPG.AI
                 new BossPatternBase[patterns.Length];
 
             currentPhase = BossPhase.Phase1;
-            currentPattern = BossPatternType.None;
 
             isConfigured = true;
         }
@@ -154,7 +151,6 @@ namespace UnityRPG.AI
             }
 
             activePattern = pattern;
-            currentPattern = pattern.Type;
 
             return true;
         }
@@ -168,7 +164,6 @@ namespace UnityRPG.AI
             }
 
             activePattern = null;
-            currentPattern = BossPatternType.None;
 
             patternIntervalRemaining =
                 GetCurrentPatternInterval();
