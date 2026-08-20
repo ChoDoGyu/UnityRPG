@@ -25,6 +25,7 @@ namespace UnityRPG.AI
         private EnemyTargetDetector targetDetector;
         private EnemyMotor enemyMotor;
         private EnemyAttackController attackController;
+        private EliteCombatController eliteCombatController;
         private EnemyVisualAnimator visualAnimator;
         private EnemyHealth enemyHealth;
         private LockOnTarget lockOnTarget;
@@ -46,6 +47,7 @@ namespace UnityRPG.AI
             targetDetector = GetComponent<EnemyTargetDetector>();
             enemyMotor = GetComponent<EnemyMotor>();
             attackController = GetComponent<EnemyAttackController>();
+            eliteCombatController = GetComponent<EliteCombatController>();
             visualAnimator = GetComponent<EnemyVisualAnimator>();
             enemyHealth = GetComponent<EnemyHealth>();
             lockOnTarget = GetComponent<LockOnTarget>();
@@ -74,14 +76,15 @@ namespace UnityRPG.AI
             targetDetector.UpdateDetection();
             UpdateState();
 
-            attackController.UpdateAttack(deltaTime);
-
+            UpdateCombat(deltaTime);
             UpdateBehavior(deltaTime);
 
             visualAnimator.UpdateAnimation(
                 enemyMotor.IsMoving,
-                attackController.CurrentPhase,
-                attackController.PhaseNormalizedProgress,
+                GetCurrentAttackPhase(),
+                GetAttackPhaseProgress(),
+                eliteCombatController != null &&
+                eliteCombatController.IsSlamActionLocked,
                 context.Definition.EnemyType,
                 deltaTime);
         }
@@ -96,18 +99,13 @@ namespace UnityRPG.AI
                 return;
             }
 
-            if (attackController.IsActionLocked)
+            if (IsAttackActionLocked())
             {
                 currentState = EnemyState.Attack;
                 return;
             }
 
-            Vector3 direction = target.position - transform.position;
-            direction.y = 0f;
-
-            float attackRange = context.Definition.AttackRange;
-
-            if (direction.sqrMagnitude <= attackRange * attackRange)
+            if (ShouldEnterAttackState(target))
             {
                 currentState = EnemyState.Attack;
                 return;
@@ -169,12 +167,79 @@ namespace UnityRPG.AI
         {
             Transform target = targetDetector.CurrentTarget;
 
-            if (target == null || !attackController.IsReady)
+            if (target == null)
+            {
+                return;
+            }
+
+            if (eliteCombatController != null)
+            {
+                eliteCombatController.TryStartAttack(target);
+                return;
+            }
+
+            if (!attackController.IsReady)
             {
                 return;
             }
 
             attackController.TryStartAttack(target);
+        }
+
+        private void UpdateCombat(float deltaTime)
+        {
+            if (eliteCombatController != null)
+            {
+                eliteCombatController.UpdateCombat(deltaTime);
+                return;
+            }
+
+            attackController.UpdateAttack(deltaTime);
+        }
+
+        private bool ShouldEnterAttackState(Transform target)
+        {
+            if (eliteCombatController != null)
+            {
+                return eliteCombatController.ShouldEnterAttackState(target);
+            }
+
+            Vector3 direction = target.position - transform.position;
+            direction.y = 0f;
+
+            float attackRange = context.Definition.AttackRange;
+
+            return direction.sqrMagnitude <= attackRange * attackRange;
+        }
+
+        private bool IsAttackActionLocked()
+        {
+            if (eliteCombatController != null)
+            {
+                return eliteCombatController.IsActionLocked;
+            }
+
+            return attackController.IsActionLocked;
+        }
+
+        private EnemyAttackPhase GetCurrentAttackPhase()
+        {
+            if (eliteCombatController != null)
+            {
+                return eliteCombatController.CurrentPhase;
+            }
+
+            return attackController.CurrentPhase;
+        }
+
+        private float GetAttackPhaseProgress()
+        {
+            if (eliteCombatController != null)
+            {
+                return eliteCombatController.PhaseNormalizedProgress;
+            }
+
+            return attackController.PhaseNormalizedProgress;
         }
 
         private void OnDestroy()

@@ -115,6 +115,8 @@ GameObject:
   - component: {fileID: 4776888870515084657}
   - component: {fileID: 4886550551847192262}
   - component: {fileID: 3337247284365926919}
+  - component: {fileID: 4768104346924529210}
+  - component: {fileID: 7031700382925010541}
   m_Layer: 6
   m_Name: EliteMelee
   m_TagString: Untagged
@@ -310,6 +312,35 @@ MonoBehaviour:
   moveLean: 6
   deathDuration: 0.4
   transitionSpeed: 12
+--- !u!114 &4768104346924529210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6189293470926243558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 668309750cfe1904db0e39383ea342ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EliteSlamAttack
+  range: 3
+  windup: 1
+  recovery: 0.8
+  cooldown: 5
+  damageMultiplier: 1.5
+--- !u!114 &7031700382925010541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6189293470926243558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebfaf80a86df8d04c9c05704124611d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EliteCombatController
 --- !u!1 &7001119210333398633
 GameObject:
   m_ObjectHideFlags: 0

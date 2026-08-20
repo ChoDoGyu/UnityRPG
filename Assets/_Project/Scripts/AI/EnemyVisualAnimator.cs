@@ -79,6 +79,7 @@ namespace UnityRPG.AI
             bool isMoving,
             EnemyAttackPhase attackPhase,
             float attackProgress,
+            bool isSlamAttack,
             EnemyType enemyType,
             float deltaTime)
         {
@@ -91,13 +92,29 @@ namespace UnityRPG.AI
 
             if (attackPhase == EnemyAttackPhase.Windup)
             {
-                UpdateWindup(enemyType, attackProgress, deltaTime);
+                if (isSlamAttack)
+                {
+                    UpdateSlamWindup(attackProgress, deltaTime);
+                }
+                else
+                {
+                    UpdateWindup(enemyType, attackProgress, deltaTime);
+                }
+
                 return;
             }
 
             if (attackPhase == EnemyAttackPhase.Recovery)
             {
-                UpdateRecovery(enemyType, attackProgress, deltaTime);
+                if (isSlamAttack)
+                {
+                    UpdateSlamRecovery(attackProgress, deltaTime);
+                }
+                else
+                {
+                    UpdateRecovery(enemyType, attackProgress, deltaTime);
+                }
+
                 return;
             }
 
@@ -320,6 +337,53 @@ namespace UnityRPG.AI
             }
 
             modelRoot.localRotation = targetRotation;
+        }
+
+        private void UpdateSlamWindup(float progress, float deltaTime)
+        {
+            progress = Mathf.Clamp01(progress);
+
+            Vector3 bodyTarget =
+                bodyBasePosition +
+                Vector3.back * 0.45f * progress +
+                Vector3.up * 0.55f * progress;
+
+            Quaternion rotationTarget =
+                bodyBaseRotation *
+                Quaternion.Euler(-55f * progress, 0f, 0f);
+
+            float scale = 1f + 0.15f * progress;
+            modelRoot.localScale = modelRootBaseScale * scale;
+
+            ApplyBodyPose(bodyTarget, rotationTarget, deltaTime);
+        }
+
+        private void UpdateSlamRecovery(float progress, float deltaTime)
+        {
+            progress = Mathf.Clamp01(progress);
+
+            float weight = 1f - progress;
+
+            Vector3 bodyTarget =
+                bodyBasePosition +
+                Vector3.forward * 0.5f * weight +
+                Vector3.down * 0.4f * weight;
+
+            Quaternion rotationTarget =
+                bodyBaseRotation *
+                Quaternion.Euler(45f * weight, 0f, 0f);
+
+            Vector3 impactScale = new Vector3(
+                modelRootBaseScale.x * 1.1f,
+                modelRootBaseScale.y * 0.9f,
+                modelRootBaseScale.z * 1.1f);
+
+            modelRoot.localScale = Vector3.Lerp(
+                modelRootBaseScale,
+                impactScale,
+                weight);
+
+            ApplyBodyPose(bodyTarget, rotationTarget, deltaTime);
         }
     }
 }
