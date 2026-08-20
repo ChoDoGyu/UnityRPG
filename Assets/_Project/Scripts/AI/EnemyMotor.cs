@@ -104,5 +104,14 @@ namespace UnityRPG.AI
 
             agent.enabled = false;
         }
+
+        public bool TryMove(Vector3 displacement)
+        {
+            if (!isConfigured || !agent.enabled || !agent.isOnNavMesh)
+                return false;
+
+            agent.Move(displacement);
+            return true;
+        }
     }
 }
