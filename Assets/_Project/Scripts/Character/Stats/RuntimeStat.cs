@@ -4,8 +4,7 @@ namespace UnityRPG.Character.Stats
 {
     public sealed class RuntimeStat
     {
-        private readonly List<StatModifier> modifiers =
-            new List<StatModifier>();
+        private readonly List<StatModifier> modifiers = new List<StatModifier>();
 
         public float BaseValue { get; private set; }
 
@@ -34,8 +33,7 @@ namespace UnityRPG.Character.Stats
             BaseValue = value;
         }
 
-        public void AddModifier(
-            StatModifier modifier)
+        public void AddModifier(StatModifier modifier)
         {
             if (modifier == null)
             {
@@ -45,14 +43,9 @@ namespace UnityRPG.Character.Stats
             modifiers.Add(modifier);
         }
 
-        public void RemoveModifiersFromSource(
-            object source)
+        public void RemoveModifiersFromSource(object source)
         {
-            modifiers.RemoveAll(
-                modifier =>
-                    ReferenceEquals(
-                        modifier.Source,
-                        source));
+            modifiers.RemoveAll(modifier => ReferenceEquals(modifier.Source, source));
         }
     }
 }

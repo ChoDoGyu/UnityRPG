@@ -16,34 +16,25 @@ namespace UnityRPG.Character.Stats
 
         private bool isConfigured;
 
-        public float MaxHealth =>
-            GetValue(StatType.MaxHealth);
+        public float MaxHealth => GetValue(StatType.MaxHealth);
 
-        public float Attack =>
-            GetValue(StatType.Attack);
+        public float Attack => GetValue(StatType.Attack);
 
-        public float Defense =>
-            GetValue(StatType.Defense);
+        public float Defense => GetValue(StatType.Defense);
 
-        public float CritChance =>
-            GetValue(StatType.CritChance);
+        public float CritChance => GetValue(StatType.CritChance);
 
-        public float CritDamage =>
-            GetValue(StatType.CritDamage);
+        public float CritDamage => GetValue(StatType.CritDamage);
 
-        public float MoveSpeed =>
-            GetValue(StatType.MoveSpeed);
+        public float MoveSpeed => GetValue(StatType.MoveSpeed);
 
-        public bool IsConfigured => 
-            isConfigured;
+        public bool IsConfigured => isConfigured;
 
         private void Awake()
         {
             if (definition == null)
             {
-                Debug.LogError(
-                    "[Stats] PlayerStatDefinition이 설정되지 않았습니다.",
-                    this);
+                Debug.LogError("[Stats] PlayerStatDefinition이 설정되지 않았습니다.",this);
 
                 return;
             }
@@ -60,30 +51,22 @@ namespace UnityRPG.Character.Stats
                 return 0f;
             }
 
-            if (!stats.TryGetValue(
-                    statType,
-                    out RuntimeStat stat))
+            if (!stats.TryGetValue(statType, out RuntimeStat stat))
             {
                 return 0f;
             }
 
-            return ClampValue(
-                statType,
-                stat.Value);
+            return ClampValue(statType, stat.Value);
         }
 
-        public void AddModifier(
-            StatType statType,
-            StatModifier modifier)
+        public void AddModifier(StatType statType, StatModifier modifier)
         {
             if (!isConfigured)
             {
                 return;
             }
 
-            if (!stats.TryGetValue(
-                    statType,
-                    out RuntimeStat stat))
+            if (!stats.TryGetValue(statType, out RuntimeStat stat))
             {
                 return;
             }
@@ -91,8 +74,7 @@ namespace UnityRPG.Character.Stats
             stat.AddModifier(modifier);
         }
 
-        public void RemoveModifiersFromSource(
-            object source)
+        public void RemoveModifiersFromSource(object source)
         {
             if (!isConfigured)
             {
@@ -107,19 +89,13 @@ namespace UnityRPG.Character.Stats
 
         private void InitializeStats()
         {
-            foreach (
-                StatType statType in
-                Enum.GetValues(typeof(StatType)))
+            foreach (StatType statType in Enum.GetValues(typeof(StatType)))
             {
-                stats.Add(
-                    statType,
-                    new RuntimeStat(
-                        GetBaseValue(statType)));
+                stats.Add(statType, new RuntimeStat(GetBaseValue(statType)));
             }
         }
 
-        private float GetBaseValue(
-            StatType statType)
+        private float GetBaseValue(StatType statType)
         {
             switch (statType)
             {
@@ -151,25 +127,18 @@ namespace UnityRPG.Character.Stats
             switch (statType)
             {
                 case StatType.MaxHealth:
-                    return Mathf.Max(
-                        1f,
-                        value);
+                    return Mathf.Max(1f, value);
 
                 case StatType.Attack:
                 case StatType.Defense:
                 case StatType.MoveSpeed:
-                    return Mathf.Max(
-                        0f,
-                        value);
+                    return Mathf.Max(0f, value);
 
                 case StatType.CritChance:
-                    return Mathf.Clamp01(
-                        value);
+                    return Mathf.Clamp01(value);
 
                 case StatType.CritDamage:
-                    return Mathf.Max(
-                        1f,
-                        value);
+                    return Mathf.Max(1f, value);
 
                 default:
                     return value;

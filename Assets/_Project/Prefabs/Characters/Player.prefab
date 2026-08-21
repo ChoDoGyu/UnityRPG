@@ -29,6 +29,7 @@ GameObject:
   - component: {fileID: 7025670843452615858}
   - component: {fileID: 6108543259105645243}
   - component: {fileID: 888765474829304046}
+  - component: {fileID: 8062844567832452623}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -202,6 +203,7 @@ MonoBehaviour:
   attackLeftHandBack: 0.18
   thirdAttackHandLift: 0.8
   modelRoot: {fileID: 7417113505253281969}
+  deathDuration: 0.5
 --- !u!114 &5190169177384520186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,6 +232,8 @@ MonoBehaviour:
   dodgeDuration: 0.25
   dodgeSpeed: 12
   dodgeCooldown: 0.5
+  invulnerabilityStart: 0.05
+  invulnerabilityEnd: 0.2
 --- !u!114 &2696405582685427564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -413,6 +417,19 @@ MonoBehaviour:
   attackBonus: 5
   duration: 5
   actionDuration: 0.3
+--- !u!114 &8062844567832452623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810838048693877344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72089c901d66432458161f2dfd01e957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Item.PlayerInventory
+  maxSlots: 24
 --- !u!1 &1000176733347427081
 GameObject:
   m_ObjectHideFlags: 0

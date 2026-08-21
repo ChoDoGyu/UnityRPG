@@ -35,22 +35,16 @@ namespace UnityRPG.Character.Stats
         [Min(0f)]
         private float moveSpeed = 5f;
 
-        public float MaxHealth =>
-            maxHealth;
+        public float MaxHealth => maxHealth;
 
-        public float Attack =>
-            attack;
+        public float Attack => attack;
 
-        public float Defense =>
-            defense;
+        public float Defense => defense;
 
-        public float CritChance =>
-            critChance;
+        public float CritChance => critChance;
 
-        public float CritDamage =>
-            critDamage;
+        public float CritDamage => critDamage;
 
-        public float MoveSpeed =>
-            moveSpeed;
+        public float MoveSpeed => moveSpeed;
     }
 }
