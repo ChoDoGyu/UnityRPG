@@ -1671,13 +1671,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 750cb9c942c3bda488a93d9e395d8a66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemySpawner
-  spawnEntries:
-  - enemyPrefab: {fileID: 2278680056077728918, guid: 9114f85dfe1b6024b93d5fb7991dbde0, type: 3}
-    spawnPoint: {fileID: 708150085}
-  - enemyPrefab: {fileID: 2278680056077728918, guid: 9114f85dfe1b6024b93d5fb7991dbde0, type: 3}
-    spawnPoint: {fileID: 2023249798}
-  - enemyPrefab: {fileID: 4871250424725364811, guid: c1a25e2b0439ca941a174f6a1529aa0a, type: 3}
-    spawnPoint: {fileID: 341630995}
+  spawnGroups: []
+  spawnArea: {fileID: 0}
+  minimumSpacing: 1.5
+  navMeshSampleDistance: 1.5
+  maxPositionAttempts: 30
   aliveEnemyCount: 0
   hasSpawned: 0
 --- !u!114 &1452364522
