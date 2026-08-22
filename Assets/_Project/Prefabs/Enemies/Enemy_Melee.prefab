@@ -52,6 +52,7 @@ GameObject:
   - component: {fileID: 6574357442000136684}
   - component: {fileID: 6117997722158681928}
   - component: {fileID: 4978355971520167727}
+  - component: {fileID: 3060501810865363920}
   m_Layer: 6
   m_Name: Enemy_Melee
   m_TagString: Untagged
@@ -213,6 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6487fcdbea8876d4b8d64b84da97028d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyAttackController
+  currentPhase: 0
 --- !u!114 &6117997722158681928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,9 +246,28 @@ MonoBehaviour:
   moveCycleSpeed: 7
   moveBob: 0.05
   moveLean: 6
-  attackVisualDuration: 0.25
-  transitionSpeed: 12
   deathDuration: 0.4
+  transitionSpeed: 12
+--- !u!114 &3060501810865363920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2278680056077728918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff623b337d33a8e448353e5f1898efea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Item.EnemyLootDropper
+  pickupPrefab: {fileID: 8559662641245307577, guid: 57be530687ce0eb48a9ea627165006f9, type: 3}
+  dropOffset: {x: 0, y: 0.5, z: 0}
+  dropSpreadRadius: 0.5
+  lootEntries:
+  - item: {fileID: 11400000, guid: 3727ac5b494add940876afb621259e0c, type: 2}
+    dropChance: 0.2
+    minAmount: 1
+    maxAmount: 1
 --- !u!1 &5710613824781483818
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 662585170459822850}
   - component: {fileID: 8559662641245307577}
   m_Layer: 0
-  m_Name: ItemPickup_HealthPotion
+  m_Name: ItemPickup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2783932d510f5ee4aa99941086b60192, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Item.ItemPickup
-  item: {fileID: 11400000, guid: 3727ac5b494add940876afb621259e0c, type: 2}
+  item: {fileID: 0}
   amount: 1
 --- !u!1 &4530999974949076925
 GameObject:

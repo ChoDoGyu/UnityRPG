@@ -235,6 +235,7 @@ GameObject:
   - component: {fileID: 2698126283378516243}
   - component: {fileID: 4355989493533284107}
   - component: {fileID: 3415832689803851325}
+  - component: {fileID: 3473832428099388226}
   m_Layer: 6
   m_Name: Boss
   m_TagString: Untagged
@@ -517,6 +518,30 @@ MonoBehaviour:
   moveLean: 8
   deathDuration: 0.7
   transitionSpeed: 14
+--- !u!114 &3473832428099388226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2034048425506549625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff623b337d33a8e448353e5f1898efea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Item.EnemyLootDropper
+  pickupPrefab: {fileID: 8559662641245307577, guid: 57be530687ce0eb48a9ea627165006f9, type: 3}
+  dropOffset: {x: 0, y: 0.5, z: 0}
+  dropSpreadRadius: 0.5
+  lootEntries:
+  - item: {fileID: 11400000, guid: 3727ac5b494add940876afb621259e0c, type: 2}
+    dropChance: 1
+    minAmount: 2
+    maxAmount: 3
+  - item: {fileID: 11400000, guid: c0d170e12733146439b8cfc27e3fe313, type: 2}
+    dropChance: 1
+    minAmount: 1
+    maxAmount: 1
 --- !u!1 &3177604272314747597
 GameObject:
   m_ObjectHideFlags: 0

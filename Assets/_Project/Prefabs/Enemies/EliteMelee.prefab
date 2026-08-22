@@ -117,6 +117,7 @@ GameObject:
   - component: {fileID: 3337247284365926919}
   - component: {fileID: 4768104346924529210}
   - component: {fileID: 7031700382925010541}
+  - component: {fileID: 5994349365075407608}
   m_Layer: 6
   m_Name: EliteMelee
   m_TagString: Untagged
@@ -341,6 +342,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebfaf80a86df8d04c9c05704124611d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EliteCombatController
+--- !u!114 &5994349365075407608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6189293470926243558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff623b337d33a8e448353e5f1898efea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Item.EnemyLootDropper
+  pickupPrefab: {fileID: 8559662641245307577, guid: 57be530687ce0eb48a9ea627165006f9, type: 3}
+  dropOffset: {x: 0, y: 0.5, z: 0}
+  dropSpreadRadius: 0.5
+  lootEntries:
+  - item: {fileID: 11400000, guid: a5c9e1d32c3ab91498b7905223be2ef9, type: 2}
+    dropChance: 1
+    minAmount: 2
+    maxAmount: 3
 --- !u!1 &7001119210333398633
 GameObject:
   m_ObjectHideFlags: 0

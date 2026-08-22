@@ -11,10 +11,12 @@ namespace UnityRPG.Item
         [SerializeField, Min(1)] private int amount = 1;
 
         private Collider triggerCollider;
-        private bool isConfigured;
+        private bool isColliderConfigured;
 
         public ItemDefinition Item => item;
         public int Amount => amount;
+
+        private bool IsReady => isColliderConfigured && item != null && amount > 0;
 
         private void Awake()
         {
@@ -26,18 +28,28 @@ namespace UnityRPG.Item
                 return;
             }
 
-            if (item == null)
-            {
-                Debug.LogError("[Item] ItemPickup에 ItemDefinition이 설정되지 않았습니다.", this);
-                return;
-            }
+            isColliderConfigured = true;
+        }
 
-            isConfigured = true;
+        private void Start()
+        {
+            if (isColliderConfigured && item == null)
+                Debug.LogError("[Item] ItemPickup에 ItemDefinition이 설정되지 않았습니다.", this);
+        }
+
+        public bool Initialize(ItemDefinition item, int amount)
+        {
+            if (!isColliderConfigured || item == null || amount <= 0)
+                return false;
+
+            this.item = item;
+            this.amount = amount;
+            return true;
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!isConfigured || amount <= 0)
+            if (!IsReady)
                 return;
 
             PlayerInventory inventory = other.GetComponentInParent<PlayerInventory>();
@@ -46,8 +58,6 @@ namespace UnityRPG.Item
                 return;
 
             int added = inventory.AddItem(item, amount);
-
-            Debug.Log($"[Item] {item.DisplayName} {added}개 획득 / 현재 보유: {inventory.GetItemCount(item)}");
 
             if (added <= 0)
                 return;
