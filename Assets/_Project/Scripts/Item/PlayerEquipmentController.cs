@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityRPG.Character.Player;
 using UnityRPG.Character.Stats;
 
 namespace UnityRPG.Item
@@ -7,11 +8,13 @@ namespace UnityRPG.Item
     [RequireComponent(typeof(PlayerInventory))]
     [RequireComponent(typeof(PlayerEquipment))]
     [RequireComponent(typeof(PlayerStats))]
+    [RequireComponent(typeof(PlayerHealth))]
     public sealed class PlayerEquipmentController : MonoBehaviour
     {
         private PlayerInventory inventory;
         private PlayerEquipment equipment;
         private PlayerStats playerStats;
+        private PlayerHealth playerHealth;
         private bool isConfigured;
 
         private void Awake()
@@ -19,8 +22,9 @@ namespace UnityRPG.Item
             inventory = GetComponent<PlayerInventory>();
             equipment = GetComponent<PlayerEquipment>();
             playerStats = GetComponent<PlayerStats>();
+            playerHealth = GetComponent<PlayerHealth>();
 
-            isConfigured = inventory != null && equipment != null;
+            isConfigured = inventory != null && equipment != null && playerStats != null && playerHealth != null;
         }
 
         public bool TryEquip(EquipmentDefinition item)
@@ -50,6 +54,7 @@ namespace UnityRPG.Item
 
             ApplyStatBonuses(item);
             equipment.SetEquipped(item);
+            playerHealth.ClampToMaxHealth();
 
             return true;
         }
@@ -69,6 +74,7 @@ namespace UnityRPG.Item
 
             playerStats.RemoveModifiersFromSource(equippedItem);
             equipment.ClearSlot(slot);
+            playerHealth.ClampToMaxHealth();
 
             return true;
         }
@@ -78,7 +84,6 @@ namespace UnityRPG.Item
             for (int i = 0; i < item.StatBonuses.Count; i++)
             {
                 EquipmentStatBonus bonus = item.StatBonuses[i];
-
                 playerStats.AddModifier(bonus.StatType, new StatModifier(bonus.Value, item));
             }
         }

@@ -65,5 +65,13 @@ namespace UnityRPG.Character.Player
             currentHealth = Mathf.Min(currentHealth + amount, MaxHealth);
             return true;
         }
+
+        public void ClampToMaxHealth()
+        {
+            if (!isInitialized)
+                return;
+
+            currentHealth = Mathf.Min(currentHealth, MaxHealth);
+        }
     }
 }
