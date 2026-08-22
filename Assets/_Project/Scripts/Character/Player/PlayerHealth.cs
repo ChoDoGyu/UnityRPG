@@ -11,8 +11,7 @@ namespace UnityRPG.Character.Player
     public sealed class PlayerHealth : MonoBehaviour, IDamageable
     {
         [Header("Runtime")]
-        [SerializeField]
-        private float currentHealth;
+        [SerializeField] private float currentHealth;
 
         private PlayerStats playerStats;
         private PlayerDodger playerDodger;
@@ -20,16 +19,10 @@ namespace UnityRPG.Character.Player
 
         public event Action Died;
 
-        public float MaxHealth =>
-            playerStats != null
-                ? playerStats.MaxHealth
-                : 0f;
-
+        public float MaxHealth => playerStats != null ? playerStats.MaxHealth : 0f;
         public float CurrentHealth => currentHealth;
-
-        public bool IsDead =>
-            isInitialized &&
-            currentHealth <= 0f;
+        public bool IsDead => isInitialized && currentHealth <= 0f;
+        public bool CanHeal => isInitialized && !IsDead && currentHealth < MaxHealth;
 
         private void Awake()
         {
@@ -40,9 +33,7 @@ namespace UnityRPG.Character.Player
         private void Start()
         {
             if (!playerStats.IsConfigured)
-            {
                 return;
-            }
 
             currentHealth = playerStats.MaxHealth;
             isInitialized = true;
@@ -51,32 +42,28 @@ namespace UnityRPG.Character.Player
         public void TakeDamage(DamageInfo damageInfo)
         {
             if (!isInitialized || IsDead)
-            {
                 return;
-            }
 
             if (playerDodger.IsInvulnerable)
-            {
                 return;
-            }
 
             if (damageInfo.Amount <= 0f)
-            {
                 return;
-            }
 
-            float finalDamage = DamageCalculator.CalculateAfterDefense(
-                damageInfo.Amount,
-                playerStats.Defense);
-
-            currentHealth = Mathf.Max(
-                0f,
-                currentHealth - finalDamage);
+            float finalDamage = DamageCalculator.CalculateAfterDefense(damageInfo.Amount, playerStats.Defense);
+            currentHealth = Mathf.Max(0f, currentHealth - finalDamage);
 
             if (currentHealth <= 0f)
-            {
                 Died?.Invoke();
-            }
+        }
+
+        public bool TryHeal(float amount)
+        {
+            if (!CanHeal || amount <= 0f)
+                return false;
+
+            currentHealth = Mathf.Min(currentHealth + amount, MaxHealth);
+            return true;
         }
     }
 }
