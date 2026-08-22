@@ -30,6 +30,8 @@ GameObject:
   - component: {fileID: 6108543259105645243}
   - component: {fileID: 888765474829304046}
   - component: {fileID: 8062844567832452623}
+  - component: {fileID: 8054939778708151993}
+  - component: {fileID: 657774237395452559}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -430,6 +432,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Item.PlayerInventory
   maxSlots: 24
+--- !u!114 &8054939778708151993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810838048693877344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd5e0a74ffac6004abbed1d16beafdfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Item.PlayerEquipment
+--- !u!114 &657774237395452559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810838048693877344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83958f2b6ae2c6a45aecfeacfc197fb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Item.PlayerEquipmentController
 --- !u!1 &1000176733347427081
 GameObject:
   m_ObjectHideFlags: 0
