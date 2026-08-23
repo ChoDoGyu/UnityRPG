@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1df1e08c551a384b8579eb852f27574, type: 3}
   m_Name: Enemy_Ranged
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyDefinition
+  enemyId: enemy_ranged
   enemyType: 1
   displayName: "\uC6D0\uAC70\uB9AC \uC801"
   maxHealth: 40

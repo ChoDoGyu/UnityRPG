@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Character.Stats.PlayerStatDefinition
   maxHealth: 100
   defense: 5
-  attack: 10
+  attack: 100
   critChance: 0.05
   critDamage: 1.5
   moveSpeed: 5

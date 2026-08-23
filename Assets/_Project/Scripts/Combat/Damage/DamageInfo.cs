@@ -8,19 +8,13 @@ namespace UnityRPG.Combat
         public GameObject Source { get; }
         public bool IsCritical { get; }
 
-        public DamageInfo(
-            float amount,
-            GameObject source,
-            bool isCritical = false)
+        public DamageInfo(float amount, GameObject source, bool isCritical = false)
         {
-            Amount =
-                Mathf.Max(0f, amount);
+            Amount = Mathf.Max(0f, amount);
 
-            Source =
-                source;
+            Source = source;
 
-            IsCritical =
-                isCritical;
+            IsCritical = isCritical;
         }
     }
 }

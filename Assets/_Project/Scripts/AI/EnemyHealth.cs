@@ -17,6 +17,7 @@ namespace UnityRPG.AI
         public bool IsDead => isConfigured && currentHealth <= 0f;
 
         public event Action Died;
+        public event Action<GameObject> DiedBy;
 
         private void Awake()
         {
@@ -47,6 +48,7 @@ namespace UnityRPG.AI
             if (currentHealth <= 0f)
             {
                 Died?.Invoke();
+                DiedBy?.Invoke(damageInfo.Source);
             }
         }
     }

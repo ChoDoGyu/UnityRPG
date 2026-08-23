@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1df1e08c551a384b8579eb852f27574, type: 3}
   m_Name: EliteMeleeDefinition
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyDefinition
+  enemyId: enemy_elite_melee
   enemyType: 0
   displayName: "\uC5D8\uB9AC\uD2B8"
   maxHealth: 140

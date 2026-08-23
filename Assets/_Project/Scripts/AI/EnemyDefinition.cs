@@ -8,11 +8,9 @@ namespace UnityRPG.AI
     public sealed class EnemyDefinition : ScriptableObject
     {
         [Header("Identity")]
-        [SerializeField]
-        private EnemyType enemyType;
-
-        [SerializeField]
-        private string displayName;
+        [SerializeField] private string enemyId;
+        [SerializeField] private EnemyType enemyType;
+        [SerializeField] private string displayName;
 
         [Header("Stats")]
         [SerializeField]
@@ -63,15 +61,15 @@ namespace UnityRPG.AI
         public float AttackCooldown => attackCooldown;
         public float AttackWindup => attackWindup;
         public float AttackRecovery => attackRecovery;
+        public string EnemyId => enemyId;
 
         private void OnValidate()
         {
             if (attackRange > detectionRange)
-            {
-                Debug.LogWarning(
-                    $"[Enemy] {name}: Attack Range가 Detection Range보다 큽니다.",
-                    this);
-            }
+                Debug.LogWarning($"[Enemy] {name}: Attack Range가 Detection Range보다 큽니다.", this);
+
+            if (string.IsNullOrWhiteSpace(enemyId))
+                Debug.LogWarning($"[Enemy] {name}: EnemyId가 비어 있습니다.", this);
         }
     }
 }
