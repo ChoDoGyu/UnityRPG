@@ -72,6 +72,28 @@ namespace UnityRPG.Character.Growth
             return true;
         }
 
+        public bool TryRestoreProgress(int level, int experience)
+        {
+            if (!isConfigured || level < 1 || level > definition.MaxLevel || experience < 0)
+                return false;
+
+            if (level == definition.MaxLevel && experience != 0)
+                return false;
+
+            if (level < definition.MaxLevel && experience >= definition.GetRequiredExperience(level))
+                return false;
+
+            int previousLevel = currentLevel;
+            currentLevel = level;
+            currentExperience = experience;
+
+            if (currentLevel != previousLevel)
+                LevelChanged?.Invoke(previousLevel, currentLevel);
+
+            ExperienceChanged?.Invoke(currentExperience, RequiredExperience);
+            return true;
+        }
+
         private void OnValidate()
         {
             currentLevel = Mathf.Max(1, currentLevel);
