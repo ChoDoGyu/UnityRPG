@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityRPG.Combat;
 using UnityRPG.Skill;
+using UnityRPG.Interaction;
 
 namespace UnityRPG.Character.Player
 {
@@ -15,6 +16,7 @@ namespace UnityRPG.Character.Player
     [RequireComponent(typeof(PlayerAttackController))]
     [RequireComponent(typeof(PlayerSkillController))]
     [RequireComponent(typeof(PlayerHealth))]
+    [RequireComponent(typeof(PlayerInteractor))]
     public sealed class PlayerController : MonoBehaviour
     {
         private PlayerInputReader inputReader;
@@ -28,6 +30,7 @@ namespace UnityRPG.Character.Player
         private PlayerAttackController attackController;
         private PlayerSkillController skillController;
         private PlayerHealth playerHealth;
+        private PlayerInteractor playerInteractor;
 
         private void Awake()
         {
@@ -42,6 +45,7 @@ namespace UnityRPG.Character.Player
             attackController = GetComponent<PlayerAttackController>();
             skillController = GetComponent<PlayerSkillController>();
             playerHealth = GetComponent<PlayerHealth>();
+            playerInteractor = GetComponent<PlayerInteractor>();
 
             playerHealth.Died += HandleDied;
         }
@@ -72,6 +76,7 @@ namespace UnityRPG.Character.Player
 
             UpdateSkillInput();
             UpdateAttackInput();
+            UpdateInteractionInput();
 
             UpdateAttackRotation(deltaTime);
 
@@ -385,6 +390,14 @@ namespace UnityRPG.Character.Player
         {
             stateController.EnterDead();
             visualAnimator.PlayDeath();
+        }
+
+        private void UpdateInteractionInput()
+        {
+            if (!inputReader.WasInteractPressed || stateController.CurrentState != PlayerState.Normal)
+                return;
+
+            playerInteractor.TryInteract();
         }
     }
 }

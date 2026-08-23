@@ -35,6 +35,7 @@ GameObject:
   - component: {fileID: 4751484407923050766}
   - component: {fileID: 8718427882651745805}
   - component: {fileID: 3983230016488983500}
+  - component: {fileID: 3819796726018680202}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -498,6 +499,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77d5eef0c4cbc0a478b82bf8f15dc64f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Character.Growth.PlayerGrowthStatController
+--- !u!114 &3819796726018680202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810838048693877344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5772d21d6535ca244bd4577c24197109, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Interaction.PlayerInteractor
+  interactionOrigin: {fileID: 4613765813261899622}
+  interactionRadius: 1.5
+  forwardOffset: 1
+  interactionMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &1000176733347427081
 GameObject:
   m_ObjectHideFlags: 0
