@@ -48,6 +48,28 @@ namespace UnityRPG.Quest
             return true;
         }
 
+        internal bool TryRestoreObjectiveProgress(int objectiveIndex, int amount)
+        {
+            if (objectiveIndex < 0 || objectiveIndex >= objectives.Count)
+                return false;
+
+            return objectives[objectiveIndex].TryRestoreProgress(amount);
+        }
+
+        internal bool TryRestoreState(QuestState state)
+        {
+            bool allCompleted = AreAllObjectivesCompleted();
+
+            if (state == QuestState.Active && allCompleted)
+                return false;
+
+            if ((state == QuestState.ReadyToTurnIn || state == QuestState.Completed) && !allCompleted)
+                return false;
+
+            State = state;
+            return true;
+        }
+
         private bool AreAllObjectivesCompleted()
         {
             if (objectives.Count == 0)

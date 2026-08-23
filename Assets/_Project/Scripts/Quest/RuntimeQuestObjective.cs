@@ -27,5 +27,14 @@ namespace UnityRPG.Quest
         {
             return Definition.Type == type && Definition.TargetId == targetId;
         }
+
+        internal bool TryRestoreProgress(int amount)
+        {
+            if (amount < 0 || amount > Definition.RequiredAmount)
+                return false;
+
+            CurrentAmount = amount;
+            return true;
+        }
     }
 }
