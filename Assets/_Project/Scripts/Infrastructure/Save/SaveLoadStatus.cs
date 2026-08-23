@@ -6,6 +6,9 @@
         FileNotFound,
         InvalidData,
         UnsupportedVersion,
+        SceneMismatch,
+        CaptureFailed,
+        RestoreFailed,
         IoError
     }
 }

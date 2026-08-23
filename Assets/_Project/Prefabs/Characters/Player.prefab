@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 2509061267417315684}
   - component: {fileID: 9181858573482822194}
   - component: {fileID: 2674604363308229555}
+  - component: {fileID: 6914871965725585284}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -623,6 +624,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cf586f97eed93446803e18dadc1b12e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Character.Player.PlayerRespawnController
+--- !u!114 &6914871965725585284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810838048693877344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6719903650f31ad41b6df2d450a64396, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Infrastructure.Save.SaveGameController
 --- !u!1 &1000176733347427081
 GameObject:
   m_ObjectHideFlags: 0
