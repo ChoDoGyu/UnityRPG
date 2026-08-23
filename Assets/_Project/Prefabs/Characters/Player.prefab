@@ -38,6 +38,7 @@ GameObject:
   - component: {fileID: 3819796726018680202}
   - component: {fileID: 7763416908570918491}
   - component: {fileID: 7391493734726031804}
+  - component: {fileID: 1554924642932058009}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -543,6 +544,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ce73465f45092c46a223989007e2ddc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Infrastructure.Save.PlayerGrowthSaveAdapter
+--- !u!114 &1554924642932058009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810838048693877344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d13a32ccb4757e48b4f976c51e887d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Infrastructure.Save.PlayerItemSaveAdapter
+  itemDatabase: {fileID: 11400000, guid: f0315ca0ab704c446bd86b6c5a5821dc, type: 2}
 --- !u!1 &1000176733347427081
 GameObject:
   m_ObjectHideFlags: 0

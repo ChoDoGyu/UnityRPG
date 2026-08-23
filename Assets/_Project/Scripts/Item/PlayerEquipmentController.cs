@@ -79,6 +79,36 @@ namespace UnityRPG.Item
             return true;
         }
 
+        internal void ClearForRestore()
+        {
+            if (!isConfigured)
+                return;
+
+            foreach (EquipmentSlot slot in System.Enum.GetValues(typeof(EquipmentSlot)))
+            {
+                EquipmentDefinition equippedItem = equipment.GetEquipped(slot);
+
+                if (equippedItem == null)
+                    continue;
+
+                playerStats.RemoveModifiersFromSource(equippedItem);
+                equipment.ClearSlot(slot);
+            }
+
+            playerHealth.ClampToMaxHealth();
+        }
+
+        internal bool EquipForRestore(EquipmentDefinition item)
+        {
+            if (!isConfigured || item == null || equipment.HasEquipment(item.Slot))
+                return false;
+
+            ApplyStatBonuses(item);
+            equipment.SetEquipped(item);
+            playerHealth.ClampToMaxHealth();
+            return true;
+        }
+
         private void ApplyStatBonuses(EquipmentDefinition item)
         {
             for (int i = 0; i < item.StatBonuses.Count; i++)

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82ca5fb549676584c91f68798b8c005f, type: 3}
+  m_Name: ItemDatabase
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Item.ItemDatabase
+  items:
+  - {fileID: 11400000, guid: 29d9edff8c62d71498e2b816e038893d, type: 2}
+  - {fileID: 11400000, guid: c0d170e12733146439b8cfc27e3fe313, type: 2}
+  - {fileID: 11400000, guid: 2f8999f226b108a4caacf4db5869ab37, type: 2}
+  - {fileID: 11400000, guid: a5c9e1d32c3ab91498b7905223be2ef9, type: 2}
+  - {fileID: 11400000, guid: 3727ac5b494add940876afb621259e0c, type: 2}

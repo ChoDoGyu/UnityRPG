@@ -94,6 +94,15 @@ namespace UnityRPG.Item
             return amount > 0 && GetItemCount(item) >= amount;
         }
 
+        public void Clear()
+        {
+            if (slots.Count == 0)
+                return;
+
+            slots.Clear();
+            Changed?.Invoke();
+        }
+
         private int FillExistingStacks(ItemDefinition item, int amount)
         {
             int remaining = amount;
