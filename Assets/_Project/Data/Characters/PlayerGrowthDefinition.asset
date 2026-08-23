@@ -15,4 +15,10 @@ MonoBehaviour:
   maxLevel: 10
   baseExperienceToNextLevel: 100
   experienceGrowthMultiplier: 1.35
-  statBonusesPerLevel: []
+  statBonusesPerLevel:
+  - statType: 0
+    valuePerLevel: 5
+  - statType: 1
+    valuePerLevel: 1
+  - statType: 2
+    valuePerLevel: 0.5

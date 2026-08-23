@@ -33,6 +33,7 @@ GameObject:
   - component: {fileID: 8054939778708151993}
   - component: {fileID: 657774237395452559}
   - component: {fileID: 4751484407923050766}
+  - component: {fileID: 8718427882651745805}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -469,6 +470,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 916e04f9d034c784d817cb9eed945772, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Item.PlayerConsumableController
+--- !u!114 &8718427882651745805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810838048693877344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9d5efd8805d5d941a2b188a8e798737, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Character.Growth.PlayerGrowth
+  definition: {fileID: 11400000, guid: 9e8795f64600d7648ac4a089fbd4fcc8, type: 2}
+  currentLevel: 1
+  currentExperience: 0
 --- !u!1 &1000176733347427081
 GameObject:
   m_ObjectHideFlags: 0
