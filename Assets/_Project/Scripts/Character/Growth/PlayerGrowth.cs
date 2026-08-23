@@ -23,6 +23,7 @@ namespace UnityRPG.Character.Growth
         public int RequiredExperience => IsMaxLevel ? 0 : definition.GetRequiredExperience(currentLevel);
         public bool IsMaxLevel => isConfigured && currentLevel >= definition.MaxLevel;
         public bool IsConfigured => isConfigured;
+        public PlayerGrowthDefinition Definition => definition;
 
         private void Awake()
         {
