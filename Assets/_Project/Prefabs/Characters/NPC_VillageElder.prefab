@@ -164,6 +164,7 @@ GameObject:
   - component: {fileID: 2319162186393534728}
   - component: {fileID: 7307114512912766412}
   - component: {fileID: 1555896567751573740}
+  - component: {fileID: 7784973655719854740}
   m_Layer: 0
   m_Name: NPC_VillageElder
   m_TagString: Untagged
@@ -225,3 +226,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Interaction.NpcInteractable
   definition: {fileID: 11400000, guid: 7bbcf201706b6c643bcffc49f3cd202f, type: 2}
   interactionPoint: {fileID: 3549072662214745408}
+--- !u!114 &7784973655719854740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6966407653831990935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f00204275db1fbf448474be7eb5dd532, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Quest.NpcQuestGiver
+  questDefinition: {fileID: 11400000, guid: 73ed91bc054d20443b27c017b2d7f536, type: 2}
