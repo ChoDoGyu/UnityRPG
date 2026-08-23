@@ -66,6 +66,15 @@ namespace UnityRPG.Character.Player
             return true;
         }
 
+        public bool Revive()
+        {
+            if (!isInitialized || !IsDead)
+                return false;
+
+            currentHealth = MaxHealth;
+            return true;
+        }
+
         public void ClampToMaxHealth()
         {
             if (!isInitialized)

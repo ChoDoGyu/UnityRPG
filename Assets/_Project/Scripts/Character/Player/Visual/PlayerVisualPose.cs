@@ -54,5 +54,17 @@ namespace UnityRPG.Character.Player
             ModelRoot.localRotation = ModelRootBaseRotation;
             ModelRoot.localScale = ModelRootBaseScale;
         }
+
+        public void ResetPose()
+        {
+            ResetModelRoot();
+
+            Body.localPosition = BodyBasePosition;
+            Body.localRotation = BodyBaseRotation;
+            LeftHand.localPosition = LeftHandBasePosition;
+            RightHand.localPosition = RightHandBasePosition;
+            LeftFoot.localPosition = LeftFootBasePosition;
+            RightFoot.localPosition = RightFootBasePosition;
+        }
     }
 }

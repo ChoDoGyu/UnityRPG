@@ -8,9 +8,7 @@ namespace UnityRPG.Character.Player
         private readonly PlayerVisualPose pose;
         private readonly float transitionSpeed;
 
-        public PlayerSkillVisual(
-            PlayerVisualPose pose,
-            float transitionSpeed)
+        public PlayerSkillVisual(PlayerVisualPose pose, float transitionSpeed)
         {
             this.pose = pose;
             this.transitionSpeed = transitionSpeed;
@@ -28,10 +26,7 @@ namespace UnityRPG.Character.Player
             pose.ModelRoot.localScale = pose.ModelRootBaseScale * pulse;
         }
 
-        public void UpdateSkillAnimation(
-            SkillId skillId,
-            float progress,
-            float deltaTime)
+        public void UpdateSkillAnimation(SkillId skillId, float progress, float deltaTime)
         {
             progress = Mathf.Clamp01(progress);
 
@@ -55,116 +50,60 @@ namespace UnityRPG.Character.Player
             }
         }
 
-        private void UpdateDashSlashAnimation(
-            float progress,
-            float deltaTime)
+        private void UpdateDashSlashAnimation(float progress, float deltaTime)
         {
             float weight = Mathf.Sin(progress * Mathf.PI);
 
-            Vector3 bodyTarget =
-                pose.BodyBasePosition +
-                new Vector3(0f, -0.05f, 0.12f) * weight;
+            Vector3 bodyTarget = pose.BodyBasePosition + new Vector3(0f, -0.05f, 0.12f) * weight;
 
-            Quaternion bodyRotationTarget =
-                pose.BodyBaseRotation *
-                Quaternion.Euler(18f * weight, 0f, 0f);
+            Quaternion bodyRotationTarget = pose.BodyBaseRotation * Quaternion.Euler(18f * weight, 0f, 0f);
 
-            Vector3 rightHandTarget =
-                pose.RightHandBasePosition +
-                new Vector3(0.15f, 0.05f, 0.5f) * weight;
+            Vector3 rightHandTarget = pose.RightHandBasePosition + new Vector3(0.15f, 0.05f, 0.5f) * weight;
 
-            Vector3 leftHandTarget =
-                pose.LeftHandBasePosition +
-                new Vector3(-0.1f, 0f, -0.2f) * weight;
+            Vector3 leftHandTarget = pose.LeftHandBasePosition + new Vector3(-0.1f, 0f, -0.2f) * weight;
 
-            ApplySkillPose(
-                bodyTarget,
-                bodyRotationTarget,
-                leftHandTarget,
-                rightHandTarget,
-                deltaTime);
+            ApplySkillPose(bodyTarget, bodyRotationTarget, leftHandTarget, rightHandTarget, deltaTime);
         }
 
-        private void UpdateProjectileSkillAnimation(
-            float progress,
-            float deltaTime)
+        private void UpdateProjectileSkillAnimation(float progress, float deltaTime)
         {
             float weight = Mathf.Sin(progress * Mathf.PI);
 
-            Vector3 bodyTarget =
-                pose.BodyBasePosition +
-                Vector3.forward * 0.05f * weight;
+            Vector3 bodyTarget = pose.BodyBasePosition + Vector3.forward * 0.05f * weight;
 
-            Quaternion bodyRotationTarget =
-                pose.BodyBaseRotation *
-                Quaternion.Euler(8f * weight, 0f, 0f);
+            Quaternion bodyRotationTarget = pose.BodyBaseRotation * Quaternion.Euler(8f * weight, 0f, 0f);
 
-            Vector3 rightHandTarget =
-                pose.RightHandBasePosition +
-                new Vector3(0f, 0.1f, 0.55f) * weight;
+            Vector3 rightHandTarget = pose.RightHandBasePosition + new Vector3(0f, 0.1f, 0.55f) * weight;
 
-            Vector3 leftHandTarget =
-                pose.LeftHandBasePosition +
-                new Vector3(0f, 0.05f, -0.15f) * weight;
+            Vector3 leftHandTarget = pose.LeftHandBasePosition + new Vector3(0f, 0.05f, -0.15f) * weight;
 
-            ApplySkillPose(
-                bodyTarget,
-                bodyRotationTarget,
-                leftHandTarget,
-                rightHandTarget,
-                deltaTime);
+            ApplySkillPose(bodyTarget, bodyRotationTarget, leftHandTarget, rightHandTarget, deltaTime);
         }
 
-        private void UpdateSpinAttackAnimation(
-            float progress,
-            float deltaTime)
+        private void UpdateSpinAttackAnimation(float progress, float deltaTime)
         {
             float weight = Mathf.Sin(progress * Mathf.PI);
 
-            pose.ModelRoot.localRotation =
-                pose.ModelRootBaseRotation *
-                Quaternion.Euler(0f, 360f * progress, 0f);
+            pose.ModelRoot.localRotation = pose.ModelRootBaseRotation * Quaternion.Euler(0f, 360f * progress, 0f);
 
-            Vector3 rightHandTarget =
-                pose.RightHandBasePosition +
-                Vector3.right * 0.4f * weight;
+            Vector3 rightHandTarget = pose.RightHandBasePosition + Vector3.right * 0.4f * weight;
 
-            Vector3 leftHandTarget =
-                pose.LeftHandBasePosition +
-                Vector3.left * 0.4f * weight;
+            Vector3 leftHandTarget = pose.LeftHandBasePosition + Vector3.left * 0.4f * weight;
 
-            ApplySkillPose(
-                pose.BodyBasePosition,
-                pose.BodyBaseRotation,
-                leftHandTarget,
-                rightHandTarget,
-                deltaTime);
+            ApplySkillPose(pose.BodyBasePosition, pose.BodyBaseRotation, leftHandTarget, rightHandTarget, deltaTime);
         }
 
-        private void UpdateAttackBuffCastAnimation(
-            float progress,
-            float deltaTime)
+        private void UpdateAttackBuffCastAnimation(float progress, float deltaTime)
         {
             float weight = Mathf.Sin(progress * Mathf.PI);
 
-            Vector3 bodyTarget =
-                pose.BodyBasePosition +
-                Vector3.up * 0.05f * weight;
+            Vector3 bodyTarget = pose.BodyBasePosition + Vector3.up * 0.05f * weight;
 
-            Vector3 rightHandTarget =
-                pose.RightHandBasePosition +
-                new Vector3(0.1f, 0.4f, 0f) * weight;
+            Vector3 rightHandTarget = pose.RightHandBasePosition + new Vector3(0.1f, 0.4f, 0f) * weight;
 
-            Vector3 leftHandTarget =
-                pose.LeftHandBasePosition +
-                new Vector3(-0.1f, 0.4f, 0f) * weight;
+            Vector3 leftHandTarget = pose.LeftHandBasePosition + new Vector3(-0.1f, 0.4f, 0f) * weight;
 
-            ApplySkillPose(
-                bodyTarget,
-                pose.BodyBaseRotation,
-                leftHandTarget,
-                rightHandTarget,
-                deltaTime);
+            ApplySkillPose(bodyTarget, pose.BodyBaseRotation, leftHandTarget, rightHandTarget, deltaTime);
         }
 
         private void ApplySkillPose(
@@ -176,35 +115,17 @@ namespace UnityRPG.Character.Player
         {
             float smoothFactor = GetSmoothFactor(deltaTime);
 
-            pose.Body.localPosition = Vector3.Lerp(
-                pose.Body.localPosition,
-                bodyTarget,
-                smoothFactor);
+            pose.Body.localPosition = Vector3.Lerp(pose.Body.localPosition, bodyTarget, smoothFactor);
 
-            pose.Body.localRotation = Quaternion.Slerp(
-                pose.Body.localRotation,
-                bodyRotationTarget,
-                smoothFactor);
+            pose.Body.localRotation = Quaternion.Slerp(pose.Body.localRotation, bodyRotationTarget, smoothFactor);
 
-            pose.LeftHand.localPosition = Vector3.Lerp(
-                pose.LeftHand.localPosition,
-                leftHandTarget,
-                smoothFactor);
+            pose.LeftHand.localPosition = Vector3.Lerp(pose.LeftHand.localPosition, leftHandTarget, smoothFactor);
 
-            pose.RightHand.localPosition = Vector3.Lerp(
-                pose.RightHand.localPosition,
-                rightHandTarget,
-                smoothFactor);
+            pose.RightHand.localPosition = Vector3.Lerp(pose.RightHand.localPosition, rightHandTarget, smoothFactor);
 
-            pose.LeftFoot.localPosition = Vector3.Lerp(
-                pose.LeftFoot.localPosition,
-                pose.LeftFootBasePosition,
-                smoothFactor);
+            pose.LeftFoot.localPosition = Vector3.Lerp(pose.LeftFoot.localPosition, pose.LeftFootBasePosition, smoothFactor);
 
-            pose.RightFoot.localPosition = Vector3.Lerp(
-                pose.RightFoot.localPosition,
-                pose.RightFootBasePosition,
-                smoothFactor);
+            pose.RightFoot.localPosition = Vector3.Lerp(pose.RightFoot.localPosition, pose.RightFootBasePosition, smoothFactor);
         }
 
         private float GetSmoothFactor(float deltaTime)

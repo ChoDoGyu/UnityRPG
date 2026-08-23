@@ -15,9 +15,7 @@ namespace UnityRPG.Character.Player
 
         public bool IsPlaying => isPlaying;
 
-        public PlayerDeathVisual(
-            PlayerVisualPose pose,
-            float deathDuration)
+        public PlayerDeathVisual(PlayerVisualPose pose, float deathDuration)
         {
             this.pose = pose;
             this.deathDuration = Mathf.Max(0.01f, deathDuration);
@@ -36,9 +34,7 @@ namespace UnityRPG.Character.Player
             pose.ModelRoot.localScale = pose.ModelRootBaseScale;
 
             startRotation = pose.ModelRoot.localRotation;
-            targetRotation =
-                pose.ModelRootBaseRotation *
-                Quaternion.Euler(0f, 0f, 90f);
+            targetRotation = pose.ModelRootBaseRotation * Quaternion.Euler(0f, 0f, 90f);
         }
 
         public bool UpdateDeath(float deltaTime)
@@ -52,10 +48,7 @@ namespace UnityRPG.Character.Player
 
             float progress = Mathf.Clamp01(elapsedTime / deathDuration);
 
-            pose.ModelRoot.localRotation = Quaternion.Slerp(
-                startRotation,
-                targetRotation,
-                progress);
+            pose.ModelRoot.localRotation = Quaternion.Slerp(startRotation, targetRotation, progress);
 
             if (progress < 1f)
             {
@@ -66,6 +59,12 @@ namespace UnityRPG.Character.Player
             isPlaying = false;
 
             return true;
+        }
+
+        public void Reset()
+        {
+            elapsedTime = 0f;
+            isPlaying = false;
         }
     }
 }

@@ -6,24 +6,18 @@ namespace UnityRPG.Character.Player
     public sealed class PlayerVisualAnimator : MonoBehaviour
     {
         [Header("Parts")]
-        [SerializeField]
-        private Transform body;
+        [SerializeField] private Transform body;
 
-        [SerializeField]
-        private Transform leftHand;
+        [SerializeField] private Transform leftHand;
 
-        [SerializeField]
-        private Transform rightHand;
+        [SerializeField] private Transform rightHand;
 
-        [SerializeField]
-        private Transform leftFoot;
+        [SerializeField] private Transform leftFoot;
 
-        [SerializeField]
-        private Transform rightFoot;
+        [SerializeField] private Transform rightFoot;
 
         [Header("Reference")]
-        [SerializeField]
-        private Transform movementReference;
+        [SerializeField] private Transform movementReference;
 
         [Header("State")]
         [SerializeField]
@@ -105,8 +99,7 @@ namespace UnityRPG.Character.Player
         [Min(0f)]
         private float dodgeBodyDrop = 0.12f;
 
-        [SerializeField]
-        private float dodgeBodyLean = 20f;
+        [SerializeField] private float dodgeBodyLean = 20f;
 
         [SerializeField]
         [Min(0f)]
@@ -171,8 +164,7 @@ namespace UnityRPG.Character.Player
         private float thirdAttackHandLift = 0.8f;
 
         [Header("Skill")]
-        [SerializeField]
-        private Transform modelRoot;
+        [SerializeField] private Transform modelRoot;
 
         [Header("Death")]
         [SerializeField]
@@ -188,6 +180,8 @@ namespace UnityRPG.Character.Player
         private bool isConfigured;
         private bool isDead;
 
+        public bool IsDeathAnimationPlaying => isConfigured && deathVisual != null && deathVisual.IsPlaying;
+
         private void Awake()
         {
             if (!ValidateParts())
@@ -195,13 +189,7 @@ namespace UnityRPG.Character.Player
                 return;
             }
 
-            pose = new PlayerVisualPose(
-                modelRoot,
-                body,
-                leftHand,
-                rightHand,
-                leftFoot,
-                rightFoot);
+            pose = new PlayerVisualPose(modelRoot, body, leftHand, rightHand, leftFoot, rightFoot);
 
             CreateVisualModules();
 
@@ -228,9 +216,7 @@ namespace UnityRPG.Character.Player
                 leftFoot == null ||
                 rightFoot == null)
             {
-                Debug.LogError(
-                    "[Player] PlayerVisualAnimator의 캐릭터 파츠 또는 이동 기준 참조가 누락되었습니다.",
-                    this);
+                Debug.LogError("[Player] PlayerVisualAnimator의 캐릭터 파츠 또는 이동 기준 참조가 누락되었습니다.", this);
 
                 return false;
             }
@@ -240,10 +226,7 @@ namespace UnityRPG.Character.Player
 
         private void CreateVisualModules()
         {
-            PlayerIdleVisualSettings idleSettings = new PlayerIdleVisualSettings(
-                idleCycleSpeed,
-                idleBodyBob,
-                idleHandBob);
+            PlayerIdleVisualSettings idleSettings = new PlayerIdleVisualSettings(idleCycleSpeed, idleBodyBob, idleHandBob);
 
             PlayerMovementVisualSettings walkSettings = new PlayerMovementVisualSettings(
                 walkCycleSpeed,
@@ -295,19 +278,11 @@ namespace UnityRPG.Character.Player
                 runSettings,
                 lockOnSettings);
 
-            combatVisual = new PlayerCombatVisual(
-                pose,
-                transitionSpeed,
-                dodgeSettings,
-                attackSettings);
+            combatVisual = new PlayerCombatVisual(pose, transitionSpeed, dodgeSettings, attackSettings);
 
-            skillVisual = new PlayerSkillVisual(
-                pose,
-                transitionSpeed);
+            skillVisual = new PlayerSkillVisual(pose, transitionSpeed);
 
-            deathVisual = new PlayerDeathVisual(
-                pose,
-                deathDuration);
+            deathVisual = new PlayerDeathVisual(pose, deathDuration);
         }
 
         public void UpdateAnimation(
@@ -342,30 +317,19 @@ namespace UnityRPG.Character.Player
 
             if (isUsingSkill)
             {
-                skillVisual.UpdateSkillAnimation(
-                    currentSkillId,
-                    skillProgress,
-                    deltaTime);
+                skillVisual.UpdateSkillAnimation(currentSkillId, skillProgress, deltaTime);
 
                 return;
             }
 
             if (isAttacking)
             {
-                combatVisual.UpdateAttack(
-                    comboStep,
-                    attackProgress,
-                    deltaTime);
+                combatVisual.UpdateAttack(comboStep, attackProgress, deltaTime);
 
                 return;
             }
 
-            locomotionVisual.UpdateAnimation(
-                horizontalSpeed,
-                isSprinting,
-                isLockedOn,
-                moveDirection,
-                deltaTime);
+            locomotionVisual.UpdateAnimation(horizontalSpeed, isSprinting, isLockedOn, moveDirection, deltaTime);
         }
 
         public void PlayDeath()
@@ -377,6 +341,16 @@ namespace UnityRPG.Character.Player
 
             isDead = true;
             deathVisual.BeginDeath();
+        }
+
+        public void ResetAfterDeath()
+        {
+            if (!isConfigured)
+                return;
+
+            isDead = false;
+            deathVisual.Reset();
+            pose.ResetPose();
         }
     }
 }
