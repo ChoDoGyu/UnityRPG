@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf3f8d12661e4d748b3de95c7e5907b6, type: 3}
+  m_Name: Quest_DungeonCleanup
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Quest.QuestDefinition
+  questId: quest_dungeon_cleanup
+  displayName: "\uB358\uC804\uC758 \uBAAC\uC2A4\uD130"
+  description: "\uB358\uC804\uC5D0 \uB098\uD0C0\uB09C \uBAAC\uC2A4\uD130\uB97C \uCC98\uCE58\uD558\uACE0
+    \uB9C8\uC744 \uC7A5\uB85C\uC5D0\uAC8C \uB3CC\uC544\uAC00\uC790."
+  objectives:
+  - type: 0
+    targetId: enemy_melee
+    requiredAmount: 3
+  experienceReward: 150
+  itemRewards:
+  - item: {fileID: 11400000, guid: 3727ac5b494add940876afb621259e0c, type: 2}
+    amount: 2
