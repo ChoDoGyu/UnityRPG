@@ -40,6 +40,7 @@ GameObject:
   - component: {fileID: 7391493734726031804}
   - component: {fileID: 1554924642932058009}
   - component: {fileID: 3517327345964614233}
+  - component: {fileID: 4843093298523067076}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -571,6 +572,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Infrastructure.Save.PlayerQuestSaveAdapter
   questDatabase: {fileID: 11400000, guid: ef994e3d75ba0844c8313105d458818e, type: 2}
+--- !u!114 &4843093298523067076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810838048693877344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3fa959656e25854c920eca91addd416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Infrastructure.Save.PlayerTransformSaveAdapter
 --- !u!1 &1000176733347427081
 GameObject:
   m_ObjectHideFlags: 0
