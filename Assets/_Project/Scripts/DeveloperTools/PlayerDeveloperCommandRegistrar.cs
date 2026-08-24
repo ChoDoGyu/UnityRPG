@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityRPG.Character.Growth;
+using UnityRPG.Infrastructure.Save;
 using UnityRPG.Item;
 using UnityRPG.Quest;
 
@@ -9,6 +10,7 @@ namespace UnityRPG.DeveloperTools
     [RequireComponent(typeof(PlayerGrowth))]
     [RequireComponent(typeof(PlayerInventory))]
     [RequireComponent(typeof(PlayerQuestLog))]
+    [RequireComponent(typeof(SaveGameController))]
     public sealed class PlayerDeveloperCommandRegistrar : MonoBehaviour
     {
         [SerializeField] private DeveloperConsole developerConsole;
@@ -18,12 +20,14 @@ namespace UnityRPG.DeveloperTools
         private PlayerGrowth playerGrowth;
         private PlayerInventory inventory;
         private PlayerQuestLog questLog;
+        private SaveGameController saveGameController;
 
         private void Awake()
         {
             playerGrowth = GetComponent<PlayerGrowth>();
             inventory = GetComponent<PlayerInventory>();
             questLog = GetComponent<PlayerQuestLog>();
+            saveGameController = GetComponent<SaveGameController>();
         }
 
         private void Start()
@@ -32,6 +36,8 @@ namespace UnityRPG.DeveloperTools
                 return;
 
             developerConsole.RegisterCommand(new ExpCommand(playerGrowth));
+            developerConsole.RegisterCommand(new SaveCommand(saveGameController));
+            developerConsole.RegisterCommand(new LoadCommand(saveGameController));
 
             if (itemDatabase != null)
                 developerConsole.RegisterCommand(new GiveItemCommand(inventory, itemDatabase));

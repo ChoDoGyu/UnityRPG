@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 9181858573482822194}
   - component: {fileID: 2674604363308229555}
   - component: {fileID: 6914871965725585284}
+  - component: {fileID: 4660837674481162236}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -636,6 +637,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6719903650f31ad41b6df2d450a64396, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Infrastructure.Save.SaveGameController
+--- !u!114 &4660837674481162236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810838048693877344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed7b194f071bc2a47b493e96c8f7f8cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.DeveloperTools::UnityRPG.DeveloperTools.PlayerDeveloperCommandRegistrar
+  developerConsole: {fileID: 0}
+  itemDatabase: {fileID: 11400000, guid: f0315ca0ab704c446bd86b6c5a5821dc, type: 2}
+  questDatabase: {fileID: 11400000, guid: ef994e3d75ba0844c8313105d458818e, type: 2}
 --- !u!1 &1000176733347427081
 GameObject:
   m_ObjectHideFlags: 0
