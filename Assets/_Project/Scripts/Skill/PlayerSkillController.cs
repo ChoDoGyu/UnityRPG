@@ -23,8 +23,7 @@ namespace UnityRPG.Skill
         [SerializeField]
         private SkillDefinition attackBuffDefinition;
 
-        private readonly Dictionary<SkillId, RuntimeSkill> skills =
-            new Dictionary<SkillId, RuntimeSkill>();
+        private readonly Dictionary<SkillId, RuntimeSkill> skills = new Dictionary<SkillId, RuntimeSkill>();
 
         private bool isConfigured;
 
@@ -37,15 +36,11 @@ namespace UnityRPG.Skill
         private SkillId currentSkillId;
         private float currentActionDuration;
 
-        public bool IsUsingSkill =>
-            remainingActionDuration > 0f;
+        public bool IsUsingSkill => remainingActionDuration > 0f;
 
-        public SkillId CurrentSkillId =>
-            currentSkillId;
+        public SkillId CurrentSkillId => currentSkillId;
 
-        public bool IsAttackBuffActive =>
-            attackBuffSkill != null &&
-            attackBuffSkill.IsActive;
+        public bool IsAttackBuffActive => attackBuffSkill != null && attackBuffSkill.IsActive;
 
         public float ActionNormalizedProgress
         {
@@ -56,9 +51,7 @@ namespace UnityRPG.Skill
                     return 1f;
                 }
 
-                return 1f -
-                    remainingActionDuration /
-                    currentActionDuration;
+                return 1f - remainingActionDuration / currentActionDuration;
             }
         }
 
@@ -179,28 +172,21 @@ namespace UnityRPG.Skill
             return true;
         }
 
-        public RuntimeSkill GetSkill(
-            SkillId skillId)
+        public RuntimeSkill GetSkill(SkillId skillId)
         {
             if (!isConfigured)
             {
                 return null;
             }
 
-            skills.TryGetValue(
-                skillId,
-                out RuntimeSkill skill);
+            skills.TryGetValue(skillId, out RuntimeSkill skill);
 
             return skill;
         }
 
-        private void AddRuntimeSkill(
-            SkillDefinition definition)
+        private void AddRuntimeSkill(SkillDefinition definition)
         {
-            skills.Add(
-                definition.SkillId,
-                new RuntimeSkill(
-                    definition));
+            skills.Add(definition.SkillId, new RuntimeSkill(definition));
         }
 
         private bool ValidateDefinitions()
@@ -210,9 +196,7 @@ namespace UnityRPG.Skill
                 spinAttackDefinition == null ||
                 attackBuffDefinition == null)
             {
-                Debug.LogError(
-                    "[Skill] PlayerSkillController의 Skill Definition이 설정되지 않았습니다.",
-                    this);
+                Debug.LogError("[Skill] PlayerSkillController의 Skill Definition이 설정되지 않았습니다.", this);
 
                 return false;
             }
@@ -222,9 +206,7 @@ namespace UnityRPG.Skill
                 spinAttackDefinition.SkillId != SkillId.SpinAttack ||
                 attackBuffDefinition.SkillId != SkillId.AttackBuff)
             {
-                Debug.LogError(
-                    "[Skill] PlayerSkillController의 Skill Definition과 SkillId가 일치하지 않습니다.",
-                    this);
+                Debug.LogError("[Skill] PlayerSkillController의 Skill Definition과 SkillId가 일치하지 않습니다.", this);
 
                 return false;
             }
@@ -244,11 +226,7 @@ namespace UnityRPG.Skill
                 return;
             }
 
-            remainingActionDuration =
-                Mathf.Max(
-                    0f,
-                    remainingActionDuration -
-                    deltaTime);
+            remainingActionDuration = Mathf.Max(0f, remainingActionDuration - deltaTime);
         }
     }
 }

@@ -2,11 +2,8 @@
 
 namespace UnityRPG.Skill
 {
-    [CreateAssetMenu(
-        fileName = "SkillDefinition",
-        menuName = "UnityRPG/Skills/Skill Definition")]
-    public sealed class SkillDefinition :
-        ScriptableObject
+    [CreateAssetMenu(fileName = "SkillDefinition", menuName = "UnityRPG/Skills/Skill Definition")]
+    public sealed class SkillDefinition : ScriptableObject
     {
         [Header("Identity")]
         [SerializeField]
@@ -20,13 +17,10 @@ namespace UnityRPG.Skill
         [Min(0f)]
         private float cooldown = 5f;
 
-        public SkillId SkillId =>
-            skillId;
+        public SkillId SkillId => skillId;
 
-        public string DisplayName =>
-            displayName;
+        public string DisplayName => displayName;
 
-        public float Cooldown =>
-            cooldown;
+        public float Cooldown => cooldown;
     }
 }

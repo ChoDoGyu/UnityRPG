@@ -7,16 +7,17 @@ using UnityRPG.Quest;
 namespace UnityRPG.DeveloperTools
 {
     [DisallowMultipleComponent]
+    [RequireComponent(typeof(DeveloperConsole))]
     [RequireComponent(typeof(PlayerGrowth))]
     [RequireComponent(typeof(PlayerInventory))]
     [RequireComponent(typeof(PlayerQuestLog))]
     [RequireComponent(typeof(SaveGameController))]
     public sealed class PlayerDeveloperCommandRegistrar : MonoBehaviour
     {
-        [SerializeField] private DeveloperConsole developerConsole;
         [SerializeField] private ItemDatabase itemDatabase;
         [SerializeField] private QuestDatabase questDatabase;
 
+        private DeveloperConsole developerConsole;
         private PlayerGrowth playerGrowth;
         private PlayerInventory inventory;
         private PlayerQuestLog questLog;
@@ -24,6 +25,7 @@ namespace UnityRPG.DeveloperTools
 
         private void Awake()
         {
+            developerConsole = GetComponent<DeveloperConsole>();
             playerGrowth = GetComponent<PlayerGrowth>();
             inventory = GetComponent<PlayerInventory>();
             questLog = GetComponent<PlayerQuestLog>();
@@ -32,7 +34,7 @@ namespace UnityRPG.DeveloperTools
 
         private void Start()
         {
-            if (developerConsole == null || !developerConsole.IsAvailable)
+            if (!developerConsole.IsAvailable)
                 return;
 
             developerConsole.RegisterCommand(new ExpCommand(playerGrowth));

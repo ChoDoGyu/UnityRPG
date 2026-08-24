@@ -29,9 +29,7 @@ namespace UnityRPG.AI
 
             if (!triggerCollider.isTrigger)
             {
-                Debug.LogError(
-                    "[Encounter] EncounterTrigger의 Collider는 Is Trigger가 활성화되어 있어야 합니다.",
-                    this);
+                Debug.LogError("[Encounter] EncounterTrigger의 Collider는 Is Trigger가 활성화되어 있어야 합니다.", this);
 
                 return;
             }
@@ -62,8 +60,7 @@ namespace UnityRPG.AI
                 return;
             }
 
-            PlayerController player =
-                other.GetComponentInParent<PlayerController>();
+            PlayerController player = other.GetComponentInParent<PlayerController>();
 
             if (player == null)
             {

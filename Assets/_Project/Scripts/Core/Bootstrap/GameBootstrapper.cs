@@ -22,8 +22,7 @@ namespace UnityRPG.Core
 
             DontDestroyOnLoad(gameObject);
 
-            sceneTransitionService =
-                GetComponent<SceneTransitionService>();
+            sceneTransitionService = GetComponent<SceneTransitionService>();
         }
 
         private IEnumerator Start()
