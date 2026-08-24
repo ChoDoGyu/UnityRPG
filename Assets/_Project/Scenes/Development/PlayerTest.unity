@@ -250,6 +250,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityRPG.DeveloperTools::UnityRPG.DeveloperTools.PlayerDeveloperCommandRegistrar
   developerConsole: {fileID: 1649408502}
   itemDatabase: {fileID: 11400000, guid: f0315ca0ab704c446bd86b6c5a5821dc, type: 2}
+  questDatabase: {fileID: 11400000, guid: ef994e3d75ba0844c8313105d458818e, type: 2}
 --- !u!1 &260038548
 GameObject:
   m_ObjectHideFlags: 0
