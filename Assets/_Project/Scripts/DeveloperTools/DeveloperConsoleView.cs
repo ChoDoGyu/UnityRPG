@@ -181,16 +181,26 @@ namespace UnityRPG.DeveloperTools
             isOpen = open;
             input = string.Empty;
 
-            inputReader.SetGameplayInputEnabled(!open);
-
             if (open)
+            {
+                inputReader.BlockGameplayInput(this);
+                inputReader.BlockUIInput(this);
                 focusInput = true;
+            }
+            else
+            {
+                inputReader.UnblockGameplayInput(this);
+                inputReader.UnblockUIInput(this);
+            }
         }
 
         private void OnDisable()
         {
-            if (isOpen && inputReader != null)
-                inputReader.SetGameplayInputEnabled(true);
+            if (inputReader != null)
+            {
+                inputReader.UnblockGameplayInput(this);
+                inputReader.UnblockUIInput(this);
+            }
 
             isOpen = false;
         }

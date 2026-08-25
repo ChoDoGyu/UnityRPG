@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -5,6 +6,9 @@ namespace UnityRPG.Character.Player
 {
     public sealed class PlayerInputReader : MonoBehaviour
     {
+        private readonly HashSet<object> gameplayInputBlockers = new HashSet<object>();
+        private readonly HashSet<object> uiInputBlockers = new HashSet<object>();
+
         private PlayerInputActions inputActions;
         private bool gameplayInputEnabled;
 
@@ -23,6 +27,8 @@ namespace UnityRPG.Character.Player
 
         public bool IsGameplayInputEnabled => gameplayInputEnabled;
         public bool WasDeveloperConsolePressed => inputActions.Developer.ToggleConsole.WasPressedThisFrame();
+        public bool WasInventoryPressed => inputActions.UI.Inventory.WasPressedThisFrame();
+        public bool WasCancelPressed => inputActions.UI.Cancel.WasPressedThisFrame();
 
         private void Awake()
         {
@@ -32,27 +38,86 @@ namespace UnityRPG.Character.Player
         private void OnEnable()
         {
             inputActions.Developer.Enable();
-            SetGameplayInputEnabled(true);
+            RefreshGameplayInputState();
+            RefreshUIInputState();
         }
 
         private void OnDisable()
         {
+            gameplayInputBlockers.Clear();
+            uiInputBlockers.Clear();
+
             inputActions.Player.Disable();
+            inputActions.UI.Disable();
             inputActions.Developer.Disable();
+
             gameplayInputEnabled = false;
         }
 
-        public void SetGameplayInputEnabled(bool enabled)
+        public void BlockGameplayInput(object source)
         {
-            if (gameplayInputEnabled == enabled)
+            if (source == null)
                 return;
 
-            if (enabled)
+            if (!gameplayInputBlockers.Add(source))
+                return;
+
+            RefreshGameplayInputState();
+        }
+
+        public void UnblockGameplayInput(object source)
+        {
+            if (source == null)
+                return;
+
+            if (!gameplayInputBlockers.Remove(source))
+                return;
+
+            RefreshGameplayInputState();
+        }
+
+        private void RefreshGameplayInputState()
+        {
+            bool shouldEnable = isActiveAndEnabled && gameplayInputBlockers.Count == 0;
+
+            if (shouldEnable)
                 inputActions.Player.Enable();
             else
                 inputActions.Player.Disable();
 
-            gameplayInputEnabled = enabled;
+            gameplayInputEnabled = shouldEnable;
+        }
+
+        public void BlockUIInput(object source)
+        {
+            if (source == null)
+                return;
+
+            if (!uiInputBlockers.Add(source))
+                return;
+
+            RefreshUIInputState();
+        }
+
+        public void UnblockUIInput(object source)
+        {
+            if (source == null)
+                return;
+
+            if (!uiInputBlockers.Remove(source))
+                return;
+
+            RefreshUIInputState();
+        }
+
+        private void RefreshUIInputState()
+        {
+            bool shouldEnable = isActiveAndEnabled && uiInputBlockers.Count == 0;
+
+            if (shouldEnable)
+                inputActions.UI.Enable();
+            else
+                inputActions.UI.Disable();
         }
     }
 }

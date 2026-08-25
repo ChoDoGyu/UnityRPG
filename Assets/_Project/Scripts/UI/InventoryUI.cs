@@ -307,5 +307,10 @@ namespace UnityRPG.UI
                    actionButton != null &&
                    actionText != null;
         }
+
+        public void ResetView()
+        {
+            ClearSelection();
+        }
     }
 }

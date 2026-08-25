@@ -8588,6 +8588,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7081366496089871832}
   - component: {fileID: 2011169379022333720}
+  - component: {fileID: 3524750821346377700}
   m_Layer: 5
   m_Name: WindowRoot
   m_TagString: Untagged
@@ -8645,6 +8646,21 @@ MonoBehaviour:
   itemAmountText: {fileID: 6140544393363427182}
   actionButton: {fileID: 261902230968985058}
   actionText: {fileID: 712110106292500636}
+--- !u!114 &3524750821346377700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7786669152534750473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81dd9f4c34523fa44ae707b21fd3b4d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.UI::UnityRPG.UI.GameplayWindowController
+  inputReader: {fileID: 0}
+  inventoryPanel: {fileID: 3501616146950357571}
+  inventoryCloseButton: {fileID: 7502621858798783066}
 --- !u!1 &7884483054054373195
 GameObject:
   m_ObjectHideFlags: 0
