@@ -15,9 +15,19 @@ namespace UnityRPG.UI
         [SerializeField] private GameObject inventoryPanel;
         [SerializeField] private Button inventoryCloseButton;
 
+        [Header("Pause")]
+        [SerializeField] private GameObject pauseRoot;
+        [SerializeField] private GameObject pausePanel;
+        [SerializeField] private GameObject settingsPanel;
+        [SerializeField] private Button resumeButton;
+        [SerializeField] private Button settingsButton;
+        [SerializeField] private Button settingsBackButton;
+
         private InventoryUI inventoryUI;
 
         private bool isInventoryOpen;
+        private bool isPauseOpen;
+        private bool isSettingsOpen;
         private bool isGameplaySuspended;
 
         private float previousTimeScale = 1f;
@@ -25,7 +35,8 @@ namespace UnityRPG.UI
         private CursorLockMode previousCursorLockState;
 
         public bool IsInventoryOpen => isInventoryOpen;
-        public bool IsAnyWindowOpen => isInventoryOpen;
+        public bool IsPauseOpen => isPauseOpen;
+        public bool IsAnyWindowOpen => isInventoryOpen || isPauseOpen;
 
         private void Awake()
         {
@@ -42,19 +53,31 @@ namespace UnityRPG.UI
             }
 
             inventoryCloseButton.onClick.AddListener(CloseInventory);
-            SetInventoryOpen(false);
+            resumeButton.onClick.AddListener(ClosePause);
+
+            settingsButton.onClick.AddListener(OpenSettings);
+            settingsBackButton.onClick.AddListener(CloseSettings);
+
+            inventoryPanel.SetActive(false);
+            pauseRoot.SetActive(false);
+
+            pausePanel.SetActive(true);
+            settingsPanel.SetActive(false);
+
+            isInventoryOpen = false;
+            isPauseOpen = false;
         }
 
         private void Update()
         {
-            if (inputReader.WasInventoryPressed)
+            if (inputReader.WasCancelPressed)
             {
-                SetInventoryOpen(!isInventoryOpen);
+                HandleCancel();
                 return;
             }
 
-            if (isInventoryOpen && inputReader.WasCancelPressed)
-                CloseInventory();
+            if (inputReader.WasInventoryPressed)
+                HandleInventoryInput();
         }
 
         private void OnDisable()
@@ -63,30 +86,122 @@ namespace UnityRPG.UI
                 ResumeGameplay();
 
             isInventoryOpen = false;
+            isPauseOpen = false;
+            isSettingsOpen = false;
 
             if (inventoryPanel != null)
                 inventoryPanel.SetActive(false);
+
+            if (pauseRoot != null)
+                pauseRoot.SetActive(false);
+
+            if (pausePanel != null)
+                pausePanel.SetActive(true);
+
+            if (settingsPanel != null)
+                settingsPanel.SetActive(false);
         }
 
         private void OnDestroy()
         {
             if (inventoryCloseButton != null)
                 inventoryCloseButton.onClick.RemoveListener(CloseInventory);
+
+            if (resumeButton != null)
+                resumeButton.onClick.RemoveListener(ClosePause);
+
+            if (settingsButton != null)
+                settingsButton.onClick.RemoveListener(OpenSettings);
+
+            if (settingsBackButton != null)
+                settingsBackButton.onClick.RemoveListener(CloseSettings);
+        }
+
+        private void HandleCancel()
+        {
+            if (isInventoryOpen)
+            {
+                CloseInventory();
+                return;
+            }
+
+            if (isSettingsOpen)
+            {
+                CloseSettings();
+                return;
+            }
+
+            if (isPauseOpen)
+            {
+                ClosePause();
+                return;
+            }
+
+            OpenPause();
+        }
+
+        private void HandleInventoryInput()
+        {
+            if (isPauseOpen)
+                return;
+
+            if (isInventoryOpen)
+                CloseInventory();
+            else
+                OpenInventory();
+        }
+
+        private void OpenInventory()
+        {
+            if (isInventoryOpen || isPauseOpen)
+                return;
+
+            isInventoryOpen = true;
+            inventoryPanel.SetActive(true);
+
+            RefreshGameplayState();
         }
 
         private void CloseInventory()
         {
-            SetInventoryOpen(false);
+            if (!isInventoryOpen)
+                return;
+
+            isInventoryOpen = false;
+
+            inventoryUI.ResetView();
+            inventoryPanel.SetActive(false);
+
+            RefreshGameplayState();
         }
 
-        private void SetInventoryOpen(bool open)
+        private void OpenPause()
         {
-            isInventoryOpen = open;
+            if (isPauseOpen || isInventoryOpen)
+                return;
 
-            if (!open)
-                inventoryUI.ResetView();
+            isPauseOpen = true;
+            isSettingsOpen = false;
 
-            inventoryPanel.SetActive(open);
+            pauseRoot.SetActive(true);
+            pausePanel.SetActive(true);
+            settingsPanel.SetActive(false);
+
+            RefreshGameplayState();
+        }
+
+        private void ClosePause()
+        {
+            if (!isPauseOpen)
+                return;
+
+            isPauseOpen = false;
+            isSettingsOpen = false;
+
+            pausePanel.SetActive(true);
+            settingsPanel.SetActive(false);
+            pauseRoot.SetActive(false);
+
             RefreshGameplayState();
         }
 
@@ -135,7 +250,35 @@ namespace UnityRPG.UI
             return inputReader != null &&
                    inventoryUI != null &&
                    inventoryPanel != null &&
-                   inventoryCloseButton != null;
+                   inventoryCloseButton != null &&
+                   pauseRoot != null &&
+                   pausePanel != null &&
+                   settingsPanel != null &&
+                   resumeButton != null &&
+                   settingsButton != null &&
+                   settingsBackButton != null;
+        }
+
+        private void OpenSettings()
+        {
+            if (!isPauseOpen || isSettingsOpen)
+                return;
+
+            isSettingsOpen = true;
+
+            pausePanel.SetActive(false);
+            settingsPanel.SetActive(true);
+        }
+
+        private void CloseSettings()
+        {
+            if (!isPauseOpen || !isSettingsOpen)
+                return;
+
+            isSettingsOpen = false;
+
+            settingsPanel.SetActive(false);
+            pausePanel.SetActive(true);
         }
     }
 }
