@@ -18,13 +18,11 @@ namespace UnityRPG.AI
         [Min(0f)]
         private float damageMultiplier = 1.5f;
 
-        protected override BossPatternType PatternType =>
-            BossPatternType.HeavySlash;
+        protected override BossPatternType PatternType => BossPatternType.HeavySlash;
 
         protected override bool CanStartPattern(Transform target)
         {
-            Vector3 direction =
-                target.position - transform.position;
+            Vector3 direction = target.position - transform.position;
 
             direction.y = 0f;
 
@@ -43,15 +41,13 @@ namespace UnityRPG.AI
                 return;
             }
 
-            Vector3 direction =
-                CurrentTarget.position - transform.position;
+            Vector3 direction = CurrentTarget.position - transform.position;
 
             direction.y = 0f;
 
             float sqrDistance = direction.sqrMagnitude;
 
-            if (sqrDistance > range * range ||
-                sqrDistance <= 0.001f)
+            if (sqrDistance > range * range || sqrDistance <= 0.001f)
             {
                 return;
             }
@@ -68,11 +64,7 @@ namespace UnityRPG.AI
 
             forward.Normalize();
 
-            float minimumDot =
-                Mathf.Cos(
-                    hitAngle *
-                    0.5f *
-                    Mathf.Deg2Rad);
+            float minimumDot = Mathf.Cos(hitAngle * 0.5f * Mathf.Deg2Rad);
 
             if (Vector3.Dot(forward, direction) < minimumDot)
             {

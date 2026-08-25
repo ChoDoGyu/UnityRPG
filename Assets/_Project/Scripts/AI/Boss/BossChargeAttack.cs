@@ -41,14 +41,11 @@ namespace UnityRPG.AI
         private float travelledDistance;
         private bool hasHitTarget;
 
-        protected override BossPatternType PatternType =>
-            BossPatternType.Charge;
+        protected override BossPatternType PatternType => BossPatternType.Charge;
 
-        public override bool ShouldTrackTargetRotation =>
-            CurrentPhase != BossPatternPhase.Active;
+        public override bool ShouldTrackTargetRotation => CurrentPhase != BossPatternPhase.Active;
 
-        public override bool ShouldStopMotor =>
-            CurrentPhase != BossPatternPhase.Active;
+        public override bool ShouldStopMotor => CurrentPhase != BossPatternPhase.Active;
 
         protected override void Awake()
         {
@@ -69,17 +66,14 @@ namespace UnityRPG.AI
 
         protected override bool CanStartPattern(Transform target)
         {
-            Vector3 direction =
-                target.position - transform.position;
+            Vector3 direction = target.position - transform.position;
 
             direction.y = 0f;
 
             float sqrDistance = direction.sqrMagnitude;
 
-            return sqrDistance >=
-                       minimumStartRange * minimumStartRange &&
-                   sqrDistance <=
-                       maximumStartRange * maximumStartRange;
+            return sqrDistance >= minimumStartRange * minimumStartRange &&
+                   sqrDistance <= maximumStartRange * maximumStartRange;
         }
 
         protected override void OnWindupStarted()
@@ -117,15 +111,11 @@ namespace UnityRPG.AI
                 return;
             }
 
-            float remainingDistance =
-                maximumChargeDistance - travelledDistance;
+            float remainingDistance = maximumChargeDistance - travelledDistance;
 
-            float moveDistance = Mathf.Min(
-                chargeSpeed * deltaTime,
-                remainingDistance);
+            float moveDistance = Mathf.Min(chargeSpeed * deltaTime, remainingDistance);
 
-            if (!enemyMotor.TryMove(
-                    chargeDirection * moveDistance))
+            if (!enemyMotor.TryMove(chargeDirection * moveDistance))
             {
                 CompleteActive();
                 return;
@@ -165,8 +155,7 @@ namespace UnityRPG.AI
                 return false;
             }
 
-            Vector3 direction =
-                CurrentTarget.position - transform.position;
+            Vector3 direction = CurrentTarget.position - transform.position;
 
             direction.y = 0f;
 
@@ -175,35 +164,23 @@ namespace UnityRPG.AI
                 return false;
             }
 
-            return TryApplyDamage(
-                CurrentTarget,
-                damageMultiplier);
+            return TryApplyDamage(CurrentTarget, damageMultiplier);
         }
 
         protected override void OnValidate()
         {
             base.OnValidate();
 
-            minimumStartRange = Mathf.Max(
-                0f,
-                minimumStartRange);
+            minimumStartRange = Mathf.Max(0f, minimumStartRange);
 
-            maximumStartRange = Mathf.Max(
-                minimumStartRange,
-                maximumStartRange);
+            maximumStartRange = Mathf.Max(minimumStartRange, maximumStartRange);
 
-            chargeSpeed = Mathf.Max(
-                0.01f,
-                chargeSpeed);
+            chargeSpeed = Mathf.Max(0.01f, chargeSpeed);
 
-            maximumChargeDistance = Mathf.Max(
-                0.01f,
-                maximumChargeDistance);
+            maximumChargeDistance = Mathf.Max(0.01f, maximumChargeDistance);
 
             hitRange = Mathf.Max(0f, hitRange);
-            damageMultiplier = Mathf.Max(
-                0f,
-                damageMultiplier);
+            damageMultiplier = Mathf.Max(0f, damageMultiplier);
         }
     }
 }

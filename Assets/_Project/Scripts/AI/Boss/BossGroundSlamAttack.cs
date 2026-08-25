@@ -18,8 +18,7 @@ namespace UnityRPG.AI
         [SerializeField]
         private GameObject telegraphObject;
 
-        protected override BossPatternType PatternType =>
-            BossPatternType.GroundSlam;
+        protected override BossPatternType PatternType => BossPatternType.GroundSlam;
 
         protected override bool ValidatePatternConfiguration()
         {
@@ -33,8 +32,7 @@ namespace UnityRPG.AI
 
         protected override bool CanStartPattern(Transform target)
         {
-            Vector3 direction =
-                target.position - transform.position;
+            Vector3 direction = target.position - transform.position;
 
             direction.y = 0f;
 
@@ -68,8 +66,7 @@ namespace UnityRPG.AI
                 return;
             }
 
-            Vector3 direction =
-                CurrentTarget.position - transform.position;
+            Vector3 direction = CurrentTarget.position - transform.position;
 
             direction.y = 0f;
 

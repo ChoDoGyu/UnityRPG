@@ -38,25 +38,17 @@ namespace UnityRPG.AI
 
         public BossPhase CurrentPhase => currentPhase;
 
-        public BossPatternType CurrentPattern =>
-            activePattern != null ? activePattern.Type : BossPatternType.None;
+        public BossPatternType CurrentPattern => activePattern != null ? activePattern.Type : BossPatternType.None;
 
-        public bool HasActivePattern =>
-            activePattern != null;
+        public bool HasActivePattern => activePattern != null;
 
-        public bool ShouldTrackTargetRotation =>
-            activePattern == null ||
-            activePattern.ShouldTrackTargetRotation;
+        public bool ShouldTrackTargetRotation => activePattern == null || activePattern.ShouldTrackTargetRotation;
 
-        public bool ShouldStopMotor =>
-            activePattern == null ||
-            activePattern.ShouldStopMotor;
+        public bool ShouldStopMotor => activePattern == null || activePattern.ShouldStopMotor;
 
-        public BossPatternPhase CurrentPatternPhase =>
-            activePattern != null ? activePattern.CurrentPhase : BossPatternPhase.Ready;
+        public BossPatternPhase CurrentPatternPhase => activePattern != null ? activePattern.CurrentPhase : BossPatternPhase.Ready;
 
-        public float CurrentPatternProgress =>
-            activePattern != null ? activePattern.PhaseNormalizedProgress : 0f;
+        public float CurrentPatternProgress => activePattern != null ? activePattern.PhaseNormalizedProgress : 0f;
 
         public bool IsPatternIntervalActive => patternIntervalRemaining > 0f;
 
@@ -67,18 +59,14 @@ namespace UnityRPG.AI
 
             patterns = GetComponents<BossPatternBase>();
 
-            if (!context.IsConfigured ||
-                patterns.Length == 0)
+            if (!context.IsConfigured || patterns.Length == 0)
             {
-                Debug.LogError(
-                    "[Boss] BossCombatController의 설정이 올바르지 않습니다.",
-                    this);
+                Debug.LogError("[Boss] BossCombatController의 설정이 올바르지 않습니다.", this);
 
                 return;
             }
 
-            candidateBuffer =
-                new BossPatternBase[patterns.Length];
+            candidateBuffer = new BossPatternBase[patterns.Length];
 
             currentPhase = BossPhase.Phase1;
 
@@ -104,21 +92,16 @@ namespace UnityRPG.AI
 
         public bool TryStartPattern(Transform target)
         {
-            if (!isConfigured ||
-                target == null ||
-                HasActivePattern ||
-                patternIntervalRemaining > 0f)
+            if (!isConfigured || target == null || HasActivePattern || patternIntervalRemaining > 0f)
             {
                 return false;
             }
 
-            int candidateCount =
-                CollectCandidates(target, true);
+            int candidateCount = CollectCandidates(target, true);
 
             if (candidateCount == 0)
             {
-                candidateCount =
-                    CollectCandidates(target, false);
+                candidateCount = CollectCandidates(target, false);
             }
 
             if (candidateCount == 0)
@@ -126,9 +109,7 @@ namespace UnityRPG.AI
                 return false;
             }
 
-            BossPatternBase selectedPattern =
-                candidateBuffer[
-                    Random.Range(0, candidateCount)];
+            BossPatternBase selectedPattern = candidateBuffer[Random.Range(0, candidateCount)];
 
             if (!selectedPattern.TryStartPattern(target))
             {
@@ -142,10 +123,7 @@ namespace UnityRPG.AI
 
         public bool TryBeginPattern(BossPatternBase pattern)
         {
-            if (!isConfigured ||
-                pattern == null ||
-                HasActivePattern ||
-                patternIntervalRemaining > 0f)
+            if (!isConfigured || pattern == null || HasActivePattern || patternIntervalRemaining > 0f)
             {
                 return false;
             }
@@ -157,21 +135,17 @@ namespace UnityRPG.AI
 
         public void FinishPattern(BossPatternBase pattern)
         {
-            if (!isConfigured ||
-                activePattern != pattern)
+            if (!isConfigured || activePattern != pattern)
             {
                 return;
             }
 
             activePattern = null;
 
-            patternIntervalRemaining =
-                GetCurrentPatternInterval();
+            patternIntervalRemaining = GetCurrentPatternInterval();
         }
 
-        private int CollectCandidates(
-            Transform target,
-            bool excludeLastPattern)
+        private int CollectCandidates(Transform target, bool excludeLastPattern)
         {
             int count = 0;
 
@@ -179,15 +153,12 @@ namespace UnityRPG.AI
             {
                 BossPatternBase pattern = patterns[i];
 
-                if (!pattern.CanBeSelected(
-                        target,
-                        currentPhase))
+                if (!pattern.CanBeSelected(target, currentPhase))
                 {
                     continue;
                 }
 
-                if (excludeLastPattern &&
-                    pattern == lastPattern)
+                if (excludeLastPattern && pattern == lastPattern)
                 {
                     continue;
                 }
@@ -201,15 +172,12 @@ namespace UnityRPG.AI
 
         private void UpdateBossPhase()
         {
-            if (currentPhase == BossPhase.Phase2 ||
-                enemyHealth.MaxHealth <= 0f)
+            if (currentPhase == BossPhase.Phase2 || enemyHealth.MaxHealth <= 0f)
             {
                 return;
             }
 
-            float healthRatio =
-                enemyHealth.CurrentHealth /
-                enemyHealth.MaxHealth;
+            float healthRatio = enemyHealth.CurrentHealth / enemyHealth.MaxHealth;
 
             if (healthRatio <= phase2HealthRatio)
             {
@@ -224,17 +192,14 @@ namespace UnityRPG.AI
                 return;
             }
 
-            patternIntervalRemaining = Mathf.Max(
-                0f,
-                patternIntervalRemaining - deltaTime);
+            patternIntervalRemaining = Mathf.Max(0f, patternIntervalRemaining - deltaTime);
         }
 
         private float GetCurrentPatternInterval()
         {
             if (currentPhase == BossPhase.Phase2)
             {
-                return patternInterval *
-                       phase2IntervalMultiplier;
+                return patternInterval * phase2IntervalMultiplier;
             }
 
             return patternInterval;
@@ -242,19 +207,11 @@ namespace UnityRPG.AI
 
         private void OnValidate()
         {
-            phase2HealthRatio = Mathf.Clamp(
-                phase2HealthRatio,
-                0.01f,
-                0.99f);
+            phase2HealthRatio = Mathf.Clamp(phase2HealthRatio, 0.01f, 0.99f);
 
-            patternInterval = Mathf.Max(
-                0f,
-                patternInterval);
+            patternInterval = Mathf.Max(0f, patternInterval);
 
-            phase2IntervalMultiplier = Mathf.Clamp(
-                phase2IntervalMultiplier,
-                0.1f,
-                1f);
+            phase2IntervalMultiplier = Mathf.Clamp(phase2IntervalMultiplier, 0.1f, 1f);
         }
     }
 }

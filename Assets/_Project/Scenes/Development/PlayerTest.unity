@@ -447,7 +447,7 @@ Transform:
   m_GameObject: {fileID: 389407450}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.1, z: -5}
+  m_LocalPosition: {x: 12.91, y: 2.1, z: -18.08}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2076,7 +2076,7 @@ Transform:
   m_GameObject: {fileID: 1976734657}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.1, z: -5}
+  m_LocalPosition: {x: 12.91, y: 2.1, z: -18.08}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2121,6 +2121,39 @@ MonoBehaviour:
     CameraRadius: 0.2
     DampingIntoCollision: 0
     DampingFromCollision: 0.5
+--- !u!114 &1980626034 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3468797575737810211, guid: cc33536518238344f9ee5e3a2ff33895, type: 3}
+  m_PrefabInstance: {fileID: 3228420964936511294}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bd7138aeac1ade47a28d7369916214a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.BossController
+--- !u!114 &1980626035 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6913167293306959602, guid: cc33536518238344f9ee5e3a2ff33895, type: 3}
+  m_PrefabInstance: {fileID: 3228420964936511294}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dda8027415d5f8468de3b8ea516861b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.BossCombatController
+--- !u!114 &1980626039 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8058962488277999199, guid: cc33536518238344f9ee5e3a2ff33895, type: 3}
+  m_PrefabInstance: {fileID: 3228420964936511294}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25229ea8e2832de42bb7cb4e6d67a343, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyHealth
 --- !u!1 &1997232450
 GameObject:
   m_ObjectHideFlags: 0
@@ -2601,6 +2634,14 @@ PrefabInstance:
       propertyPath: playerConsumableController
       value: 
       objectReference: {fileID: 1521736357}
+    - target: {fileID: 2066126602286826169, guid: cd72307a927b08140ba089aa004625df, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2066126602286826169, guid: cd72307a927b08140ba089aa004625df, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2296009778902417811, guid: cd72307a927b08140ba089aa004625df, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -2813,6 +2854,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -83
       objectReference: {fileID: 0}
+    - target: {fileID: 8481698267952374894, guid: cd72307a927b08140ba089aa004625df, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8481698267952374894, guid: cd72307a927b08140ba089aa004625df, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8481698267952374894, guid: cd72307a927b08140ba089aa004625df, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8890660402535500145, guid: cd72307a927b08140ba089aa004625df, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -2857,6 +2910,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameplayHUD
       objectReference: {fileID: 0}
+    - target: {fileID: 9098273327504931538, guid: cd72307a927b08140ba089aa004625df, type: 3}
+      propertyPath: bossHealth
+      value: 
+      objectReference: {fileID: 1980626039}
+    - target: {fileID: 9098273327504931538, guid: cd72307a927b08140ba089aa004625df, type: 3}
+      propertyPath: bossController
+      value: 
+      objectReference: {fileID: 1980626034}
+    - target: {fileID: 9098273327504931538, guid: cd72307a927b08140ba089aa004625df, type: 3}
+      propertyPath: bossCombatController
+      value: 
+      objectReference: {fileID: 1980626035}
     - target: {fileID: 9153197950364972924, guid: cd72307a927b08140ba089aa004625df, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -3014,11 +3079,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2034048425506549625, guid: cc33536518238344f9ee5e3a2ff33895, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7165481325389474562, guid: cc33536518238344f9ee5e3a2ff33895, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8
+      value: -13.17
       objectReference: {fileID: 0}
     - target: {fileID: 7165481325389474562, guid: cc33536518238344f9ee5e3a2ff33895, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3026,7 +3091,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7165481325389474562, guid: cc33536518238344f9ee5e3a2ff33895, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 8
+      value: 12.58
       objectReference: {fileID: 0}
     - target: {fileID: 7165481325389474562, guid: cc33536518238344f9ee5e3a2ff33895, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3136,7 +3201,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3171799723806331505, guid: acfb77fcfd5761549bb349a926078283, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 12.91
       objectReference: {fileID: 0}
     - target: {fileID: 3171799723806331505, guid: acfb77fcfd5761549bb349a926078283, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3144,7 +3209,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3171799723806331505, guid: acfb77fcfd5761549bb349a926078283, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -13.08
       objectReference: {fileID: 0}
     - target: {fileID: 3171799723806331505, guid: acfb77fcfd5761549bb349a926078283, type: 3}
       propertyPath: m_LocalRotation.w

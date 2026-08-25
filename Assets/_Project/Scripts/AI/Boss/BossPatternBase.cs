@@ -45,9 +45,7 @@ namespace UnityRPG.AI
 
         public BossPatternPhase CurrentPhase => currentPhase;
 
-        public bool IsReady =>
-            isConfigured &&
-            currentPhase == BossPatternPhase.Ready;
+        public bool IsReady => isConfigured && currentPhase == BossPatternPhase.Ready;
 
         public bool IsActionLocked =>
             currentPhase == BossPatternPhase.Windup ||
@@ -69,8 +67,7 @@ namespace UnityRPG.AI
                     return 0f;
                 }
 
-                return 1f - Mathf.Clamp01(
-                    remainingPhaseTime / duration);
+                return 1f - Mathf.Clamp01(remainingPhaseTime / duration);
             }
         }
 
@@ -79,12 +76,9 @@ namespace UnityRPG.AI
             context = GetComponent<EnemyContext>();
             combatController = GetComponent<BossCombatController>();
 
-            if (!context.IsConfigured ||
-                !ValidatePatternConfiguration())
+            if (!context.IsConfigured || !ValidatePatternConfiguration())
             {
-                Debug.LogError(
-                    $"[Boss] {GetType().Name}의 설정이 올바르지 않습니다.",
-                    this);
+                Debug.LogError($"[Boss] {GetType().Name}의 설정이 올바르지 않습니다.", this);
 
                 return;
             }
@@ -95,14 +89,9 @@ namespace UnityRPG.AI
             OnPatternInitialized();
         }
 
-        public bool CanBeSelected(
-            Transform target,
-            BossPhase bossPhase)
+        public bool CanBeSelected(Transform target, BossPhase bossPhase)
         {
-            if (!isConfigured ||
-                !IsReady ||
-                !IsTargetAlive(target) ||
-                !IsAvailableInPhase(bossPhase))
+            if (!isConfigured || !IsReady || !IsTargetAlive(target) || !IsAvailableInPhase(bossPhase))
             {
                 return false;
             }
@@ -112,9 +101,7 @@ namespace UnityRPG.AI
 
         public bool TryStartPattern(Transform target)
         {
-            if (!CanBeSelected(
-                    target,
-                    combatController.CurrentPhase))
+            if (!CanBeSelected(target, combatController.CurrentPhase))
             {
                 return false;
             }
@@ -135,15 +122,12 @@ namespace UnityRPG.AI
 
         public void UpdatePattern(float deltaTime)
         {
-            if (!isConfigured ||
-                currentPhase == BossPatternPhase.Ready ||
-                deltaTime <= 0f)
+            if (!isConfigured || currentPhase == BossPatternPhase.Ready || deltaTime <= 0f)
             {
                 return;
             }
 
-            if (IsActionLocked &&
-                !IsTargetAlive(currentTarget))
+            if (IsActionLocked && !IsTargetAlive(currentTarget))
             {
                 Cancel();
                 return;
@@ -159,9 +143,7 @@ namespace UnityRPG.AI
                 }
             }
 
-            remainingPhaseTime = Mathf.Max(
-                0f,
-                remainingPhaseTime - deltaTime);
+            remainingPhaseTime = Mathf.Max(0f, remainingPhaseTime - deltaTime);
 
             if (remainingPhaseTime > 0f)
             {
@@ -215,30 +197,24 @@ namespace UnityRPG.AI
 
         protected DamageInfo CreateDamageInfo(float damageMultiplier)
         {
-            return new DamageInfo(
-                Context.Definition.Attack * damageMultiplier,
-                gameObject);
+            return new DamageInfo(Context.Definition.Attack * damageMultiplier, gameObject);
         }
 
-        protected bool TryApplyDamage(
-            Transform target,
-            float damageMultiplier)
+        protected bool TryApplyDamage(Transform target, float damageMultiplier)
         {
             if (!IsTargetAlive(target))
             {
                 return false;
             }
 
-            IDamageable damageable =
-                target.GetComponentInParent<IDamageable>();
+            IDamageable damageable = target.GetComponentInParent<IDamageable>();
 
             if (damageable == null)
             {
                 return false;
             }
 
-            damageable.TakeDamage(
-                CreateDamageInfo(damageMultiplier));
+            damageable.TakeDamage(CreateDamageInfo(damageMultiplier));
 
             return true;
         }
@@ -290,11 +266,9 @@ namespace UnityRPG.AI
                 return false;
             }
 
-            PlayerHealth playerHealth =
-                target.GetComponent<PlayerHealth>();
+            PlayerHealth playerHealth = target.GetComponent<PlayerHealth>();
 
-            return playerHealth != null &&
-                   !playerHealth.IsDead;
+            return playerHealth != null && !playerHealth.IsDead;
         }
 
         private void StartActive()

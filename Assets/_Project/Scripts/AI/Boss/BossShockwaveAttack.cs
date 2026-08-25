@@ -41,8 +41,7 @@ namespace UnityRPG.AI
         [SerializeField]
         private LayerMask collisionMask;
 
-        protected override BossPatternType PatternType =>
-            BossPatternType.Shockwave;
+        protected override BossPatternType PatternType => BossPatternType.Shockwave;
 
         protected override bool IsAvailableInPhase(BossPhase bossPhase)
         {
@@ -51,24 +50,19 @@ namespace UnityRPG.AI
 
         protected override bool ValidatePatternConfiguration()
         {
-            return spawnPoint != null &&
-                   projectilePrefab != null &&
-                   collisionMask.value != 0;
+            return spawnPoint != null && projectilePrefab != null && collisionMask.value != 0;
         }
 
         protected override bool CanStartPattern(Transform target)
         {
-            Vector3 direction =
-                target.position - transform.position;
+            Vector3 direction = target.position - transform.position;
 
             direction.y = 0f;
 
             float sqrDistance = direction.sqrMagnitude;
 
-            return sqrDistance >=
-                       minimumStartRange * minimumStartRange &&
-                   sqrDistance <=
-                       maximumStartRange * maximumStartRange;
+            return sqrDistance >= minimumStartRange * minimumStartRange &&
+                   sqrDistance <= maximumStartRange * maximumStartRange;
         }
 
         protected override void OnActiveStarted()
@@ -83,8 +77,7 @@ namespace UnityRPG.AI
                 return;
             }
 
-            Vector3 direction =
-                CurrentTarget.position - spawnPoint.position;
+            Vector3 direction = CurrentTarget.position - spawnPoint.position;
 
             direction.y = 0f;
 
@@ -97,13 +90,9 @@ namespace UnityRPG.AI
 
             DamageInfo damageInfo = CreateDamageInfo(damageMultiplier);
 
-            BossShockwaveProjectile projectile = Instantiate(
-                projectilePrefab,
-                spawnPoint.position,
-                Quaternion.LookRotation(direction));
+            BossShockwaveProjectile projectile = Instantiate(projectilePrefab, spawnPoint.position, Quaternion.LookRotation(direction));
 
-            projectile.Initialize(direction, projectileSpeed, hitRadius,
-                maximumDistance, damageInfo, collisionMask);
+            projectile.Initialize(direction, projectileSpeed, hitRadius, maximumDistance, damageInfo, collisionMask);
         }
 
         protected override void OnValidate()
@@ -112,9 +101,7 @@ namespace UnityRPG.AI
 
             minimumStartRange = Mathf.Max(0f, minimumStartRange);
 
-            maximumStartRange = Mathf.Max(
-                minimumStartRange,
-                maximumStartRange);
+            maximumStartRange = Mathf.Max(minimumStartRange, maximumStartRange);
 
             projectileSpeed = Mathf.Max(0.01f, projectileSpeed);
             maximumDistance = Mathf.Max(0.1f, maximumDistance);
