@@ -8,53 +8,40 @@ namespace UnityRPG.Character.Stats
     public sealed class PlayerStats : MonoBehaviour
     {
         [Header("Definition")]
-        [SerializeField]
-        private PlayerStatDefinition definition;
+        [SerializeField] private PlayerStatDefinition definition;
 
-        private readonly Dictionary<StatType, RuntimeStat> stats =
-            new Dictionary<StatType, RuntimeStat>();
-
+        private readonly Dictionary<StatType, RuntimeStat> stats = new Dictionary<StatType, RuntimeStat>();
         private bool isConfigured;
 
+        public event Action<StatType, float> StatChanged;
+
         public float MaxHealth => GetValue(StatType.MaxHealth);
-
         public float Attack => GetValue(StatType.Attack);
-
         public float Defense => GetValue(StatType.Defense);
-
         public float CritChance => GetValue(StatType.CritChance);
-
         public float CritDamage => GetValue(StatType.CritDamage);
-
         public float MoveSpeed => GetValue(StatType.MoveSpeed);
-
         public bool IsConfigured => isConfigured;
 
         private void Awake()
         {
             if (definition == null)
             {
-                Debug.LogError("[Stats] PlayerStatDefinition이 설정되지 않았습니다.",this);
-
+                Debug.LogError("[Stats] PlayerStatDefinition이 설정되지 않았습니다.", this);
                 return;
             }
 
             InitializeStats();
-
             isConfigured = true;
         }
 
         public float GetValue(StatType statType)
         {
             if (!isConfigured)
-            {
                 return 0f;
-            }
 
             if (!stats.TryGetValue(statType, out RuntimeStat stat))
-            {
                 return 0f;
-            }
 
             return ClampValue(statType, stat.Value);
         }
@@ -62,37 +49,41 @@ namespace UnityRPG.Character.Stats
         public void AddModifier(StatType statType, StatModifier modifier)
         {
             if (!isConfigured)
-            {
                 return;
-            }
 
             if (!stats.TryGetValue(statType, out RuntimeStat stat))
-            {
                 return;
-            }
 
+            float previousValue = GetValue(statType);
             stat.AddModifier(modifier);
+            NotifyStatChanged(statType, previousValue);
         }
 
         public void RemoveModifiersFromSource(object source)
         {
             if (!isConfigured)
-            {
                 return;
-            }
 
-            foreach (RuntimeStat stat in stats.Values)
+            foreach (KeyValuePair<StatType, RuntimeStat> pair in stats)
             {
-                stat.RemoveModifiersFromSource(source);
+                float previousValue = GetValue(pair.Key);
+                pair.Value.RemoveModifiersFromSource(source);
+                NotifyStatChanged(pair.Key, previousValue);
             }
         }
 
         private void InitializeStats()
         {
             foreach (StatType statType in Enum.GetValues(typeof(StatType)))
-            {
                 stats.Add(statType, new RuntimeStat(GetBaseValue(statType)));
-            }
+        }
+
+        private void NotifyStatChanged(StatType statType, float previousValue)
+        {
+            float currentValue = GetValue(statType);
+
+            if (!Mathf.Approximately(previousValue, currentValue))
+                StatChanged?.Invoke(statType, currentValue);
         }
 
         private float GetBaseValue(StatType statType)

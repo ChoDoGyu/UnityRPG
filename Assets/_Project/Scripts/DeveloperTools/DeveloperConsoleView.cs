@@ -10,6 +10,8 @@ namespace UnityRPG.DeveloperTools
     public sealed class DeveloperConsoleView : MonoBehaviour
     {
         private const string InputControlName = "DeveloperConsoleInput";
+        private const float ReferenceWidth = 1920f;
+        private const float ReferenceHeight = 1080f;
 
         [Header("View")]
         [SerializeField, Min(100f)] private float panelHeight = 260f;
@@ -19,7 +21,9 @@ namespace UnityRPG.DeveloperTools
 
         private DeveloperConsole developerConsole;
         private PlayerInputReader inputReader;
+        private GUIStyle titleStyle;
         private GUIStyle historyStyle;
+        private GUIStyle inputStyle;
 
         private string input = string.Empty;
         private bool isOpen;
@@ -57,28 +61,46 @@ namespace UnityRPG.DeveloperTools
 
             if (historyStyle == null)
             {
+                titleStyle = new GUIStyle(GUI.skin.label);
+                titleStyle.fontSize = 20;
+                titleStyle.alignment = TextAnchor.MiddleLeft;
+
                 historyStyle = new GUIStyle(GUI.skin.label);
+                historyStyle.fontSize = 18;
                 historyStyle.wordWrap = true;
+
+                inputStyle = new GUIStyle(GUI.skin.textField);
+                inputStyle.fontSize = 18;
             }
+
+            float uiScale = GetUIScale();
+            float screenWidth = Screen.width / uiScale;
+            float screenHeight = Screen.height / uiScale;
+
+            Matrix4x4 previousMatrix = GUI.matrix;
+            GUI.matrix = Matrix4x4.Scale(new Vector3(uiScale, uiScale, 1f));
 
             bool submit = currentEvent.type == EventType.KeyDown &&
                           (currentEvent.keyCode == KeyCode.Return || currentEvent.keyCode == KeyCode.KeypadEnter);
 
             float margin = 10f;
-            float panelY = Screen.height - panelHeight;
-            float inputY = Screen.height - 35f;
-            float historyY = panelY + 35f;
-            float historyWidth = Screen.width - margin * 2f;
+            float titleHeight = 32f;
+            float inputHeight = 32f;
+
+            float panelY = screenHeight - panelHeight;
+            float inputY = screenHeight - margin - inputHeight;
+            float historyY = panelY + margin + titleHeight;
+            float historyWidth = screenWidth - margin * 2f;
             float historyHeight = inputY - historyY - 10f;
 
-            GUI.Box(new Rect(0f, panelY, Screen.width, panelHeight), GUIContent.none);
-            GUI.Label(new Rect(margin, panelY + margin, historyWidth, 25f), "Developer Console [`]");
+            GUI.Box(new Rect(0f, panelY, screenWidth, panelHeight), GUIContent.none);
+            GUI.Label(new Rect(margin, panelY + margin, historyWidth, titleHeight), "Developer Console [`]", titleStyle);
 
             string historyText = BuildVisibleHistoryText(historyWidth, historyHeight);
             GUI.Label(new Rect(margin, historyY, historyWidth, historyHeight), historyText, historyStyle);
 
             GUI.SetNextControlName(InputControlName);
-            input = GUI.TextField(new Rect(margin, inputY, historyWidth, 25f), input);
+            input = GUI.TextField(new Rect(margin, inputY, historyWidth, inputHeight), input, inputStyle);
 
             if (focusInput)
             {
@@ -91,6 +113,16 @@ namespace UnityRPG.DeveloperTools
                 Submit();
                 currentEvent.Use();
             }
+
+            GUI.matrix = previousMatrix;
+        }
+
+        private float GetUIScale()
+        {
+            float widthScale = Screen.width / ReferenceWidth;
+            float heightScale = Screen.height / ReferenceHeight;
+
+            return Mathf.Sqrt(widthScale * heightScale);
         }
 
         private void Submit()

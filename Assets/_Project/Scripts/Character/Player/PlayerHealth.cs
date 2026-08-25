@@ -17,6 +17,7 @@ namespace UnityRPG.Character.Player
         private PlayerDodger playerDodger;
         private bool isInitialized;
 
+        public event Action<float, float> HealthChanged;
         public event Action Died;
 
         public float MaxHealth => playerStats != null ? playerStats.MaxHealth : 0f;
@@ -37,6 +38,7 @@ namespace UnityRPG.Character.Player
 
             currentHealth = playerStats.MaxHealth;
             isInitialized = true;
+            NotifyHealthChanged();
         }
 
         public void TakeDamage(DamageInfo damageInfo)
@@ -53,6 +55,8 @@ namespace UnityRPG.Character.Player
             float finalDamage = DamageCalculator.CalculateAfterDefense(damageInfo.Amount, playerStats.Defense);
             currentHealth = Mathf.Max(0f, currentHealth - finalDamage);
 
+            NotifyHealthChanged();
+
             if (currentHealth <= 0f)
                 Died?.Invoke();
         }
@@ -63,6 +67,7 @@ namespace UnityRPG.Character.Player
                 return false;
 
             currentHealth = Mathf.Min(currentHealth + amount, MaxHealth);
+            NotifyHealthChanged();
             return true;
         }
 
@@ -72,6 +77,7 @@ namespace UnityRPG.Character.Player
                 return false;
 
             currentHealth = MaxHealth;
+            NotifyHealthChanged();
             return true;
         }
 
@@ -80,7 +86,18 @@ namespace UnityRPG.Character.Player
             if (!isInitialized)
                 return;
 
-            currentHealth = Mathf.Min(currentHealth, MaxHealth);
+            float clampedHealth = Mathf.Min(currentHealth, MaxHealth);
+
+            if (Mathf.Approximately(currentHealth, clampedHealth))
+                return;
+
+            currentHealth = clampedHealth;
+            NotifyHealthChanged();
+        }
+
+        private void NotifyHealthChanged()
+        {
+            HealthChanged?.Invoke(currentHealth, MaxHealth);
         }
     }
 }

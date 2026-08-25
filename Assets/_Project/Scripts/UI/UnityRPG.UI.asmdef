@@ -3,7 +3,9 @@
     "rootNamespace": "UnityRPG.UI",
     "references": [
         "GUID:be6eabcff5727f94abc2eb38704e0b74",
-        "GUID:d422bbe74ae58a649b13b546aa7f2ece"
+        "GUID:d422bbe74ae58a649b13b546aa7f2ece",
+        "GUID:2bafac87e7f4b9b418d9448d219b01ab",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

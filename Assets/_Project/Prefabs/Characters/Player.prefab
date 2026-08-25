@@ -677,7 +677,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9b227b3dfaab294c90100a4d7815387, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.DeveloperTools::UnityRPG.DeveloperTools.DeveloperConsoleView
-  panelHeight: 260
+  panelHeight: 300
   maxHistoryLines: 12
 --- !u!1 &1000176733347427081
 GameObject:
