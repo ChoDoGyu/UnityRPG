@@ -12,11 +12,19 @@ namespace UnityRPG.UI
         [Header("Runtime")]
         [SerializeField] private PlayerInventory playerInventory;
         [SerializeField] private PlayerConsumableController playerConsumableController;
+        [SerializeField] private PlayerEquipment playerEquipment;
         [SerializeField] private PlayerEquipmentController playerEquipmentController;
 
-        [Header("Slots")]
+        [Header("Inventory Slots")]
         [SerializeField] private Transform slotGridRoot;
         [SerializeField] private InventorySlotUI slotPrefab;
+
+        [Header("Equipment")]
+        [SerializeField] private GameObject equipmentSlotsPanel;
+        [SerializeField] private EquipmentSlotUI weaponSlot;
+        [SerializeField] private EquipmentSlotUI headSlot;
+        [SerializeField] private EquipmentSlotUI bodySlot;
+        [SerializeField] private EquipmentSlotUI accessorySlot;
 
         [Header("Detail")]
         [SerializeField] private GameObject itemDetailPanel;
@@ -31,6 +39,7 @@ namespace UnityRPG.UI
 
         private InventorySlot selectedSlot;
         private InventorySlotUI selectedSlotView;
+        private EquipmentSlotUI selectedEquipmentSlotView;
 
         private void Start()
         {
@@ -42,11 +51,14 @@ namespace UnityRPG.UI
             }
 
             BuildSlots();
+            InitializeEquipmentSlots();
 
             playerInventory.Changed += Refresh;
+            playerEquipment.Changed += RefreshEquipment;
             actionButton.onClick.AddListener(HandleActionClicked);
 
             Refresh();
+            RefreshEquipment();
             ClearSelection();
         }
 
@@ -54,6 +66,9 @@ namespace UnityRPG.UI
         {
             if (playerInventory != null)
                 playerInventory.Changed -= Refresh;
+
+            if (playerEquipment != null)
+                playerEquipment.Changed -= RefreshEquipment;
 
             if (actionButton != null)
                 actionButton.onClick.RemoveListener(HandleActionClicked);
@@ -64,9 +79,17 @@ namespace UnityRPG.UI
             for (int i = 0; i < playerInventory.MaxSlots; i++)
             {
                 InventorySlotUI slotView = Instantiate(slotPrefab, slotGridRoot);
-                slotView.Initialize(HandleSlotSelected);
+                slotView.Initialize(HandleInventorySlotSelected);
                 slotViews.Add(slotView);
             }
+        }
+
+        private void InitializeEquipmentSlots()
+        {
+            weaponSlot.Initialize(HandleEquipmentSlotSelected);
+            headSlot.Initialize(HandleEquipmentSlotSelected);
+            bodySlot.Initialize(HandleEquipmentSlotSelected);
+            accessorySlot.Initialize(HandleEquipmentSlotSelected);
         }
 
         private void Refresh()
@@ -81,10 +104,30 @@ namespace UnityRPG.UI
                     slotViews[i].Clear();
             }
 
-            RefreshSelection(inventorySlots);
+            RefreshInventorySelection(inventorySlots);
         }
 
-        private void HandleSlotSelected(InventorySlotUI slotView)
+        private void RefreshEquipment()
+        {
+            weaponSlot.SetEquipment(playerEquipment.GetEquipped(EquipmentSlot.Weapon));
+            headSlot.SetEquipment(playerEquipment.GetEquipped(EquipmentSlot.Head));
+            bodySlot.SetEquipment(playerEquipment.GetEquipped(EquipmentSlot.Body));
+            accessorySlot.SetEquipment(playerEquipment.GetEquipped(EquipmentSlot.Accessory));
+
+            if (selectedEquipmentSlotView == null)
+                return;
+
+            if (selectedEquipmentSlotView.EquippedItem == null)
+            {
+                ClearSelection();
+                return;
+            }
+
+            selectedEquipmentSlotView.SetSelected(true);
+            RefreshEquipmentDetail(selectedEquipmentSlotView);
+        }
+
+        private void HandleInventorySlotSelected(InventorySlotUI slotView)
         {
             if (slotView == null || slotView.Slot == null)
             {
@@ -92,18 +135,44 @@ namespace UnityRPG.UI
                 return;
             }
 
-            if (selectedSlotView != null)
-                selectedSlotView.SetSelected(false);
+            ClearSelectedBorders();
 
-            selectedSlotView = slotView;
             selectedSlot = slotView.Slot;
+            selectedSlotView = slotView;
+            selectedEquipmentSlotView = null;
 
             selectedSlotView.SetSelected(true);
-            RefreshDetail(selectedSlot);
+            RefreshInventoryDetail(selectedSlot);
+        }
+
+        private void HandleEquipmentSlotSelected(EquipmentSlotUI slotView)
+        {
+            if (slotView == null || slotView.EquippedItem == null)
+            {
+                ClearSelection();
+                return;
+            }
+
+            ClearSelectedBorders();
+
+            selectedSlot = null;
+            selectedSlotView = null;
+            selectedEquipmentSlotView = slotView;
+
+            selectedEquipmentSlotView.SetSelected(true);
+            RefreshEquipmentDetail(selectedEquipmentSlotView);
         }
 
         private void HandleActionClicked()
         {
+            if (selectedEquipmentSlotView != null)
+            {
+                if (selectedEquipmentSlotView.EquippedItem != null)
+                    playerEquipmentController.TryUnequip(selectedEquipmentSlotView.Slot);
+
+                return;
+            }
+
             if (selectedSlot == null || selectedSlot.Item == null)
                 return;
 
@@ -117,7 +186,7 @@ namespace UnityRPG.UI
                 playerEquipmentController.TryEquip(equipment);
         }
 
-        private void RefreshSelection(IReadOnlyList<InventorySlot> inventorySlots)
+        private void RefreshInventorySelection(IReadOnlyList<InventorySlot> inventorySlots)
         {
             if (selectedSlot == null)
                 return;
@@ -144,22 +213,19 @@ namespace UnityRPG.UI
 
             selectedSlotView = slotViews[selectedIndex];
             selectedSlotView.SetSelected(true);
-            RefreshDetail(selectedSlot);
+            RefreshInventoryDetail(selectedSlot);
         }
 
-        private void RefreshDetail(InventorySlot slot)
+        private void RefreshInventoryDetail(InventorySlot slot)
         {
             ItemDefinition item = slot.Item;
 
-            itemDetailPanel.SetActive(true);
-
-            itemNameText.text = item.DisplayName;
-            itemDescriptionText.text = string.IsNullOrWhiteSpace(item.Description) ? "-" : item.Description;
+            ShowDetail(item);
             itemAmountText.text = $"Amount: {slot.Count}";
 
             if (item is ConsumableDefinition consumable)
             {
-                itemTypeText.text = $"Consumable · Heal {consumable.HealAmount:0.#}";
+                itemTypeText.text = $"Consumable - Heal {consumable.HealAmount:0.#}";
                 actionText.text = "Use";
                 actionButton.interactable = true;
                 return;
@@ -167,7 +233,7 @@ namespace UnityRPG.UI
 
             if (item is EquipmentDefinition equipment)
             {
-                itemTypeText.text = $"Equipment · {equipment.Slot}";
+                itemTypeText.text = $"Equipment - {equipment.Slot}";
                 actionText.text = "Equip";
                 actionButton.interactable = true;
                 return;
@@ -178,24 +244,61 @@ namespace UnityRPG.UI
             actionButton.interactable = false;
         }
 
+        private void RefreshEquipmentDetail(EquipmentSlotUI slotView)
+        {
+            EquipmentDefinition equipment = slotView.EquippedItem;
+
+            ShowDetail(equipment);
+
+            itemTypeText.text = $"Equipment - {equipment.Slot}";
+            itemAmountText.text = "Equipped";
+            actionText.text = "Unequip";
+            actionButton.interactable = true;
+        }
+
+        private void ShowDetail(ItemDefinition item)
+        {
+            equipmentSlotsPanel.SetActive(false);
+            itemDetailPanel.SetActive(true);
+
+            itemNameText.text = item.DisplayName;
+            itemDescriptionText.text = string.IsNullOrWhiteSpace(item.Description) ? "-" : item.Description;
+        }
+
         private void ClearSelection()
+        {
+            ClearSelectedBorders();
+
+            selectedSlot = null;
+            selectedSlotView = null;
+            selectedEquipmentSlotView = null;
+
+            itemDetailPanel.SetActive(false);
+            equipmentSlotsPanel.SetActive(true);
+        }
+
+        private void ClearSelectedBorders()
         {
             if (selectedSlotView != null)
                 selectedSlotView.SetSelected(false);
 
-            selectedSlot = null;
-            selectedSlotView = null;
-
-            itemDetailPanel.SetActive(false);
+            if (selectedEquipmentSlotView != null)
+                selectedEquipmentSlotView.SetSelected(false);
         }
 
         private bool HasAllReferences()
         {
             return playerInventory != null &&
                    playerConsumableController != null &&
+                   playerEquipment != null &&
                    playerEquipmentController != null &&
                    slotGridRoot != null &&
                    slotPrefab != null &&
+                   equipmentSlotsPanel != null &&
+                   weaponSlot != null &&
+                   headSlot != null &&
+                   bodySlot != null &&
+                   accessorySlot != null &&
                    itemDetailPanel != null &&
                    itemNameText != null &&
                    itemTypeText != null &&
