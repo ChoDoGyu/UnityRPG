@@ -107,20 +107,12 @@ namespace UnityRPG.Character.Player
 
             if (!stateController.CanMove)
             {
-                playerMotor.Move(
-                    Vector2.zero,
-                    false,
-                    cameraTarget,
-                    deltaTime);
+                playerMotor.Move(Vector2.zero, false, cameraTarget, deltaTime);
 
                 return;
             }
 
-            playerMotor.Move(
-                inputReader.MoveInput,
-                inputReader.IsSprintPressed,
-                cameraTarget,
-                deltaTime);
+            playerMotor.Move(inputReader.MoveInput, inputReader.IsSprintPressed, cameraTarget, deltaTime);
 
             UpdateRotation(deltaTime);
         }
@@ -134,22 +126,16 @@ namespace UnityRPG.Character.Player
 
             if (lockOnController.IsLockedOn)
             {
-                Vector3 targetDirection =
-                    lockOnController.CurrentTarget.AimPosition -
-                    transform.position;
+                Vector3 targetDirection = lockOnController.CurrentTarget.AimPosition - transform.position;
 
                 targetDirection.y = 0f;
 
-                playerRotator.Rotate(
-                    targetDirection,
-                    deltaTime);
+                playerRotator.Rotate(targetDirection, deltaTime);
 
                 return;
             }
 
-            playerRotator.Rotate(
-                playerMotor.CurrentMoveDirection,
-                deltaTime);
+            playerRotator.Rotate(playerMotor.CurrentMoveDirection, deltaTime);
         }
 
         private void UpdateVisual(bool isDodging, float deltaTime)
@@ -178,10 +164,7 @@ namespace UnityRPG.Character.Player
             {
                 if (stateController.TryEnterDodge())
                 {
-                    bool started =
-                        playerDodger.TryStartDodge(
-                            inputReader.MoveInput,
-                            playerCameraController.CameraTarget);
+                    bool started = playerDodger.TryStartDodge(inputReader.MoveInput, playerCameraController.CameraTarget);
 
                     if (!started)
                     {
@@ -189,8 +172,7 @@ namespace UnityRPG.Character.Player
                     }
                     else
                     {
-                        playerRotator.SetFacingDirection(
-                            playerDodger.DodgeDirection);
+                        playerRotator.SetFacingDirection(playerDodger.DodgeDirection);
                     }
                 }
             }
@@ -275,9 +257,7 @@ namespace UnityRPG.Character.Player
                 return;
             }
 
-            Vector3 targetDirection =
-                lockOnController.CurrentTarget.AimPosition -
-                transform.position;
+            Vector3 targetDirection = lockOnController.CurrentTarget.AimPosition - transform.position;
 
             targetDirection.y = 0f;
 
@@ -312,8 +292,7 @@ namespace UnityRPG.Character.Player
 
         private void UpdateSkillState()
         {
-            if (stateController.CurrentState !=
-                PlayerState.UsingSkill)
+            if (stateController.CurrentState != PlayerState.UsingSkill)
             {
                 return;
             }

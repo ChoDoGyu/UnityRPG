@@ -50,6 +50,9 @@ namespace UnityRPG.AI
         [Min(0.01f)]
         private float attackCooldown = 1.2f;
 
+        [Header("Reward")]
+        [SerializeField, Min(0)] private int experienceReward = 10;
+
         public EnemyType EnemyType => enemyType;
         public string DisplayName => displayName;
         public float MaxHealth => maxHealth;
@@ -62,6 +65,7 @@ namespace UnityRPG.AI
         public float AttackWindup => attackWindup;
         public float AttackRecovery => attackRecovery;
         public string EnemyId => enemyId;
+        public int ExperienceReward => experienceReward;
 
         private void OnValidate()
         {

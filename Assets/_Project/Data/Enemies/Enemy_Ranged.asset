@@ -24,3 +24,4 @@ MonoBehaviour:
   attackWindup: 0.8
   attackRecovery: 0.4
   attackCooldown: 1.8
+  experienceReward: 15

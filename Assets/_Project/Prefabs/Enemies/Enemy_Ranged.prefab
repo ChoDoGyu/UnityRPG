@@ -144,6 +144,7 @@ GameObject:
   - component: {fileID: 3104975225200431123}
   - component: {fileID: 3137394695368977031}
   - component: {fileID: -6315749114902286503}
+  - component: {fileID: -3499749356011899631}
   m_Layer: 6
   m_Name: Enemy_Ranged
   m_TagString: Untagged
@@ -380,6 +381,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54ba0e8fae672c7429a412d86d3ecb51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Quest.EnemyQuestProgressReporter
+--- !u!114 &-3499749356011899631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4871250424725364811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21d8bcf493b700847b0d509da3d6786b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyExperienceReward
 --- !u!1 &6167405587449617448
 GameObject:
   m_ObjectHideFlags: 0

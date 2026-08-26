@@ -31,6 +31,7 @@ namespace UnityRPG.AI
 
         private readonly List<EnemyHealth> spawnedEnemies = new List<EnemyHealth>();
 
+        public event Action<GameObject> EnemySpawned;
         public event Action AllEnemiesDefeated;
 
         public int AliveEnemyCount => aliveEnemyCount;
@@ -63,6 +64,8 @@ namespace UnityRPG.AI
                 enemyHealth.Died += HandleEnemyDied;
                 spawnedEnemies.Add(enemyHealth);
                 aliveEnemyCount++;
+
+                EnemySpawned?.Invoke(enemyObject);
             }
 
             return true;
