@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityRPG.Character.Player;
+using UnityRPG.Core;
 
 namespace UnityRPG.UI
 {
@@ -22,6 +23,7 @@ namespace UnityRPG.UI
         [SerializeField] private Button resumeButton;
         [SerializeField] private Button settingsButton;
         [SerializeField] private Button settingsBackButton;
+        [SerializeField] private Button mainMenuButton;
 
         private InventoryUI inventoryUI;
 
@@ -57,6 +59,8 @@ namespace UnityRPG.UI
 
             settingsButton.onClick.AddListener(OpenSettings);
             settingsBackButton.onClick.AddListener(CloseSettings);
+
+            mainMenuButton.onClick.AddListener(HandleMainMenu);
 
             inventoryPanel.SetActive(false);
             pauseRoot.SetActive(false);
@@ -115,6 +119,9 @@ namespace UnityRPG.UI
 
             if (settingsBackButton != null)
                 settingsBackButton.onClick.RemoveListener(CloseSettings);
+
+            if (mainMenuButton != null)
+                mainMenuButton.onClick.RemoveListener(HandleMainMenu);
         }
 
         private void HandleCancel()
@@ -256,7 +263,8 @@ namespace UnityRPG.UI
                    settingsPanel != null &&
                    resumeButton != null &&
                    settingsButton != null &&
-                   settingsBackButton != null;
+                   settingsBackButton != null &&
+                   mainMenuButton != null;
         }
 
         private void OpenSettings()
@@ -279,6 +287,19 @@ namespace UnityRPG.UI
 
             settingsPanel.SetActive(false);
             pausePanel.SetActive(true);
+        }
+
+        private void HandleMainMenu()
+        {
+            if (SceneTransitionService.Instance == null)
+            {
+                Debug.LogError("[UI] SceneTransitionService를 찾을 수 없습니다.", this);
+                return;
+            }
+
+            ClosePause();
+            GameplayRootLifetime.DestroyCurrent();
+            SceneTransitionService.Instance.LoadScene(SceneNames.MainMenu);
         }
     }
 }

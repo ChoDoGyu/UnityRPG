@@ -12186,6 +12186,7 @@ MonoBehaviour:
   resumeButton: {fileID: 1543020684408642580}
   settingsButton: {fileID: 7837658571640304633}
   settingsBackButton: {fileID: 33457454609512151}
+  mainMenuButton: {fileID: 7534485983025137924}
 --- !u!1 &7884483054054373195
 GameObject:
   m_ObjectHideFlags: 0
