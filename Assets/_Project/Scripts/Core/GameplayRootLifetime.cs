@@ -8,6 +8,8 @@ namespace UnityRPG.Core
     {
         private static GameplayRootLifetime instance;
 
+        public static bool HasInstance => instance != null;
+
         private void Awake()
         {
             if (instance != null && instance != this)
