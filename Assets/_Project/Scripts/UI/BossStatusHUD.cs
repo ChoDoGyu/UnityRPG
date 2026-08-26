@@ -24,7 +24,6 @@ namespace UnityRPG.UI
         [SerializeField] private TMP_Text healthText;
 
         private CanvasGroup canvasGroup;
-        private bool isInitialized;
         private bool isVisible;
 
         private void Awake()
@@ -34,27 +33,22 @@ namespace UnityRPG.UI
 
         private void Start()
         {
-            if (!HasAllReferences())
+            if (!HasViewReferences())
             {
-                Debug.LogError("[UI] BossStatusHUD의 참조가 누락되었습니다.", this);
+                Debug.LogError("[UI] BossStatusHUD의 View 참조가 누락되었습니다.", this);
                 enabled = false;
                 return;
             }
 
-            bossNameText.text = bossDisplayName;
-            bossHealth.Died += HandleBossDied;
-
             SetVisible(false);
-            Refresh();
-            isInitialized = true;
+
+            if (HasBossReferences())
+                Bind(bossHealth, bossCombatController, bossController, bossDisplayName);
         }
 
         private void LateUpdate()
         {
-            if (!isInitialized)
-                return;
-
-            if (bossHealth == null || bossCombatController == null || bossController == null)
+            if (!HasBossReferences())
             {
                 SetVisible(false);
                 return;
@@ -69,16 +63,49 @@ namespace UnityRPG.UI
             bool isEngaged = bossController.CurrentTarget != null;
             SetVisible(isEngaged);
 
-            if (!isEngaged)
-                return;
-
-            Refresh();
+            if (isEngaged)
+                Refresh();
         }
 
         private void OnDestroy()
         {
+            Unbind();
+        }
+
+        public void Bind(EnemyHealth health, BossCombatController combatController, BossController controller, string displayName)
+        {
+            Unbind();
+
+            bossHealth = health;
+            bossCombatController = combatController;
+            bossController = controller;
+
+            if (!string.IsNullOrWhiteSpace(displayName))
+                bossDisplayName = displayName;
+
+            if (!HasBossReferences())
+            {
+                SetVisible(false);
+                return;
+            }
+
+            bossNameText.text = bossDisplayName;
+            bossHealth.Died += HandleBossDied;
+
+            Refresh();
+            SetVisible(false);
+        }
+
+        public void Unbind()
+        {
             if (bossHealth != null)
                 bossHealth.Died -= HandleBossDied;
+
+            bossHealth = null;
+            bossCombatController = null;
+            bossController = null;
+
+            SetVisible(false);
         }
 
         private void Refresh()
@@ -109,24 +136,20 @@ namespace UnityRPG.UI
 
         private void SetVisible(bool visible)
         {
-            if (isVisible == visible)
-                return;
-
             isVisible = visible;
             canvasGroup.alpha = visible ? 1f : 0f;
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;
         }
 
-        private bool HasAllReferences()
+        private bool HasBossReferences()
         {
-            return bossHealth != null &&
-                   bossCombatController != null &&
-                   bossController != null &&
-                   bossNameText != null &&
-                   phaseText != null &&
-                   healthSlider != null &&
-                   healthText != null;
+            return bossHealth != null && bossCombatController != null && bossController != null;
+        }
+
+        private bool HasViewReferences()
+        {
+            return canvasGroup != null && bossNameText != null && phaseText != null && healthSlider != null && healthText != null;
         }
     }
 }
