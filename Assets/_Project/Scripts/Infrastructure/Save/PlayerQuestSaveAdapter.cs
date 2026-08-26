@@ -65,6 +65,7 @@ namespace UnityRPG.Infrastructure.Save
                     return false;
             }
 
+            questLog.NotifyRestoreCompleted();
             return true;
         }
 

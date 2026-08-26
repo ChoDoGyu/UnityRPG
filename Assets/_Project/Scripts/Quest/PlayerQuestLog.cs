@@ -13,6 +13,7 @@ namespace UnityRPG.Quest
         public event Action<RuntimeQuest> QuestProgressChanged;
         public event Action<RuntimeQuest> QuestReadyToTurnIn;
         public event Action<RuntimeQuest> QuestCompleted;
+        public event Action QuestsRestored;
 
         public IReadOnlyList<RuntimeQuest> Quests => quests;
 
@@ -86,6 +87,11 @@ namespace UnityRPG.Quest
             }
 
             return null;
+        }
+
+        internal void NotifyRestoreCompleted()
+        {
+            QuestsRestored?.Invoke();
         }
     }
 }

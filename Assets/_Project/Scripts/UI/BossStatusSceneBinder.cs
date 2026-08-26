@@ -15,21 +15,11 @@ namespace UnityRPG.UI
         private void Awake()
         {
             enemySpawner = GetComponent<EnemySpawner>();
-            bossStatusHUD = FindFirstObjectByType<BossStatusHUD>();
         }
 
         private void OnEnable()
         {
             enemySpawner.EnemySpawned += HandleEnemySpawned;
-        }
-
-        private void Start()
-        {
-            if (bossStatusHUD != null)
-                return;
-
-            Debug.LogError("[UI] BossStatusHUD를 찾을 수 없습니다.", this);
-            enabled = false;
         }
 
         private void OnDisable()
@@ -45,6 +35,15 @@ namespace UnityRPG.UI
         {
             if (!enemyObject.TryGetComponent(out BossController bossController))
                 return;
+
+            if (bossStatusHUD == null)
+                bossStatusHUD = FindFirstObjectByType<BossStatusHUD>();
+
+            if (bossStatusHUD == null)
+            {
+                Debug.LogError("[UI] BossStatusHUD를 찾을 수 없습니다.", this);
+                return;
+            }
 
             if (!enemyObject.TryGetComponent(out EnemyHealth bossHealth) ||
                 !enemyObject.TryGetComponent(out BossCombatController bossCombatController))

@@ -37,6 +37,7 @@ namespace UnityRPG.UI
             playerQuestLog.QuestProgressChanged += HandleQuestChanged;
             playerQuestLog.QuestReadyToTurnIn += HandleQuestChanged;
             playerQuestLog.QuestCompleted += HandleQuestChanged;
+            playerQuestLog.QuestsRestored += HandleQuestsRestored;
 
             Refresh();
         }
@@ -50,6 +51,7 @@ namespace UnityRPG.UI
             playerQuestLog.QuestProgressChanged -= HandleQuestChanged;
             playerQuestLog.QuestReadyToTurnIn -= HandleQuestChanged;
             playerQuestLog.QuestCompleted -= HandleQuestChanged;
+            playerQuestLog.QuestsRestored -= HandleQuestsRestored;
         }
 
         private void HandleQuestChanged(RuntimeQuest quest)
@@ -151,6 +153,11 @@ namespace UnityRPG.UI
                    questNameText != null &&
                    objectiveText != null &&
                    statusText != null;
+        }
+
+        private void HandleQuestsRestored()
+        {
+            Refresh();
         }
     }
 }

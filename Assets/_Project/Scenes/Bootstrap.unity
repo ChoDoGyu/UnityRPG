@@ -205,6 +205,7 @@ GameObject:
   - component: {fileID: 1158260416}
   - component: {fileID: 1158260415}
   - component: {fileID: 1158260417}
+  - component: {fileID: 1158260418}
   m_Layer: 0
   m_Name: GameRoot
   m_TagString: Untagged
@@ -253,6 +254,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Core::UnityRPG.Core.SceneTransitionService
   loadingOverlay: {fileID: 1345004920}
+--- !u!114 &1158260418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158260414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22527eef96d4e1445a28a4ed80887764, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Infrastructure.Save.SaveLoadCoordinator
 --- !u!1 &1243808163
 GameObject:
   m_ObjectHideFlags: 0

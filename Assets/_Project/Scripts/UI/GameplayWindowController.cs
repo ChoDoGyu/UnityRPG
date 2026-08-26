@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using UnityRPG.Character.Player;
 using UnityRPG.Core;
+using UnityRPG.Infrastructure.Save;
 
 namespace UnityRPG.UI
 {
@@ -11,6 +12,7 @@ namespace UnityRPG.UI
     {
         [Header("Runtime")]
         [SerializeField] private PlayerInputReader inputReader;
+        [SerializeField] private SaveGameController saveGameController;
 
         [Header("Inventory")]
         [SerializeField] private GameObject inventoryPanel;
@@ -24,6 +26,7 @@ namespace UnityRPG.UI
         [SerializeField] private Button settingsButton;
         [SerializeField] private Button settingsBackButton;
         [SerializeField] private Button mainMenuButton;
+        [SerializeField] private Button saveButton;
 
         private InventoryUI inventoryUI;
 
@@ -61,6 +64,8 @@ namespace UnityRPG.UI
             settingsBackButton.onClick.AddListener(CloseSettings);
 
             mainMenuButton.onClick.AddListener(HandleMainMenu);
+
+            saveButton.onClick.AddListener(HandleSave);
 
             inventoryPanel.SetActive(false);
             pauseRoot.SetActive(false);
@@ -122,6 +127,9 @@ namespace UnityRPG.UI
 
             if (mainMenuButton != null)
                 mainMenuButton.onClick.RemoveListener(HandleMainMenu);
+
+            if (saveButton != null)
+                saveButton.onClick.RemoveListener(HandleSave);
         }
 
         private void HandleCancel()
@@ -264,6 +272,8 @@ namespace UnityRPG.UI
                    resumeButton != null &&
                    settingsButton != null &&
                    settingsBackButton != null &&
+                   saveGameController != null &&
+                   saveButton != null &&
                    mainMenuButton != null;
         }
 
@@ -297,9 +307,30 @@ namespace UnityRPG.UI
                 return;
             }
 
+            SaveLoadStatus status = saveGameController.SaveGame();
+
+            if (status != SaveLoadStatus.Success)
+            {
+                Debug.LogError($"[Save] MainMenu 이동 전 저장에 실패했습니다: {status}", this);
+                return;
+            }
+
             ClosePause();
             GameplayRootLifetime.DestroyCurrent();
             SceneTransitionService.Instance.LoadScene(SceneNames.MainMenu);
+        }
+
+        private void HandleSave()
+        {
+            SaveLoadStatus status = saveGameController.SaveGame();
+
+            if (status == SaveLoadStatus.Success)
+            {
+                Debug.Log($"[Save] 게임을 저장했습니다: {saveGameController.SaveFilePath}", this);
+                return;
+            }
+
+            Debug.LogError($"[Save] 게임 저장에 실패했습니다: {status}", this);
         }
     }
 }

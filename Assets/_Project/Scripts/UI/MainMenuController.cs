@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityRPG.Core;
+using UnityRPG.Infrastructure.Save;
 
 namespace UnityRPG.UI
 {
@@ -10,6 +11,13 @@ namespace UnityRPG.UI
         [SerializeField] private Button newGameButton;
         [SerializeField] private Button continueButton;
         [SerializeField] private Button quitButton;
+
+        private SaveLoadCoordinator saveLoadCoordinator;
+
+        private void Awake()
+        {
+            saveLoadCoordinator = FindFirstObjectByType<SaveLoadCoordinator>();
+        }
 
         private void Start()
         {
@@ -21,15 +29,19 @@ namespace UnityRPG.UI
             }
 
             newGameButton.onClick.AddListener(HandleNewGame);
+            continueButton.onClick.AddListener(HandleContinue);
             quitButton.onClick.AddListener(HandleQuit);
 
-            continueButton.interactable = false;
+            RefreshContinueButton();
         }
 
         private void OnDestroy()
         {
             if (newGameButton != null)
                 newGameButton.onClick.RemoveListener(HandleNewGame);
+
+            if (continueButton != null)
+                continueButton.onClick.RemoveListener(HandleContinue);
 
             if (quitButton != null)
                 quitButton.onClick.RemoveListener(HandleQuit);
@@ -43,7 +55,24 @@ namespace UnityRPG.UI
                 return;
             }
 
+            if (!saveLoadCoordinator.ClearSave())
+            {
+                Debug.LogError("[Save] 기존 저장 데이터를 삭제하지 못했습니다.", this);
+                return;
+            }
+
             SceneTransitionService.Instance.LoadScene(SceneNames.Hub);
+        }
+
+        private void HandleContinue()
+        {
+            SaveLoadStatus status = saveLoadCoordinator.ContinueGame();
+
+            if (status == SaveLoadStatus.Success)
+                return;
+
+            Debug.LogError($"[Save] 게임 불러오기를 시작하지 못했습니다: {status}", this);
+            RefreshContinueButton();
         }
 
         private void HandleQuit()
@@ -52,11 +81,17 @@ namespace UnityRPG.UI
             Application.Quit();
         }
 
+        private void RefreshContinueButton()
+        {
+            continueButton.interactable = saveLoadCoordinator.HasValidSave;
+        }
+
         private bool HasAllReferences()
         {
             return newGameButton != null &&
                    continueButton != null &&
-                   quitButton != null;
+                   quitButton != null &&
+                   saveLoadCoordinator != null;
         }
     }
 }

@@ -539,6 +539,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 916e04f9d034c784d817cb9eed945772, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Item.PlayerConsumableController
+--- !u!114 &5801375847047451792 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6914871965725585284, guid: acfb77fcfd5761549bb349a926078283, type: 3}
+  m_PrefabInstance: {fileID: 1113567724760087316}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6719903650f31ad41b6df2d450a64396, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Infrastructure.Save.SaveGameController
 --- !u!114 &6012406154014881159 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6630552612905668243, guid: acfb77fcfd5761549bb349a926078283, type: 3}
@@ -753,6 +764,10 @@ PrefabInstance:
       propertyPath: inputReader
       value: 
       objectReference: {fileID: 6012406154014881159}
+    - target: {fileID: 3524750821346377700, guid: cd72307a927b08140ba089aa004625df, type: 3}
+      propertyPath: saveGameController
+      value: 
+      objectReference: {fileID: 5801375847047451792}
     - target: {fileID: 3585804760295850869, guid: cd72307a927b08140ba089aa004625df, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

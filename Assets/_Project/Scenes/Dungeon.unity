@@ -5346,6 +5346,51 @@ Transform:
   - {fileID: 1054338143}
   m_Father: {fileID: 33529203}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1887580103
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1887580105}
+  - component: {fileID: 1887580104}
+  m_Layer: 0
+  m_Name: GameplayRootSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1887580104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1887580103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5439974737309845a3c65a39b412975, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Core::UnityRPG.Core.GameplayRootSpawner
+  gameplayRootPrefab: {fileID: 3132550846290824040, guid: e6b0f311dd4b7684396a79e1a0c14575, type: 3}
+--- !u!4 &1887580105
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1887580103}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1898772334
 GameObject:
   m_ObjectHideFlags: 0
@@ -6213,3 +6258,4 @@ SceneRoots:
   - {fileID: 705647042}
   - {fileID: 960230073}
   - {fileID: 1721039964}
+  - {fileID: 1887580105}
