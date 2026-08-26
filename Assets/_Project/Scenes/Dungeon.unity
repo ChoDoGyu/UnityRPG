@@ -962,6 +962,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EncounterTrigger
   hasStarted: 0
   isCompleted: 0
+  encounterId: dungeon_combat_01
 --- !u!114 &393920064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1800,6 +1801,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EncounterTrigger
   hasStarted: 0
   isCompleted: 0
+  encounterId: dungeon_combat_02
 --- !u!114 &626316633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4345,6 +4347,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EncounterTrigger
   hasStarted: 0
   isCompleted: 0
+  encounterId: dungeon_boss
 --- !u!114 &1539526290
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -4,16 +4,21 @@ using UnityRPG.AI;
 namespace UnityRPG.Interaction
 {
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(EnemySpawner))]
+    [RequireComponent(typeof(EncounterTrigger))]
     public sealed class DungeonExitPortalUnlocker : MonoBehaviour
     {
         [SerializeField] private GameObject portalRoot;
 
-        private EnemySpawner enemySpawner;
+        private EncounterTrigger encounterTrigger;
 
         private void Awake()
         {
-            enemySpawner = GetComponent<EnemySpawner>();
+            encounterTrigger = GetComponent<EncounterTrigger>();
+        }
+
+        private void OnEnable()
+        {
+            encounterTrigger.StateChanged += RefreshPortalState;
         }
 
         private void Start()
@@ -25,23 +30,18 @@ namespace UnityRPG.Interaction
                 return;
             }
 
-            portalRoot.SetActive(enemySpawner.AreAllEnemiesDefeated);
-        }
-
-        private void OnEnable()
-        {
-            enemySpawner.AllEnemiesDefeated += HandleAllEnemiesDefeated;
+            RefreshPortalState();
         }
 
         private void OnDisable()
         {
-            if (enemySpawner != null)
-                enemySpawner.AllEnemiesDefeated -= HandleAllEnemiesDefeated;
+            if (encounterTrigger != null)
+                encounterTrigger.StateChanged -= RefreshPortalState;
         }
 
-        private void HandleAllEnemiesDefeated()
+        private void RefreshPortalState()
         {
-            portalRoot.SetActive(true);
+            portalRoot.SetActive(encounterTrigger.IsCompleted);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace UnityRPG.Infrastructure.Save
     [Serializable]
     public sealed class SaveGameData
     {
-        public const int CurrentVersion = 1;
+        public const int CurrentVersion = 2;
 
         public int version = CurrentVersion;
         public string savedAtUtc;
@@ -14,6 +14,7 @@ namespace UnityRPG.Infrastructure.Save
         public List<InventoryItemSaveData> inventory = new();
         public List<EquipmentSaveData> equipment = new();
         public List<QuestSaveData> quests = new();
+        public List<EncounterSaveData> encounters = new();
         public CheckpointSaveData checkpoint = new();
     }
 }

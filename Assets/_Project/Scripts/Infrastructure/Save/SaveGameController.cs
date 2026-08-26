@@ -9,6 +9,7 @@ namespace UnityRPG.Infrastructure.Save
     [RequireComponent(typeof(PlayerQuestSaveAdapter))]
     [RequireComponent(typeof(PlayerTransformSaveAdapter))]
     [RequireComponent(typeof(PlayerCheckpointSaveAdapter))]
+    [RequireComponent(typeof(EncounterSaveAdapter))]
     public sealed class SaveGameController : MonoBehaviour
     {
         private SaveFileService fileService;
@@ -17,6 +18,7 @@ namespace UnityRPG.Infrastructure.Save
         private PlayerQuestSaveAdapter questAdapter;
         private PlayerTransformSaveAdapter transformAdapter;
         private PlayerCheckpointSaveAdapter checkpointAdapter;
+        private EncounterSaveAdapter encounterAdapter;
 
         public string SaveFilePath => fileService.FilePath;
 
@@ -28,6 +30,7 @@ namespace UnityRPG.Infrastructure.Save
             questAdapter = GetComponent<PlayerQuestSaveAdapter>();
             transformAdapter = GetComponent<PlayerTransformSaveAdapter>();
             checkpointAdapter = GetComponent<PlayerCheckpointSaveAdapter>();
+            encounterAdapter = GetComponent<EncounterSaveAdapter>();
         }
 
         public SaveLoadStatus SaveGame()
@@ -41,6 +44,9 @@ namespace UnityRPG.Infrastructure.Save
                 return SaveLoadStatus.CaptureFailed;
 
             if (!questAdapter.Capture(data))
+                return SaveLoadStatus.CaptureFailed;
+
+            if (!encounterAdapter.Capture(data))
                 return SaveLoadStatus.CaptureFailed;
 
             if (!transformAdapter.Capture(data.player))
@@ -69,6 +75,9 @@ namespace UnityRPG.Infrastructure.Save
                 return SaveLoadStatus.RestoreFailed;
 
             if (!questAdapter.Restore(data))
+                return SaveLoadStatus.RestoreFailed;
+
+            if (!encounterAdapter.Restore(data))
                 return SaveLoadStatus.RestoreFailed;
 
             if (!checkpointAdapter.Restore(data.checkpoint))

@@ -48,6 +48,7 @@ GameObject:
   - component: {fileID: 4660837674481162236}
   - component: {fileID: 3344540954292436243}
   - component: {fileID: 1617478468872795478}
+  - component: {fileID: 6180193916231023810}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -679,6 +680,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityRPG.DeveloperTools::UnityRPG.DeveloperTools.DeveloperConsoleView
   panelHeight: 300
   maxHistoryLines: 12
+--- !u!114 &6180193916231023810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810838048693877344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0e56105c35b4ec4ba2e5c1d67d836c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Infrastructure.Save.EncounterSaveAdapter
 --- !u!1 &1000176733347427081
 GameObject:
   m_ObjectHideFlags: 0

@@ -109,6 +109,7 @@ namespace UnityRPG.Infrastructure.Save
                    data.inventory != null &&
                    data.equipment != null &&
                    data.quests != null &&
+                   data.encounters != null &&
                    data.checkpoint != null;
         }
     }
