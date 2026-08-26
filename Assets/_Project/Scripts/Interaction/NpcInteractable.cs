@@ -22,7 +22,6 @@ namespace UnityRPG.Interaction
                 return;
 
             Interacted?.Invoke(interactor);
-            Debug.Log($"[NPC] {definition.DisplayName}: {definition.DefaultDialogue}", this);
         }
 
         private void OnValidate()

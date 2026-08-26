@@ -24,3 +24,12 @@ MonoBehaviour:
   itemRewards:
   - item: {fileID: 11400000, guid: 3727ac5b494add940876afb621259e0c, type: 2}
     amount: 2
+  acceptDialogue: "\uB358\uC804 \uADFC\uCC98\uC5D0 \uBAAC\uC2A4\uD130\uAC00 \uB098\uD0C0\uB0AC\uB2E4\uACE0
+    \uD558\uB124. \uCC98\uB9AC\uD574\uC8FC\uACA0\uB098?"
+  activeDialogue: "\uC544\uC9C1 \uB358\uC804\uC758 \uBAAC\uC2A4\uD130\uB4E4\uC774
+    \uB0A8\uC544 \uC788\uB294 \uAC83 \uAC19\uAD70."
+  readyToTurnInDialogue: "\uC218\uACE0\uD588\uB124. \uB355\uBD84\uC5D0 \uD55C\uC2DC\uB984
+    \uB193\uC558\uAD70."
+  completedDialogue: "\uB355\uBD84\uC5D0 \uB9C8\uC744\uC774 \uB2E4\uC2DC \uC548\uC804\uD574\uC84C\uB124."
+  inventoryFullDialogue: "\uBCF4\uC0C1\uC744 \uBC1B\uC744 \uACF5\uAC04\uC774 \uBD80\uC871\uD55C
+    \uAC83 \uAC19\uAD70."

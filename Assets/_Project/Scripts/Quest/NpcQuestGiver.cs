@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityRPG.Character.Growth;
 using UnityRPG.Interaction;
 using UnityRPG.Item;
@@ -12,6 +13,8 @@ namespace UnityRPG.Quest
         [SerializeField] private QuestDefinition questDefinition;
 
         private NpcInteractable npcInteractable;
+
+        public event Action<string, string> DialogueRequested;
 
         private void Awake()
         {
@@ -44,13 +47,30 @@ namespace UnityRPG.Quest
 
             if (quest == null)
             {
-                questLog.TryAcceptQuest(questDefinition);
+                if (questLog.TryAcceptQuest(questDefinition))
+                    RequestDialogue(questDefinition.AcceptDialogue);
+
                 return;
             }
 
-            if (quest.State != QuestState.ReadyToTurnIn)
+            if (quest.State == QuestState.Active)
+            {
+                RequestDialogue(questDefinition.ActiveDialogue);
                 return;
+            }
 
+            if (quest.State == QuestState.ReadyToTurnIn)
+            {
+                CompleteQuest(interactor, questLog);
+                return;
+            }
+
+            if (quest.State == QuestState.Completed)
+                RequestDialogue(questDefinition.CompletedDialogue);
+        }
+
+        private void CompleteQuest(GameObject interactor, PlayerQuestLog questLog)
+        {
             PlayerInventory inventory = interactor.GetComponentInParent<PlayerInventory>();
             PlayerGrowth playerGrowth = interactor.GetComponentInParent<PlayerGrowth>();
 
@@ -58,7 +78,10 @@ namespace UnityRPG.Quest
                 return;
 
             if (!TryGrantItemRewards(inventory))
+            {
+                RequestDialogue(questDefinition.InventoryFullDialogue);
                 return;
+            }
 
             if (!questLog.TryCompleteQuest(questDefinition.QuestId))
             {
@@ -68,6 +91,14 @@ namespace UnityRPG.Quest
 
             if (questDefinition.ExperienceReward > 0)
                 playerGrowth.AddExperience(questDefinition.ExperienceReward);
+
+            RequestDialogue(questDefinition.ReadyToTurnInDialogue);
+        }
+
+        private void RequestDialogue(string dialogue)
+        {
+            if (!string.IsNullOrWhiteSpace(dialogue))
+                DialogueRequested?.Invoke(npcInteractable.Definition.DisplayName, dialogue);
         }
 
         private bool TryGrantItemRewards(PlayerInventory inventory)

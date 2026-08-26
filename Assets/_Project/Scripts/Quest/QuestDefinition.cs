@@ -19,12 +19,24 @@ namespace UnityRPG.Quest
         [SerializeField, Min(0)] private int experienceReward;
         [SerializeField] private QuestItemReward[] itemRewards = Array.Empty<QuestItemReward>();
 
+        [Header("Dialogue")]
+        [TextArea][SerializeField] private string acceptDialogue;
+        [TextArea][SerializeField] private string activeDialogue;
+        [TextArea][SerializeField] private string readyToTurnInDialogue;
+        [TextArea][SerializeField] private string completedDialogue;
+        [TextArea][SerializeField] private string inventoryFullDialogue;
+
         public string QuestId => questId;
         public string DisplayName => displayName;
         public string Description => description;
         public IReadOnlyList<QuestObjectiveDefinition> Objectives => objectives;
         public int ExperienceReward => experienceReward;
         public IReadOnlyList<QuestItemReward> ItemRewards => itemRewards;
+        public string AcceptDialogue => acceptDialogue;
+        public string ActiveDialogue => activeDialogue;
+        public string ReadyToTurnInDialogue => readyToTurnInDialogue;
+        public string CompletedDialogue => completedDialogue;
+        public string InventoryFullDialogue => inventoryFullDialogue;
 
         private void OnValidate()
         {
