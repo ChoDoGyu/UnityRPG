@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityRPG.Character.Stats;
+using UnityRPG.VFX;
 
 namespace UnityRPG.Combat
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(MeleeHitDetector))]
     [RequireComponent(typeof(PlayerStats))]
+    [RequireComponent(typeof(CombatVfxController))]
     public sealed class PlayerAttackController : MonoBehaviour
     {
         [Header("Reference")]
@@ -38,16 +40,13 @@ namespace UnityRPG.Combat
         private bool isConfigured;
 
         private PlayerStats playerStats;
+        private CombatVfxController combatVfxController;
 
-        public bool IsAttacking =>
-            remainingDuration > 0f;
+        public bool IsAttacking => remainingDuration > 0f;
 
-        public int CurrentComboStep =>
-            currentComboStep;
+        public int CurrentComboStep => currentComboStep;
 
-        public bool CanTrackTarget =>
-            IsAttacking &&
-            NormalizedProgress <= targetTrackingNormalizedTime;
+        public bool CanTrackTarget => IsAttacking && NormalizedProgress <= targetTrackingNormalizedTime;
 
         public float NormalizedProgress
         {
@@ -58,25 +57,19 @@ namespace UnityRPG.Combat
                     return 0f;
                 }
 
-                return Mathf.Clamp01(
-                    1f -
-                    remainingDuration / attackDuration);
+                return Mathf.Clamp01(1f - remainingDuration / attackDuration);
             }
         }
 
         private void Awake()
         {
-            hitDetector =
-                GetComponent<MeleeHitDetector>();
-
-            playerStats =
-                GetComponent<PlayerStats>();
+            hitDetector = GetComponent<MeleeHitDetector>();
+            playerStats = GetComponent<PlayerStats>();
+            combatVfxController = GetComponent<CombatVfxController>();
 
             if (attackReference == null)
             {
-                Debug.LogError(
-                    "[Combat] PlayerAttackController의 Attack Reference가 설정되지 않았습니다.",
-                    this);
+                Debug.LogError("[Combat] PlayerAttackController의 Attack Reference가 설정되지 않았습니다.", this);
 
                 return;
             }
@@ -107,17 +100,11 @@ namespace UnityRPG.Combat
                 return;
             }
 
-            remainingDuration =
-                Mathf.Max(
-                    0f,
-                    remainingDuration - deltaTime);
+            remainingDuration = Mathf.Max(0f, remainingDuration - deltaTime);
 
-            float normalizedProgress =
-                1f -
-                remainingDuration / attackDuration;
+            float normalizedProgress = 1f - remainingDuration / attackDuration;
 
-            if (!isHitApplied &&
-                normalizedProgress >= hitNormalizedTime)
+            if (!isHitApplied && normalizedProgress >= hitNormalizedTime)
             {
                 ApplyHit();
 
@@ -129,11 +116,9 @@ namespace UnityRPG.Combat
                 return;
             }
 
-            if (isNextAttackQueued &&
-                currentComboStep < maxComboCount)
+            if (isNextAttackQueued && currentComboStep < maxComboCount)
             {
-                StartAttack(
-                    currentComboStep + 1);
+                StartAttack(currentComboStep + 1);
 
                 return;
             }
@@ -143,17 +128,13 @@ namespace UnityRPG.Combat
 
         private void StartAttack(int comboStep)
         {
-            currentComboStep =
-                comboStep;
+            currentComboStep = comboStep;
 
-            remainingDuration =
-                attackDuration;
+            remainingDuration = attackDuration;
 
-            isNextAttackQueued =
-                false;
+            isNextAttackQueued = false;
 
-            isHitApplied =
-                false;
+            isHitApplied = false;
         }
 
         private void QueueNextAttack()
@@ -174,21 +155,13 @@ namespace UnityRPG.Combat
 
         private void ApplyHit()
         {
-            var targets =
-                hitDetector.FindTargets(
-                    attackReference);
+            var hits = hitDetector.FindHits(attackReference);
+            DamageInfo damageInfo = DamageCalculator.CreateAttackDamage(playerStats.Attack, 1f, playerStats.CritChance, playerStats.CritDamage, gameObject);
 
-            DamageInfo damageInfo =
-                DamageCalculator.CreateAttackDamage(
-                    playerStats.Attack,
-                    1f,
-                    playerStats.CritChance,
-                    playerStats.CritDamage,
-                    gameObject);
-
-            foreach (IDamageable target in targets)
+            foreach (MeleeHitResult hit in hits)
             {
-                target.TakeDamage(damageInfo);
+                hit.Target.TakeDamage(damageInfo);
+                combatVfxController.PlayHit(hit.Point);
             }
         }
     }
