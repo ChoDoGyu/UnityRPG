@@ -7,70 +7,68 @@ namespace UnityRPG.AI
     public sealed class EnemyVisualAnimator : MonoBehaviour
     {
         [Header("Reference")]
-        [SerializeField]
-        private Transform modelRoot;
-
-        [SerializeField]
-        private Transform body;
+        [SerializeField] private Transform modelRoot;
+        [SerializeField] private Transform body;
 
         [Header("Idle")]
-        [SerializeField]
-        [Min(0f)]
-        private float idleCycleSpeed = 2f;
-
-        [SerializeField]
-        [Min(0f)]
-        private float idleBob = 0.025f;
+        [SerializeField, Min(0f)] private float idleCycleSpeed = 2f;
+        [SerializeField, Min(0f)] private float idleBob = 0.025f;
 
         [Header("Move")]
-        [SerializeField]
-        [Min(0f)]
-        private float moveCycleSpeed = 7f;
+        [SerializeField, Min(0f)] private float moveCycleSpeed = 7f;
+        [SerializeField, Min(0f)] private float moveBob = 0.05f;
+        [SerializeField] private float moveLean = 6f;
 
-        [SerializeField]
-        [Min(0f)]
-        private float moveBob = 0.05f;
+        [Header("Melee Attack")]
+        [SerializeField, Min(0f)] private float meleeWindupBack = 0.35f;
+        [SerializeField, Min(0f)] private float meleeWindupDown = 0.18f;
+        [SerializeField] private float meleeWindupPitch = -20f;
+        [SerializeField, Min(0f)] private float meleeAttackForward = 0.38f;
+        [SerializeField, Min(0f)] private float meleeAttackUp = 0.22f;
+        [SerializeField] private float meleeAttackPitch = 28f;
 
-        [SerializeField]
-        private float moveLean = 6f;
+        [Header("Ranged Attack")]
+        [SerializeField, Min(0f)] private float rangedWindupForward = 0.18f;
+        [SerializeField, Min(0f)] private float rangedWindupDown = 0.12f;
+        [SerializeField] private float rangedWindupPitch = 18f;
+        [SerializeField, Range(0f, 0.5f)] private float rangedWindupScale = 0.1f;
+        [SerializeField, Min(0f)] private float rangedRecoveryBack = 0.18f;
+        [SerializeField] private float rangedRecoveryPitch = -10f;
+        [SerializeField, Range(0f, 0.5f)] private float rangedRecoveryScale = 0.05f;
+
+        [Header("Elite Slam")]
+        [SerializeField, Min(0f)] private float slamWindupBack = 0.45f;
+        [SerializeField, Min(0f)] private float slamWindupUp = 0.55f;
+        [SerializeField] private float slamWindupPitch = -55f;
+        [SerializeField, Range(0f, 0.5f)] private float slamWindupScale = 0.15f;
+        [SerializeField, Min(0f)] private float slamRecoveryForward = 0.5f;
+        [SerializeField, Min(0f)] private float slamRecoveryDown = 0.4f;
+        [SerializeField] private float slamRecoveryPitch = 45f;
+        [SerializeField, Min(0.1f)] private float slamImpactWidthScale = 1.1f;
+        [SerializeField, Min(0.1f)] private float slamImpactHeightScale = 0.9f;
 
         [Header("Death")]
-        [SerializeField]
-        [Min(0.01f)]
-        private float deathDuration = 0.4f;
+        [SerializeField, Min(0.01f)] private float deathDuration = 0.4f;
 
         [Header("Transition")]
-        [SerializeField]
-        [Min(0f)]
-        private float transitionSpeed = 12f;
+        [SerializeField, Min(0f)] private float transitionSpeed = 12f;
 
-        private Vector3 bodyBasePosition;
-        private Quaternion bodyBaseRotation;
-
-        private Vector3 modelRootBaseScale;
-        private Quaternion modelRootBaseRotation;
-
-        private float cycle;
+        private EnemyVisualPose pose;
+        private EnemyLocomotionVisual locomotionVisual;
+        private EnemyAttackVisual attackVisual;
+        private EliteSlamVisual slamVisual;
 
         private bool isConfigured;
         private bool isDead;
 
         private void Awake()
         {
-            if (modelRoot == null || body == null)
-            {
-                Debug.LogError(
-                    "[Enemy] EnemyVisualAnimator의 Reference가 설정되지 않았습니다.",
-                    this);
-
+            if (!ValidateReferences())
                 return;
-            }
 
-            bodyBasePosition = body.localPosition;
-            bodyBaseRotation = body.localRotation;
+            pose = new EnemyVisualPose(modelRoot, body);
 
-            modelRootBaseScale = modelRoot.localScale;
-            modelRootBaseRotation = modelRoot.localRotation;
+            CreateVisualModules();
 
             isConfigured = true;
         }
@@ -84,22 +82,16 @@ namespace UnityRPG.AI
             float deltaTime)
         {
             if (!isConfigured || isDead)
-            {
                 return;
-            }
 
-            modelRoot.localScale = modelRootBaseScale;
+            pose.ResetModelRoot();
 
             if (attackPhase == EnemyAttackPhase.Windup)
             {
                 if (isSlamAttack)
-                {
-                    UpdateSlamWindup(attackProgress, deltaTime);
-                }
+                    slamVisual.UpdateWindup(attackProgress, deltaTime);
                 else
-                {
-                    UpdateWindup(enemyType, attackProgress, deltaTime);
-                }
+                    attackVisual.UpdateWindup(enemyType, attackProgress, deltaTime);
 
                 return;
             }
@@ -107,283 +99,109 @@ namespace UnityRPG.AI
             if (attackPhase == EnemyAttackPhase.Recovery)
             {
                 if (isSlamAttack)
-                {
-                    UpdateSlamRecovery(attackProgress, deltaTime);
-                }
+                    slamVisual.UpdateRecovery(attackProgress, deltaTime);
                 else
-                {
-                    UpdateRecovery(enemyType, attackProgress, deltaTime);
-                }
+                    attackVisual.UpdateRecovery(enemyType, attackProgress, deltaTime);
 
                 return;
             }
 
             if (isMoving)
             {
-                UpdateMovement(deltaTime);
+                locomotionVisual.UpdateMovement(deltaTime);
                 return;
             }
 
-            UpdateIdle(deltaTime);
+            locomotionVisual.UpdateIdle(deltaTime);
         }
 
         public void PlayDeath()
         {
             if (!isConfigured || isDead)
-            {
                 return;
-            }
 
             isDead = true;
             StartCoroutine(DeathRoutine());
         }
 
-        private void UpdateWindup(
-            EnemyType enemyType,
-            float progress,
-            float deltaTime)
+        private bool ValidateReferences()
         {
-            progress = Mathf.Clamp01(progress);
+            if (modelRoot != null && body != null)
+                return true;
 
-            switch (enemyType)
-            {
-                case EnemyType.Melee:
-                    UpdateMeleeWindup(progress, deltaTime);
-                    break;
-
-                case EnemyType.Ranged:
-                    UpdateRangedWindup(progress, deltaTime);
-                    break;
-            }
+            Debug.LogError("[Enemy] EnemyVisualAnimator의 Reference가 설정되지 않았습니다.", this);
+            return false;
         }
 
-        private void UpdateRecovery(
-            EnemyType enemyType,
-            float progress,
-            float deltaTime)
+        private void CreateVisualModules()
         {
-            progress = Mathf.Clamp01(progress);
+            locomotionVisual = new EnemyLocomotionVisual(
+                pose,
+                idleCycleSpeed,
+                idleBob,
+                moveCycleSpeed,
+                moveBob,
+                moveLean,
+                transitionSpeed);
 
-            switch (enemyType)
-            {
-                case EnemyType.Melee:
-                    UpdateMeleeRecovery(progress, deltaTime);
-                    break;
+            EnemyMeleeVisualSettings meleeSettings = new EnemyMeleeVisualSettings(
+                meleeWindupBack,
+                meleeWindupDown,
+                meleeWindupPitch,
+                meleeAttackForward,
+                meleeAttackUp,
+                meleeAttackPitch);
 
-                case EnemyType.Ranged:
-                    UpdateRangedRecovery(progress, deltaTime);
-                    break;
-            }
-        }
+            EnemyRangedVisualSettings rangedSettings = new EnemyRangedVisualSettings(
+                rangedWindupForward,
+                rangedWindupDown,
+                rangedWindupPitch,
+                rangedWindupScale,
+                rangedRecoveryBack,
+                rangedRecoveryPitch,
+                rangedRecoveryScale);
 
-        private void UpdateMeleeWindup(float progress, float deltaTime)
-        {
-            Vector3 bodyTarget =
-                bodyBasePosition +
-                Vector3.back * 0.4f * progress;
+            attackVisual = new EnemyAttackVisual(
+                pose,
+                transitionSpeed,
+                meleeSettings,
+                rangedSettings);
 
-            Quaternion rotationTarget =
-                bodyBaseRotation *
-                Quaternion.Euler(-25f * progress, 0f, 0f);
-
-            ApplyBodyPose(bodyTarget, rotationTarget, deltaTime);
-        }
-
-        private void UpdateMeleeRecovery(float progress, float deltaTime)
-        {
-            float weight = 1f - progress;
-
-            Vector3 bodyTarget =
-                bodyBasePosition +
-                Vector3.forward * 0.35f * weight;
-
-            Quaternion rotationTarget =
-                bodyBaseRotation *
-                Quaternion.Euler(18f * weight, 0f, 0f);
-
-            ApplyBodyPose(bodyTarget, rotationTarget, deltaTime);
-        }
-
-        private void UpdateRangedWindup(float progress, float deltaTime)
-        {
-            Vector3 bodyTarget =
-                bodyBasePosition +
-                Vector3.forward * 0.18f * progress +
-                Vector3.down * 0.12f * progress;
-
-            Quaternion rotationTarget =
-                bodyBaseRotation *
-                Quaternion.Euler(18f * progress, 0f, 0f);
-
-            float scale = 1f - 0.1f * progress;
-            modelRoot.localScale = modelRootBaseScale * scale;
-
-            ApplyBodyPose(bodyTarget, rotationTarget, deltaTime);
-        }
-
-        private void UpdateRangedRecovery(float progress, float deltaTime)
-        {
-            float weight = 1f - progress;
-
-            Vector3 bodyTarget =
-                bodyBasePosition +
-                Vector3.back * 0.18f * weight;
-
-            Quaternion rotationTarget =
-                bodyBaseRotation *
-                Quaternion.Euler(-10f * weight, 0f, 0f);
-
-            float scale = 1f + 0.05f * weight;
-            modelRoot.localScale = modelRootBaseScale * scale;
-
-            ApplyBodyPose(bodyTarget, rotationTarget, deltaTime);
-        }
-
-        private void UpdateIdle(float deltaTime)
-        {
-            cycle += idleCycleSpeed * deltaTime;
-
-            float bob = Mathf.Sin(cycle) * idleBob;
-
-            Vector3 bodyTarget =
-                bodyBasePosition +
-                Vector3.up * bob;
-
-            float smoothFactor = GetSmoothFactor(deltaTime);
-
-            body.localPosition = Vector3.Lerp(
-                body.localPosition,
-                bodyTarget,
-                smoothFactor);
-
-            body.localRotation = Quaternion.Slerp(
-                body.localRotation,
-                bodyBaseRotation,
-                smoothFactor);
-        }
-
-        private void UpdateMovement(float deltaTime)
-        {
-            cycle += moveCycleSpeed * deltaTime;
-
-            float bob = Mathf.Abs(Mathf.Sin(cycle)) * moveBob;
-
-            Vector3 bodyTarget =
-                bodyBasePosition +
-                Vector3.up * bob;
-
-            Quaternion rotationTarget =
-                bodyBaseRotation *
-                Quaternion.Euler(moveLean, 0f, 0f);
-
-            float smoothFactor = GetSmoothFactor(deltaTime);
-
-            body.localPosition = Vector3.Lerp(
-                body.localPosition,
-                bodyTarget,
-                smoothFactor);
-
-            body.localRotation = Quaternion.Slerp(
-                body.localRotation,
-                rotationTarget,
-                smoothFactor);
-        }
-
-        private void ApplyBodyPose(
-            Vector3 bodyTarget,
-            Quaternion rotationTarget,
-            float deltaTime)
-        {
-            float smoothFactor = GetSmoothFactor(deltaTime);
-
-            body.localPosition = Vector3.Lerp(
-                body.localPosition,
-                bodyTarget,
-                smoothFactor);
-
-            body.localRotation = Quaternion.Slerp(
-                body.localRotation,
-                rotationTarget,
-                smoothFactor);
-        }
-
-        private float GetSmoothFactor(float deltaTime)
-        {
-            return 1f - Mathf.Exp(-transitionSpeed * deltaTime);
+            slamVisual = new EliteSlamVisual(
+                pose,
+                transitionSpeed,
+                slamWindupBack,
+                slamWindupUp,
+                slamWindupPitch,
+                slamWindupScale,
+                slamRecoveryForward,
+                slamRecoveryDown,
+                slamRecoveryPitch,
+                slamImpactWidthScale,
+                slamImpactHeightScale);
         }
 
         private IEnumerator DeathRoutine()
         {
             float elapsedTime = 0f;
 
-            Quaternion startRotation = modelRoot.localRotation;
+            Quaternion startRotation = pose.ModelRoot.localRotation;
             Quaternion targetRotation =
-                modelRootBaseRotation *
-                Quaternion.Euler(0f, 0f, 90f);
+                pose.ModelRootBaseRotation * Quaternion.Euler(0f, 0f, 90f);
 
             while (elapsedTime < deathDuration)
             {
                 elapsedTime += Time.deltaTime;
 
-                float progress =
-                    Mathf.Clamp01(elapsedTime / deathDuration);
+                float progress = Mathf.Clamp01(elapsedTime / deathDuration);
 
-                modelRoot.localRotation = Quaternion.Slerp(
-                    startRotation,
-                    targetRotation,
-                    progress);
+                pose.ModelRoot.localRotation =
+                    Quaternion.Slerp(startRotation, targetRotation, progress);
 
                 yield return null;
             }
 
-            modelRoot.localRotation = targetRotation;
-        }
-
-        private void UpdateSlamWindup(float progress, float deltaTime)
-        {
-            progress = Mathf.Clamp01(progress);
-
-            Vector3 bodyTarget =
-                bodyBasePosition +
-                Vector3.back * 0.45f * progress +
-                Vector3.up * 0.55f * progress;
-
-            Quaternion rotationTarget =
-                bodyBaseRotation *
-                Quaternion.Euler(-55f * progress, 0f, 0f);
-
-            float scale = 1f + 0.15f * progress;
-            modelRoot.localScale = modelRootBaseScale * scale;
-
-            ApplyBodyPose(bodyTarget, rotationTarget, deltaTime);
-        }
-
-        private void UpdateSlamRecovery(float progress, float deltaTime)
-        {
-            progress = Mathf.Clamp01(progress);
-
-            float weight = 1f - progress;
-
-            Vector3 bodyTarget =
-                bodyBasePosition +
-                Vector3.forward * 0.5f * weight +
-                Vector3.down * 0.4f * weight;
-
-            Quaternion rotationTarget =
-                bodyBaseRotation *
-                Quaternion.Euler(45f * weight, 0f, 0f);
-
-            Vector3 impactScale = new Vector3(
-                modelRootBaseScale.x * 1.1f,
-                modelRootBaseScale.y * 0.9f,
-                modelRootBaseScale.z * 1.1f);
-
-            modelRoot.localScale = Vector3.Lerp(
-                modelRootBaseScale,
-                impactScale,
-                weight);
-
-            ApplyBodyPose(bodyTarget, rotationTarget, deltaTime);
+            pose.ModelRoot.localRotation = targetRotation;
         }
     }
 }
