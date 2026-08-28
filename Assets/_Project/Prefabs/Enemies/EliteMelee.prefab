@@ -120,6 +120,7 @@ GameObject:
   - component: {fileID: 5994349365075407608}
   - component: {fileID: 7755948309732871053}
   - component: {fileID: 3539911747314585312}
+  - component: {fileID: 6006924395722004620}
   m_Layer: 6
   m_Name: EliteMelee
   m_TagString: Untagged
@@ -392,6 +393,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21d8bcf493b700847b0d509da3d6786b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyExperienceReward
+--- !u!114 &6006924395722004620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6189293470926243558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f9fdd12641139d4ca5bdcd46c7143cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.VFX.DamageFlashFeedback
+  targetRenderers:
+  - {fileID: 770736243827821207}
+  flashColor: {r: 1, g: 1, b: 1, a: 1}
+  duration: 0.1
 --- !u!1 &7001119210333398633
 GameObject:
   m_ObjectHideFlags: 0

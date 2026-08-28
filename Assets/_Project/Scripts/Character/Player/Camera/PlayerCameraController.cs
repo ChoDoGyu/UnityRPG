@@ -24,8 +24,15 @@ namespace UnityRPG.Character.Player
         [SerializeField]
         private float maxPitch = 70f;
 
+        [Header("Shake")]
+        [SerializeField, Min(0f)] private float damageShakeDuration = 0.14f;
+        [SerializeField, Min(0f)] private float damageShakeStrength = 1.5f;
+
         private float yaw;
         private float pitch;
+        private float shakeRemainingTime;
+        private float shakeDuration;
+        private float shakeStrength;
 
         private bool isConfigured;
 
@@ -35,14 +42,12 @@ namespace UnityRPG.Character.Player
         {
             if (cameraTarget == null)
             {
-                Debug.LogError(
-                    "[Player] PlayerCameraController의 Camera Target이 설정되지 않았습니다.");
+                Debug.LogError("[Player] PlayerCameraController의 Camera Target이 설정되지 않았습니다.");
 
                 return;
             }
 
-            Vector3 rotation =
-                cameraTarget.eulerAngles;
+            Vector3 rotation = cameraTarget.eulerAngles;
 
             yaw = rotation.y;
             pitch = NormalizeAngle(rotation.x);
@@ -50,10 +55,28 @@ namespace UnityRPG.Character.Player
             isConfigured = true;
         }
 
-        public void RotateCamera(
-            Vector2 lookInput,
-            bool isMouseInput,
-            float deltaTime)
+        private void LateUpdate()
+        {
+            if (!isConfigured)
+                return;
+
+            float shakeYaw = 0f;
+            float shakePitch = 0f;
+
+            if (shakeRemainingTime > 0f)
+            {
+                float strength = shakeStrength * Mathf.Clamp01(shakeRemainingTime / shakeDuration);
+
+                shakeYaw = Random.Range(-strength, strength);
+                shakePitch = Random.Range(-strength, strength);
+
+                shakeRemainingTime = Mathf.Max(0f, shakeRemainingTime - Time.deltaTime);
+            }
+
+            cameraTarget.rotation = Quaternion.Euler(pitch + shakePitch, yaw + shakeYaw, 0f);
+        }
+
+        public void RotateCamera(Vector2 lookInput, bool isMouseInput, float deltaTime)
         {
             if (!isConfigured)
             {
@@ -65,20 +88,12 @@ namespace UnityRPG.Character.Player
                 return;
             }
 
-            float sensitivity = isMouseInput
-                ? mouseSensitivity
-                : gamepadLookSpeed * deltaTime;
+            float sensitivity = isMouseInput ? mouseSensitivity : gamepadLookSpeed * deltaTime;
 
             yaw += lookInput.x * sensitivity;
             pitch -= lookInput.y * sensitivity;
 
-            pitch = Mathf.Clamp(
-                pitch,
-                minPitch,
-                maxPitch);
-
-            cameraTarget.rotation =
-                Quaternion.Euler(pitch, yaw, 0f);
+            pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
         }
 
         private static float NormalizeAngle(float angle)
@@ -89,6 +104,16 @@ namespace UnityRPG.Character.Player
             }
 
             return angle;
+        }
+
+        public void PlayDamageShake()
+        {
+            if (!isConfigured)
+                return;
+
+            shakeDuration = damageShakeDuration;
+            shakeRemainingTime = damageShakeDuration;
+            shakeStrength = damageShakeStrength;
         }
     }
 }

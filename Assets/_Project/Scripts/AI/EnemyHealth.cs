@@ -16,6 +16,7 @@ namespace UnityRPG.AI
         public float CurrentHealth => currentHealth;
         public bool IsDead => isConfigured && currentHealth <= 0f;
 
+        public event Action<float> Damaged;
         public event Action Died;
         public event Action<GameObject> DiedBy;
 
@@ -41,7 +42,11 @@ namespace UnityRPG.AI
 
             float finalDamage = DamageCalculator.CalculateAfterDefense(damageInfo.Amount, context.Definition.Defense);
 
+            if (finalDamage <= 0f)
+                return;
+
             currentHealth = Mathf.Max(0f, currentHealth - finalDamage);
+            Damaged?.Invoke(finalDamage);
 
             if (currentHealth <= 0f)
             {

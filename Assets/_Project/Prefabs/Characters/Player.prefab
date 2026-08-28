@@ -50,6 +50,8 @@ GameObject:
   - component: {fileID: 1617478468872795478}
   - component: {fileID: 6180193916231023810}
   - component: {fileID: 2716128398972456714}
+  - component: {fileID: 6652355472771589991}
+  - component: {fileID: 5457081723386252129}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -169,6 +171,8 @@ MonoBehaviour:
   gamepadLookSpeed: 120
   minPitch: -35
   maxPitch: 70
+  damageShakeDuration: 0.14
+  damageShakeStrength: 2
 --- !u!114 &4445118300463334293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -713,6 +717,40 @@ MonoBehaviour:
   spinAttackVfxHeight: 0.9
   attackBuffVfxPrefab: {fileID: 2710653550065155004, guid: 3291cf4e0dce3a447868f81d8eaf5ef8, type: 3}
   attackBuffCleanupDelay: 1.2
+--- !u!114 &6652355472771589991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810838048693877344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f9fdd12641139d4ca5bdcd46c7143cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.VFX.DamageFlashFeedback
+  targetRenderers:
+  - {fileID: 1593220467741066611}
+  - {fileID: 498280455110724154}
+  - {fileID: 6401533982090850611}
+  - {fileID: 3790052580459469185}
+  - {fileID: 6577602822430620572}
+  flashColor: {r: 1, g: 0.3529412, b: 0.3529412, a: 1}
+  duration: 0.14
+--- !u!114 &5457081723386252129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810838048693877344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f269fc52c5019844a7937669ddcb3c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.VFX.PlayerDamageCameraFeedback
+  playerHealth: {fileID: 3175761624004211360}
+  cameraController: {fileID: 1047985175376667507}
 --- !u!1 &1000176733347427081
 GameObject:
   m_ObjectHideFlags: 0

@@ -90,10 +90,7 @@ namespace UnityRPG.Character.Player
 
         private void UpdateCamera(float deltaTime)
         {
-            playerCameraController.RotateCamera(
-                inputReader.LookInput,
-                inputReader.IsLookInputMouse,
-                deltaTime);
+            playerCameraController.RotateCamera(inputReader.LookInput, inputReader.IsLookInputMouse, deltaTime);
         }
 
         private void UpdateMovement(float deltaTime)
@@ -158,9 +155,7 @@ namespace UnityRPG.Character.Player
 
         private bool UpdateDodge(float deltaTime)
         {
-            if (inputReader.WasDodgePressed &&
-                playerMotor.IsGrounded &&
-                playerDodger.CanDodge)
+            if (inputReader.WasDodgePressed && playerMotor.IsGrounded && playerDodger.CanDodge)
             {
                 if (stateController.TryEnterDodge())
                 {
@@ -266,20 +261,17 @@ namespace UnityRPG.Character.Player
 
         private void UpdateSkillInput()
         {
-            if (inputReader.WasSkill1Pressed &&
-                TryUseSkill(SkillId.DashSlash))
+            if (inputReader.WasSkill1Pressed && TryUseSkill(SkillId.DashSlash))
             {
                 return;
             }
 
-            if (inputReader.WasSkill2Pressed &&
-                TryUseSkill(SkillId.Projectile))
+            if (inputReader.WasSkill2Pressed && TryUseSkill(SkillId.Projectile))
             {
                 return;
             }
 
-            if (inputReader.WasSkill3Pressed &&
-                TryUseSkill(SkillId.SpinAttack))
+            if (inputReader.WasSkill3Pressed && TryUseSkill(SkillId.SpinAttack))
             {
                 return;
             }

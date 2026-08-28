@@ -19,6 +19,7 @@ namespace UnityRPG.Character.Player
 
         public event Action<float, float> HealthChanged;
         public event Action Died;
+        public event Action<float> Damaged;
 
         public float MaxHealth => playerStats != null ? playerStats.MaxHealth : 0f;
         public float CurrentHealth => currentHealth;
@@ -53,9 +54,14 @@ namespace UnityRPG.Character.Player
                 return;
 
             float finalDamage = DamageCalculator.CalculateAfterDefense(damageInfo.Amount, playerStats.Defense);
+
+            if (finalDamage <= 0f)
+                return;
+
             currentHealth = Mathf.Max(0f, currentHealth - finalDamage);
 
             NotifyHealthChanged();
+            Damaged?.Invoke(finalDamage);
 
             if (currentHealth <= 0f)
                 Died?.Invoke();
