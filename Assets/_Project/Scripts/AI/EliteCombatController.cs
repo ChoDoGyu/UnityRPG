@@ -14,14 +14,9 @@ namespace UnityRPG.AI
 
         private bool isConfigured;
 
-        public bool IsActionLocked =>
-            isConfigured &&
-            (normalAttack.IsActionLocked ||
-             slamAttack.IsActionLocked);
+        public bool IsActionLocked => isConfigured && (normalAttack.IsActionLocked || slamAttack.IsActionLocked);
 
-        public bool IsSlamActionLocked =>
-            isConfigured &&
-            slamAttack.IsActionLocked;
+        public bool IsSlamActionLocked => isConfigured && slamAttack.IsActionLocked;
 
         public EnemyAttackPhase CurrentPhase
         {
@@ -127,15 +122,12 @@ namespace UnityRPG.AI
                 return true;
             }
 
-            return slamAttack.IsReady &&
-                   sqrDistance <= slamAttack.Range * slamAttack.Range;
+            return slamAttack.IsReady && sqrDistance <= slamAttack.Range * slamAttack.Range;
         }
 
         public bool TryStartAttack(Transform target)
         {
-            if (!isConfigured ||
-                target == null ||
-                IsActionLocked)
+            if (!isConfigured || target == null || IsActionLocked)
             {
                 return false;
             }
@@ -145,16 +137,14 @@ namespace UnityRPG.AI
 
             float sqrDistance = direction.sqrMagnitude;
 
-            if (slamAttack.IsReady &&
-                sqrDistance <= slamAttack.Range * slamAttack.Range)
+            if (slamAttack.IsReady && sqrDistance <= slamAttack.Range * slamAttack.Range)
             {
                 return slamAttack.TryStartSlam(target);
             }
 
             float normalRange = context.Definition.AttackRange;
 
-            if (normalAttack.IsReady &&
-                sqrDistance <= normalRange * normalRange)
+            if (normalAttack.IsReady && sqrDistance <= normalRange * normalRange)
             {
                 return normalAttack.TryStartAttack(target);
             }

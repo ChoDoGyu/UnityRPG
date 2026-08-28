@@ -36,10 +36,7 @@ namespace UnityRPG.AI
 
         public EnemyState CurrentState => currentState;
 
-        public Transform CurrentTarget =>
-            targetDetector != null
-                ? targetDetector.CurrentTarget
-                : null;
+        public Transform CurrentTarget => targetDetector != null ? targetDetector.CurrentTarget : null;
 
         private void Awake()
         {
@@ -158,9 +155,7 @@ namespace UnityRPG.AI
 
             Vector3 direction = target.position - transform.position;
 
-            enemyMotor.RotateTowards(
-                direction,
-                deltaTime);
+            enemyMotor.RotateTowards(direction, deltaTime);
         }
 
         private void UpdateAttack()

@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using UnityRPG.Combat;
+using UnityRPG.VFX;
 
 namespace UnityRPG.AI
 {
     [DisallowMultipleComponent]
+    [RequireComponent(typeof(ProjectileVfxController))]
     public sealed class BossShockwaveProjectile : MonoBehaviour
     {
         private Vector3 direction;
@@ -18,6 +20,13 @@ namespace UnityRPG.AI
 
         private bool hasHitTarget;
         private bool isInitialized;
+
+        private ProjectileVfxController vfxController;
+
+        private void Awake()
+        {
+            vfxController = GetComponent<ProjectileVfxController>();
+        }
 
         public void Initialize(Vector3 direction, float speed, float hitRadius,
             float maximumDistance, DamageInfo damageInfo, LayerMask collisionMask)
@@ -43,7 +52,7 @@ namespace UnityRPG.AI
 
             if (remainingDistance <= 0f)
             {
-                Destroy(gameObject);
+                FinishProjectile();
                 return;
             }
 
@@ -55,7 +64,7 @@ namespace UnityRPG.AI
             travelledDistance += moveDistance;
 
             if (travelledDistance >= maximumDistance)
-                Destroy(gameObject);
+                FinishProjectile();
         }
 
         private void TryHitTarget(float moveDistance)
@@ -74,9 +83,24 @@ namespace UnityRPG.AI
                     continue;
 
                 damageable.TakeDamage(damageInfo);
+
+                Vector3 hitPoint = hits[i].collider.ClosestPoint(transform.position);
+                vfxController.PlayImpact(hitPoint);
+
                 hasHitTarget = true;
                 return;
             }
+        }
+
+        private void FinishProjectile()
+        {
+            if (!isInitialized)
+                return;
+
+            isInitialized = false;
+
+            float delay = vfxController != null ? vfxController.Finish(transform.position, false) : 0f;
+            Destroy(gameObject, delay);
         }
     }
 }

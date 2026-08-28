@@ -2,9 +2,7 @@ using UnityEngine;
 
 namespace UnityRPG.AI
 {
-    [CreateAssetMenu(
-        fileName = "EnemyDefinition",
-        menuName = "UnityRPG/Enemy Definition")]
+    [CreateAssetMenu(fileName = "EnemyDefinition", menuName = "UnityRPG/Enemy Definition")]
     public sealed class EnemyDefinition : ScriptableObject
     {
         [Header("Identity")]

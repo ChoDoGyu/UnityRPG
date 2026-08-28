@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityRPG.VFX;
 
 namespace UnityRPG.AI
 {
@@ -17,6 +18,10 @@ namespace UnityRPG.AI
         [Header("Telegraph")]
         [SerializeField]
         private GameObject telegraphObject;
+
+        [Header("VFX")]
+        [SerializeField] private GameObject impactVfxPrefab;
+        [SerializeField, Min(0f)] private float vfxGroundOffset = 0.05f;
 
         protected override BossPatternType PatternType => BossPatternType.GroundSlam;
 
@@ -47,6 +52,9 @@ namespace UnityRPG.AI
         protected override void OnActiveStarted()
         {
             telegraphObject.SetActive(false);
+
+            Vector3 position = transform.position + Vector3.up * vfxGroundOffset;
+            VfxSpawner.Spawn(impactVfxPrefab, position, Quaternion.identity);
 
             ExecuteHit();
         }

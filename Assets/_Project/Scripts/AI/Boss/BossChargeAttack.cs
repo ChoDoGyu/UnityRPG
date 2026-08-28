@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityRPG.VFX;
 
 namespace UnityRPG.AI
 {
@@ -34,6 +35,13 @@ namespace UnityRPG.AI
         [Header("Telegraph")]
         [SerializeField]
         private GameObject telegraphObject;
+
+        [Header("VFX")]
+        [SerializeField] private GameObject chargeVfxPrefab;
+        [SerializeField] private GameObject impactVfxPrefab;
+        [SerializeField, Min(0f)] private float chargeVfxCleanupDelay = 0.7f;
+
+        private GameObject activeChargeVfx;
 
         private EnemyMotor enemyMotor;
 
@@ -88,6 +96,8 @@ namespace UnityRPG.AI
         {
             telegraphObject.SetActive(false);
 
+            activeChargeVfx = VfxSpawner.SpawnAttached(chargeVfxPrefab, transform);
+
             chargeDirection = transform.forward;
             chargeDirection.y = 0f;
 
@@ -139,9 +149,9 @@ namespace UnityRPG.AI
         protected override void OnPatternCancelled()
         {
             if (telegraphObject != null)
-            {
                 telegraphObject.SetActive(false);
-            }
+
+            StopChargeVfx();
 
             chargeDirection = Vector3.zero;
             travelledDistance = 0f;
@@ -164,7 +174,15 @@ namespace UnityRPG.AI
                 return false;
             }
 
-            return TryApplyDamage(CurrentTarget, damageMultiplier);
+            if (!TryApplyDamage(CurrentTarget, damageMultiplier))
+                return false;
+
+            Collider targetCollider = CurrentTarget.GetComponentInParent<Collider>();
+            Vector3 hitPoint = targetCollider != null ? targetCollider.ClosestPoint(transform.position) : CurrentTarget.position;
+
+            VfxSpawner.Spawn(impactVfxPrefab, hitPoint, Quaternion.identity);
+
+            return true;
         }
 
         protected override void OnValidate()
@@ -181,6 +199,25 @@ namespace UnityRPG.AI
 
             hitRange = Mathf.Max(0f, hitRange);
             damageMultiplier = Mathf.Max(0f, damageMultiplier);
+        }
+
+        protected override void OnRecoveryStarted()
+        {
+            StopChargeVfx();
+        }
+
+        private void StopChargeVfx()
+        {
+            if (activeChargeVfx == null)
+                return;
+
+            ParticleSystem[] particleSystems = activeChargeVfx.GetComponentsInChildren<ParticleSystem>();
+
+            for (int i = 0; i < particleSystems.Length; i++)
+                particleSystems[i].Stop(true, ParticleSystemStopBehavior.StopEmitting);
+
+            Destroy(activeChargeVfx, chargeVfxCleanupDelay);
+            activeChargeVfx = null;
         }
     }
 }

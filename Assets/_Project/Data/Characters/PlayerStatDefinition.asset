@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcbb686af22022f4c8f226f5c5cef1f2, type: 3}
   m_Name: PlayerStatDefinition
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Character.Stats.PlayerStatDefinition
-  maxHealth: 100
+  maxHealth: 1000
   defense: 5
-  attack: 10
+  attack: 100
   critChance: 0.05
   critDamage: 1.5
   moveSpeed: 5

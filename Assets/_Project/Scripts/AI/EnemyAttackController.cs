@@ -61,9 +61,7 @@ namespace UnityRPG.AI
 
         public bool IsReady => currentPhase == EnemyAttackPhase.Ready;
 
-        public bool IsActionLocked =>
-            currentPhase == EnemyAttackPhase.Windup ||
-            currentPhase == EnemyAttackPhase.Recovery;
+        public bool IsActionLocked => currentPhase == EnemyAttackPhase.Windup || currentPhase == EnemyAttackPhase.Recovery;
 
         private void Awake()
         {
@@ -81,9 +79,7 @@ namespace UnityRPG.AI
                 case EnemyType.Melee:
                     if (meleeAttack == null || !meleeAttack.enabled)
                     {
-                        Debug.LogError(
-                            "[Enemy] Melee Enemy의 EnemyMeleeAttack이 없거나 비활성화되어 있습니다.",
-                            this);
+                        Debug.LogError("[Enemy] Melee Enemy의 EnemyMeleeAttack이 없거나 비활성화되어 있습니다.", this);
 
                         return;
                     }
@@ -92,9 +88,7 @@ namespace UnityRPG.AI
                 case EnemyType.Ranged:
                     if (rangedAttack == null || !rangedAttack.enabled)
                     {
-                        Debug.LogError(
-                            "[Enemy] Ranged Enemy의 EnemyRangedAttack이 없거나 비활성화되어 있습니다.",
-                            this);
+                        Debug.LogError("[Enemy] Ranged Enemy의 EnemyRangedAttack이 없거나 비활성화되어 있습니다.", this);
 
                         return;
                     }
@@ -120,9 +114,7 @@ namespace UnityRPG.AI
 
         public void UpdateAttack(float deltaTime)
         {
-            if (!isConfigured ||
-                currentPhase == EnemyAttackPhase.Ready ||
-                deltaTime <= 0f)
+            if (!isConfigured || currentPhase == EnemyAttackPhase.Ready || deltaTime <= 0f)
             {
                 return;
             }

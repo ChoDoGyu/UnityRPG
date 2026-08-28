@@ -39,9 +39,7 @@ namespace UnityRPG.AI
                 return;
             }
 
-            float finalDamage = DamageCalculator.CalculateAfterDefense(
-                damageInfo.Amount,
-                context.Definition.Defense);
+            float finalDamage = DamageCalculator.CalculateAfterDefense(damageInfo.Amount, context.Definition.Defense);
 
             currentHealth = Mathf.Max(0f, currentHealth - finalDamage);
 

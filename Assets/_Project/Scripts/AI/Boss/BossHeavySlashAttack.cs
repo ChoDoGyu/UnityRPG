@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityRPG.VFX;
 
 namespace UnityRPG.AI
 {
@@ -18,6 +19,14 @@ namespace UnityRPG.AI
         [Min(0f)]
         private float damageMultiplier = 1.5f;
 
+        [Header("VFX")]
+        [SerializeField] private GameObject windupVfxPrefab;
+        [SerializeField] private GameObject slashVfxPrefab;
+        [SerializeField] private GameObject impactVfxPrefab;
+        [SerializeField, Min(0f)] private float vfxHeight = 0.8f;
+
+        private GameObject activeWindupVfx;
+
         protected override BossPatternType PatternType => BossPatternType.HeavySlash;
 
         protected override bool CanStartPattern(Transform target)
@@ -31,6 +40,11 @@ namespace UnityRPG.AI
 
         protected override void OnActiveStarted()
         {
+            ClearWindupVfx();
+
+            Vector3 position = transform.position + Vector3.up * vfxHeight;
+            VfxSpawner.Spawn(slashVfxPrefab, position, transform.rotation);
+
             ExecuteHit();
         }
 
@@ -71,7 +85,15 @@ namespace UnityRPG.AI
                 return;
             }
 
-            TryApplyDamage(CurrentTarget, damageMultiplier);
+            if (!TryApplyDamage(CurrentTarget, damageMultiplier))
+                return;
+
+            Collider targetCollider = CurrentTarget.GetComponentInParent<Collider>();
+            Vector3 hitPoint = targetCollider != null ?
+                targetCollider.ClosestPoint(transform.position) :
+                CurrentTarget.position;
+
+            VfxSpawner.Spawn(impactVfxPrefab, hitPoint, Quaternion.identity);
         }
 
         protected override void OnValidate()
@@ -81,6 +103,25 @@ namespace UnityRPG.AI
             range = Mathf.Max(0f, range);
             hitAngle = Mathf.Clamp(hitAngle, 1f, 180f);
             damageMultiplier = Mathf.Max(0f, damageMultiplier);
+        }
+
+        protected override void OnWindupStarted()
+        {
+            activeWindupVfx = VfxSpawner.SpawnAttached(windupVfxPrefab, transform);
+        }
+
+        protected override void OnPatternCancelled()
+        {
+            ClearWindupVfx();
+        }
+
+        private void ClearWindupVfx()
+        {
+            if (activeWindupVfx == null)
+                return;
+
+            Destroy(activeWindupVfx);
+            activeWindupVfx = null;
         }
     }
 }

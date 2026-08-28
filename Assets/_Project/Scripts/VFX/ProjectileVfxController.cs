@@ -19,7 +19,7 @@ namespace UnityRPG.VFX
         public float Finish(Vector3 impactPosition, bool playImpact)
         {
             if (playImpact)
-                VfxSpawner.Spawn(impactVfxPrefab, impactPosition, Quaternion.identity);
+                PlayImpact(impactPosition);
 
             if (projectileVisual != null)
                 projectileVisual.SetActive(false);
@@ -31,6 +31,11 @@ namespace UnityRPG.VFX
                 trailRenderer.emitting = false;
 
             return cleanupDelay;
+        }
+
+        public void PlayImpact(Vector3 position)
+        {
+            VfxSpawner.Spawn(impactVfxPrefab, position, Quaternion.identity);
         }
     }
 }

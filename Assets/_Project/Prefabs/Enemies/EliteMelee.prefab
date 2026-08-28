@@ -294,6 +294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7400d03953d8a424992d04198322798b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyMeleeAttack
+  hitVfxPrefab: {fileID: 0}
 --- !u!114 &3337247284365926919
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,6 +333,9 @@ MonoBehaviour:
   recovery: 0.8
   cooldown: 5
   damageMultiplier: 1.5
+  windupVfxPrefab: {fileID: 7505000327670572560, guid: 2caaebdda1a7bd445a2eda85d482f47f, type: 3}
+  impactVfxPrefab: {fileID: 7505000327670572560, guid: a73fdac5558de00409f4b60a61c38cd6, type: 3}
+  vfxGroundOffset: 0.05
 --- !u!114 &7031700382925010541
 MonoBehaviour:
   m_ObjectHideFlags: 0

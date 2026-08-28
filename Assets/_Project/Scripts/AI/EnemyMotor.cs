@@ -13,16 +13,9 @@ namespace UnityRPG.AI
 
         private bool isConfigured;
 
-        public bool IsMoving =>
-            isConfigured &&
-            agent.enabled &&
-            agent.isOnNavMesh &&
-            agent.velocity.sqrMagnitude > 0.01f;
+        public bool IsMoving => isConfigured && agent.enabled && agent.isOnNavMesh && agent.velocity.sqrMagnitude > 0.01f;
 
-        public Vector3 Velocity =>
-            isConfigured
-                ? agent.velocity
-                : Vector3.zero;
+        public Vector3 Velocity => isConfigured ? agent.velocity : Vector3.zero;
 
         private void Awake()
         {
@@ -40,9 +33,7 @@ namespace UnityRPG.AI
 
         public bool TrySetDestination(Vector3 destination)
         {
-            if (!isConfigured ||
-                !agent.enabled ||
-                !agent.isOnNavMesh)
+            if (!isConfigured || !agent.enabled || !agent.isOnNavMesh)
             {
                 return false;
             }
@@ -54,9 +45,7 @@ namespace UnityRPG.AI
 
         public void Stop()
         {
-            if (!isConfigured ||
-                !agent.enabled ||
-                !agent.isOnNavMesh)
+            if (!isConfigured || !agent.enabled || !agent.isOnNavMesh)
             {
                 return;
             }
@@ -79,14 +68,9 @@ namespace UnityRPG.AI
                 return;
             }
 
-            Quaternion targetRotation = Quaternion.LookRotation(
-                direction,
-                Vector3.up);
+            Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
 
-            transform.rotation = Quaternion.RotateTowards(
-                transform.rotation,
-                targetRotation,
-                agent.angularSpeed * deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, agent.angularSpeed * deltaTime);
         }
 
         public void Disable()

@@ -427,6 +427,10 @@ MonoBehaviour:
   range: 3
   hitAngle: 100
   damageMultiplier: 1.5
+  windupVfxPrefab: {fileID: 6889172413196463854, guid: b85c2f456c7cba241a3859c765a42a58, type: 3}
+  slashVfxPrefab: {fileID: 6441870169880424528, guid: 2e655846e02ba05458035db2af4d6458, type: 3}
+  impactVfxPrefab: {fileID: 5520712616411988428, guid: d653dda243e279a4594291e558226eed, type: 3}
+  vfxHeight: 0.8
 --- !u!114 &7250216861849421799
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -447,6 +451,8 @@ MonoBehaviour:
   range: 4.5
   damageMultiplier: 1.8
   telegraphObject: {fileID: 2026730538881356739}
+  impactVfxPrefab: {fileID: 8607171215529170194, guid: 1f6b841f6a35edd4cade38af6999774a, type: 3}
+  vfxGroundOffset: 0.05
 --- !u!114 &2698126283378516243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -471,6 +477,9 @@ MonoBehaviour:
   hitRange: 1.2
   damageMultiplier: 1.6
   telegraphObject: {fileID: 85254931626695053}
+  chargeVfxPrefab: {fileID: 3373251869169076361, guid: 55c17b849674b4c41a3b3cf70e229632, type: 3}
+  impactVfxPrefab: {fileID: 6500635362073186678, guid: d9a6b67798d978c409c94027910bbb0c, type: 3}
+  chargeVfxCleanupDelay: 0.7
 --- !u!114 &4355989493533284107
 MonoBehaviour:
   m_ObjectHideFlags: 0

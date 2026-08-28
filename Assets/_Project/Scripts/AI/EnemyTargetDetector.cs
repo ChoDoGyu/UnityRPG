@@ -88,8 +88,7 @@ namespace UnityRPG.AI
                     continue;
                 }
 
-                PlayerController player =
-                    hit.GetComponentInParent<PlayerController>();
+                PlayerController player = hit.GetComponentInParent<PlayerController>();
 
                 if (player == null)
                 {
@@ -101,9 +100,7 @@ namespace UnityRPG.AI
                     continue;
                 }
 
-                Vector3 direction =
-                    player.transform.position -
-                    transform.position;
+                Vector3 direction = player.transform.position - transform.position;
 
                 direction.y = 0f;
 
@@ -135,16 +132,13 @@ namespace UnityRPG.AI
 
         private bool IsTargetInDetectionRange(Transform target)
         {
-            Vector3 direction =
-                target.position -
-                transform.position;
+            Vector3 direction = target.position - transform.position;
 
             direction.y = 0f;
 
             float detectionRange = context.Definition.DetectionRange;
 
-            return direction.sqrMagnitude <=
-                detectionRange * detectionRange;
+            return direction.sqrMagnitude <= detectionRange * detectionRange;
         }
     }
 }

@@ -229,6 +229,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7400d03953d8a424992d04198322798b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyMeleeAttack
+  hitVfxPrefab: {fileID: 5307426551704648260, guid: f0ff063b85368834d9f0cd6acc8a0418, type: 3}
 --- !u!114 &4978355971520167727
 MonoBehaviour:
   m_ObjectHideFlags: 0

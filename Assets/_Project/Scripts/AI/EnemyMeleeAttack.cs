@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityRPG.Combat;
+using UnityRPG.VFX;
 
 namespace UnityRPG.AI
 {
@@ -7,6 +8,9 @@ namespace UnityRPG.AI
     [RequireComponent(typeof(EnemyContext))]
     public sealed class EnemyMeleeAttack : MonoBehaviour
     {
+        [Header("VFX")]
+        [SerializeField] private GameObject hitVfxPrefab;
+
         private EnemyContext context;
 
         private void Awake()
@@ -38,11 +42,14 @@ namespace UnityRPG.AI
                 return false;
             }
 
-            DamageInfo damageInfo = new DamageInfo(
-                context.Definition.Attack,
-                gameObject);
+            DamageInfo damageInfo = new DamageInfo(context.Definition.Attack, gameObject);
 
             damageable.TakeDamage(damageInfo);
+
+            Collider targetCollider = target.GetComponentInParent<Collider>();
+            Vector3 hitPoint = targetCollider != null ? targetCollider.ClosestPoint(transform.position) : target.position;
+
+            VfxSpawner.Spawn(hitVfxPrefab, hitPoint, Quaternion.identity);
 
             return true;
         }

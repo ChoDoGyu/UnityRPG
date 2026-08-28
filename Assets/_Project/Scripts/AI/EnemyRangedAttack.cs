@@ -37,14 +37,9 @@ namespace UnityRPG.AI
         {
             context = GetComponent<EnemyContext>();
 
-            if (!context.IsConfigured ||
-                spawnPoint == null ||
-                projectilePrefab == null ||
-                collisionMask.value == 0)
+            if (!context.IsConfigured || spawnPoint == null || projectilePrefab == null || collisionMask.value == 0)
             {
-                Debug.LogError(
-                    "[Enemy] EnemyRangedAttack의 설정이 올바르지 않습니다.",
-                    this);
+                Debug.LogError("[Enemy] EnemyRangedAttack의 설정이 올바르지 않습니다.", this);
 
                 return;
             }
@@ -61,8 +56,7 @@ namespace UnityRPG.AI
 
             Vector3 targetPosition = target.position;
 
-            CharacterController targetController =
-                target.GetComponent<CharacterController>();
+            CharacterController targetController = target.GetComponent<CharacterController>();
 
             if (targetController != null)
             {
@@ -78,22 +72,11 @@ namespace UnityRPG.AI
 
             direction.Normalize();
 
-            DamageInfo damageInfo = new DamageInfo(
-                context.Definition.Attack,
-                gameObject);
+            DamageInfo damageInfo = new DamageInfo(context.Definition.Attack, gameObject);
 
-            EnemyProjectile projectile = Instantiate(
-                projectilePrefab,
-                spawnPoint.position,
-                Quaternion.LookRotation(direction));
+            EnemyProjectile projectile = Instantiate(projectilePrefab, spawnPoint.position, Quaternion.LookRotation(direction));
 
-            projectile.Initialize(
-                direction,
-                projectileSpeed,
-                projectileLifetime,
-                hitRadius,
-                collisionMask,
-                damageInfo);
+            projectile.Initialize(direction, projectileSpeed, projectileLifetime, hitRadius, collisionMask, damageInfo);
 
             return true;
         }
