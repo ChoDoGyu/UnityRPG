@@ -1,10 +1,12 @@
 using System;
 using UnityEngine;
 using UnityRPG.Combat;
+using UnityRPG.VFX;
 
 namespace UnityRPG.Skill
 {
     [DisallowMultipleComponent]
+    [RequireComponent(typeof(ProjectileVfxController))]
     public sealed class SkillProjectile : MonoBehaviour
     {
         private Vector3 direction;
@@ -14,15 +16,16 @@ namespace UnityRPG.Skill
         private LayerMask collisionMask;
         private DamageInfo damageInfo;
 
+        private ProjectileVfxController vfxController;
+
         private bool isInitialized;
 
-        public void Initialize(
-            Vector3 direction,
-            float speed,
-            float lifetime,
-            float hitRadius,
-            LayerMask collisionMask,
-            DamageInfo damageInfo)
+        private void Awake()
+        {
+            vfxController = GetComponent<ProjectileVfxController>();
+        }
+
+        public void Initialize(Vector3 direction, float speed, float lifetime, float hitRadius, LayerMask collisionMask, DamageInfo damageInfo)
         {
             this.direction = direction.normalized;
 
@@ -58,27 +61,15 @@ namespace UnityRPG.Skill
             remainingLifetime -= deltaTime;
 
             if (remainingLifetime <= 0f)
-            {
-                Destroy(gameObject);
-            }
+                FinishProjectile(transform.position, false);
         }
 
         private bool MoveProjectile(float moveDistance)
         {
             RaycastHit[] hits =
-                Physics.SphereCastAll(
-                    transform.position,
-                    hitRadius,
-                    direction,
-                    moveDistance,
-                    collisionMask,
-                    QueryTriggerInteraction.Ignore);
+                Physics.SphereCastAll(transform.position, hitRadius, direction, moveDistance, collisionMask, QueryTriggerInteraction.Ignore);
 
-            Array.Sort(
-                hits,
-                (a, b) =>
-                    a.distance.CompareTo(
-                        b.distance));
+            Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
 
             foreach (RaycastHit hit in hits)
             {
@@ -87,19 +78,14 @@ namespace UnityRPG.Skill
                     continue;
                 }
 
-                transform.position =
-                    hit.point -
-                    direction * hitRadius;
+                transform.position = hit.point - direction * hitRadius;
 
                 IDamageable damageable = hit.collider.GetComponentInParent<IDamageable>();
 
                 if (damageable != null)
-                {
                     damageable.TakeDamage(damageInfo);
-                }
 
-                Destroy(gameObject);
-
+                FinishProjectile(hit.point, true);
                 return true;
             }
 
@@ -119,10 +105,20 @@ namespace UnityRPG.Skill
 
             Transform colliderTransform = collider.transform;
 
-            return
-                colliderTransform ==
-                source.transform ||
-                colliderTransform.IsChildOf(source.transform);
+            return colliderTransform == source.transform || colliderTransform.IsChildOf(source.transform);
+        }
+
+        private void FinishProjectile(Vector3 position, bool playImpact)
+        {
+            if (!isInitialized)
+                return;
+
+            isInitialized = false;
+
+            float delay = vfxController != null ?
+                vfxController.Finish(position, playImpact) : 0f;
+
+            Destroy(gameObject, delay);
         }
     }
 }

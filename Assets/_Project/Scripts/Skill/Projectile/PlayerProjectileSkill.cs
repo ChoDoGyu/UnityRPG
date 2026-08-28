@@ -6,8 +6,7 @@ namespace UnityRPG.Skill
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(PlayerStats))]
-    public sealed class PlayerProjectileSkill :
-        MonoBehaviour
+    public sealed class PlayerProjectileSkill : MonoBehaviour
     {
         [Header("Reference")]
         [SerializeField]
@@ -45,8 +44,7 @@ namespace UnityRPG.Skill
         [Min(0.01f)]
         private float actionDuration = 0.3f;
 
-        public float ActionDuration =>
-            actionDuration;
+        public float ActionDuration => actionDuration;
 
         private bool isConfigured;
 
@@ -54,13 +52,9 @@ namespace UnityRPG.Skill
 
         private void Awake()
         {
-            if (spawnPoint == null ||
-                directionReference == null ||
-                projectilePrefab == null)
+            if (spawnPoint == null || directionReference == null || projectilePrefab == null)
             {
-                Debug.LogError(
-                    "[Skill] Projectile Skill의 Reference가 설정되지 않았습니다.",
-                    this);
+                Debug.LogError("[Skill] Projectile Skill의 Reference가 설정되지 않았습니다.", this);
 
                 return;
             }
@@ -72,15 +66,12 @@ namespace UnityRPG.Skill
 
         public bool TryStart()
         {
-            if (!isConfigured ||
-                playerStats == null ||
-                !playerStats.IsConfigured)
+            if (!isConfigured || playerStats == null || !playerStats.IsConfigured)
             {
                 return false;
             }
 
-            Vector3 direction =
-                directionReference.forward;
+            Vector3 direction = directionReference.forward;
 
             direction.y = 0f;
 
@@ -91,28 +82,12 @@ namespace UnityRPG.Skill
 
             direction.Normalize();
 
-            SkillProjectile projectile =
-                Instantiate(
-                    projectilePrefab,
-                    spawnPoint.position,
-                    Quaternion.LookRotation(
-                        direction));
+            SkillProjectile projectile = Instantiate(projectilePrefab, spawnPoint.position, Quaternion.LookRotation(direction));
 
             DamageInfo damageInfo =
-                DamageCalculator.CreateAttackDamage(
-                    playerStats.Attack,
-                    damageMultiplier,
-                    playerStats.CritChance,
-                    playerStats.CritDamage,
-                    gameObject);
+                DamageCalculator.CreateAttackDamage(playerStats.Attack, damageMultiplier, playerStats.CritChance, playerStats.CritDamage, gameObject);
 
-            projectile.Initialize(
-                direction,
-                projectileSpeed,
-                projectileLifetime,
-                hitRadius,
-                collisionMask,
-                damageInfo);
+            projectile.Initialize(direction, projectileSpeed, projectileLifetime, hitRadius, collisionMask, damageInfo);
 
             return true;
         }

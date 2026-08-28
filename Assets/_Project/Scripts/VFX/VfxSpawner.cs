@@ -19,5 +19,13 @@ namespace UnityRPG.VFX
 
             return Spawn(prefab, point.position, point.rotation);
         }
+
+        public static GameObject SpawnAttached(GameObject prefab, Transform point)
+        {
+            if (prefab == null || point == null)
+                return null;
+
+            return Object.Instantiate(prefab, point.position, point.rotation, point);
+        }
     }
 }

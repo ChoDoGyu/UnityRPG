@@ -70,7 +70,6 @@ namespace UnityRPG.Combat
             if (attackReference == null)
             {
                 Debug.LogError("[Combat] PlayerAttackController의 Attack Reference가 설정되지 않았습니다.", this);
-
                 return;
             }
 
@@ -155,6 +154,8 @@ namespace UnityRPG.Combat
 
         private void ApplyHit()
         {
+            combatVfxController.PlayBasicSlash(currentComboStep);
+
             var hits = hitDetector.FindHits(attackReference);
             DamageInfo damageInfo = DamageCalculator.CreateAttackDamage(playerStats.Attack, 1f, playerStats.CritChance, playerStats.CritDamage, gameObject);
 

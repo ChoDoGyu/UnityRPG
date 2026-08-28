@@ -1,12 +1,13 @@
 using UnityEngine;
 using UnityRPG.Character.Stats;
+using UnityRPG.VFX;
 
 namespace UnityRPG.Skill
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(PlayerStats))]
-    public sealed class PlayerAttackBuffSkill :
-        MonoBehaviour
+    [RequireComponent(typeof(CombatVfxController))]
+    public sealed class PlayerAttackBuffSkill : MonoBehaviour
     {
         [Header("Buff")]
         [SerializeField]
@@ -23,18 +24,18 @@ namespace UnityRPG.Skill
         private float actionDuration = 0.3f;
 
         private PlayerStats playerStats;
+        private CombatVfxController combatVfxController;
+
         private float remainingDuration;
 
-        public bool IsActive =>
-            remainingDuration > 0f;
+        public bool IsActive => remainingDuration > 0f;
 
-        public float ActionDuration =>
-            actionDuration;
+        public float ActionDuration => actionDuration;
 
         private void Awake()
         {
-            playerStats =
-                GetComponent<PlayerStats>();
+            playerStats = GetComponent<PlayerStats>();
+            combatVfxController = GetComponent<CombatVfxController>();
         }
 
         private void OnDisable()
@@ -44,8 +45,7 @@ namespace UnityRPG.Skill
 
         public bool TryStart()
         {
-            if (playerStats == null ||
-                !playerStats.IsConfigured)
+            if (playerStats == null || !playerStats.IsConfigured)
             {
                 return false;
             }
@@ -55,20 +55,15 @@ namespace UnityRPG.Skill
                 return false;
             }
 
-            playerStats.AddModifier(
-                StatType.Attack,
-                new StatModifier(
-                    attackBonus,
-                    this));
+            playerStats.AddModifier(StatType.Attack, new StatModifier(attackBonus, this));
+            remainingDuration = duration;
 
-            remainingDuration =
-                duration;
+            combatVfxController.PlayAttackBuff();
 
             return true;
         }
 
-        public void UpdateSkill(
-            float deltaTime)
+        public void UpdateSkill(float deltaTime)
         {
             if (!IsActive)
             {
@@ -80,8 +75,7 @@ namespace UnityRPG.Skill
                 return;
             }
 
-            remainingDuration -=
-                deltaTime;
+            remainingDuration -= deltaTime;
 
             if (remainingDuration <= 0f)
             {
@@ -92,10 +86,10 @@ namespace UnityRPG.Skill
         private void EndBuff()
         {
             if (playerStats != null)
-            {
-                playerStats.RemoveModifiersFromSource(
-                    this);
-            }
+                playerStats.RemoveModifiersFromSource(this);
+
+            if (combatVfxController != null)
+                combatVfxController.StopAttackBuff();
 
             remainingDuration = 0f;
         }

@@ -2,12 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityRPG.Combat;
 using UnityRPG.Character.Stats;
+using UnityRPG.VFX;
 
 namespace UnityRPG.Skill
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(PlayerStats))]
+    [RequireComponent(typeof(CombatVfxController))]
     public sealed class PlayerDashSlashSkill : MonoBehaviour
     {
         [Header("Reference")]
@@ -36,33 +38,30 @@ namespace UnityRPG.Skill
         [Min(0f)]
         private float damageMultiplier = 1.5f;
 
-        private readonly HashSet<IDamageable> hitTargets =
-            new HashSet<IDamageable>();
+        private readonly HashSet<IDamageable> hitTargets = new HashSet<IDamageable>();
 
         private CharacterController characterController;
         private PlayerStats playerStats;
+        private CombatVfxController combatVfxController;
 
         private Vector3 dashDirection;
         private float remainingDuration;
         private float dashSpeed;
         private bool isConfigured;
 
-        public bool IsActive =>
-            remainingDuration > 0f;
+        public bool IsActive => remainingDuration > 0f;
 
-        public float ActionDuration =>
-            dashDuration;
+        public float ActionDuration => dashDuration;
 
         private void Awake()
         {
             characterController = GetComponent<CharacterController>();
             playerStats = GetComponent<PlayerStats>();
+            combatVfxController = GetComponent<CombatVfxController>();
 
             if (directionReference == null)
             {
-                Debug.LogError(
-                    "[Skill] DashSlash의 Direction Reference가 설정되지 않았습니다.",
-                    this);
+                Debug.LogError("[Skill] DashSlash의 Direction Reference가 설정되지 않았습니다.", this);
 
                 return;
             }
@@ -72,9 +71,7 @@ namespace UnityRPG.Skill
 
         public bool TryStart()
         {
-            if (!isConfigured ||
-                playerStats == null ||
-                !playerStats.IsConfigured)
+            if (!isConfigured || playerStats == null || !playerStats.IsConfigured)
             {
                 return false;
             }
@@ -84,8 +81,7 @@ namespace UnityRPG.Skill
                 return false;
             }
 
-            dashDirection =
-                directionReference.forward;
+            dashDirection = directionReference.forward;
 
             dashDirection.y = 0f;
 
@@ -96,14 +92,13 @@ namespace UnityRPG.Skill
 
             dashDirection.Normalize();
 
-            dashSpeed =
-                dashDistance /
-                dashDuration;
+            dashSpeed = dashDistance / dashDuration;
 
-            remainingDuration =
-                dashDuration;
+            remainingDuration = dashDuration;
 
             hitTargets.Clear();
+
+            combatVfxController.PlayDashSlash();
 
             CheckHitTargets();
 
@@ -130,12 +125,7 @@ namespace UnityRPG.Skill
         {
             Vector3 center = transform.TransformPoint(characterController.center);
 
-            Collider[] hits = 
-                Physics.OverlapSphere(
-                    center, 
-                    hitRadius, 
-                    targetLayer,
-                    QueryTriggerInteraction.Ignore);
+            Collider[] hits = Physics.OverlapSphere(center, hitRadius, targetLayer, QueryTriggerInteraction.Ignore);
 
             foreach (Collider hit in hits)
             {
@@ -152,14 +142,12 @@ namespace UnityRPG.Skill
                 }
 
                 DamageInfo damageInfo =
-                    DamageCalculator.CreateAttackDamage(
-                        playerStats.Attack,
-                        damageMultiplier,
-                        playerStats.CritChance,
-                        playerStats.CritDamage,
-                        gameObject);
+                    DamageCalculator.CreateAttackDamage(playerStats.Attack, damageMultiplier, playerStats.CritChance, playerStats.CritDamage, gameObject);
 
                 damageable.TakeDamage(damageInfo);
+
+                Vector3 hitPoint = hit.ClosestPoint(transform.position);
+                combatVfxController.PlayHit(hitPoint);
             }
         }
     }

@@ -70,9 +70,7 @@ namespace UnityRPG.Character.Player
 
             Vector3 bodyTarget = pose.BodyBasePosition + Vector3.down * dodgeSettings.BodyDrop;
 
-            Quaternion bodyRotationTarget =
-                pose.BodyBaseRotation *
-                Quaternion.Euler(dodgeSettings.BodyLean, 0f, 0f);
+            Quaternion bodyRotationTarget = pose.BodyBaseRotation * Quaternion.Euler(dodgeSettings.BodyLean, 0f, 0f);
 
             Vector3 leftHandTarget = pose.LeftHandBasePosition + Vector3.back * dodgeSettings.HandBack;
 

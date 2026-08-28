@@ -705,7 +705,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23c8ea8fa497837489b8cea0bada43fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.VFX.CombatVfxController
+  slashVfxPoint: {fileID: 7257790209869944248}
   hitVfxPrefab: {fileID: 3282767246620720396, guid: b3d1d08f81608884f9f63f172eb157d0, type: 3}
+  basicSlashVfxPrefab: {fileID: 8029856944496334661, guid: 46b2900bf67a3e046af5bf515ecf6f87, type: 3}
+  dashSlashVfxPrefab: {fileID: 2417820188034746877, guid: 12bb87d874f5f974c8c56da7205c0484, type: 3}
+  spinAttackVfxPrefab: {fileID: 8718054501594374007, guid: 84c5403115c3fed44872a4905373ae54, type: 3}
+  spinAttackVfxHeight: 0.9
+  attackBuffVfxPrefab: {fileID: 2710653550065155004, guid: 3291cf4e0dce3a447868f81d8eaf5ef8, type: 3}
+  attackBuffCleanupDelay: 1.2
 --- !u!1 &1000176733347427081
 GameObject:
   m_ObjectHideFlags: 0
@@ -854,7 +861,7 @@ Transform:
   m_GameObject: {fileID: 2149945175881056703}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.2, z: 0.7}
+  m_LocalPosition: {x: 0, y: 1.2, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1137,7 +1144,8 @@ Transform:
   m_LocalPosition: {x: 0.58, y: 1.05, z: 0}
   m_LocalScale: {x: 0.28, y: 0.28, z: 0.28}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7257790209869944248}
   m_Father: {fileID: 7417113505253281969}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4455368876025636447
@@ -1197,6 +1205,37 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &7371888836363932241
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7257790209869944248}
+  m_Layer: 3
+  m_Name: SlashVfxPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7257790209869944248
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7371888836363932241}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.5, y: 0, z: 3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5138645430008665280}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8386447345250681248
 GameObject:
   m_ObjectHideFlags: 0
