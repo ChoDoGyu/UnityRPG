@@ -263,15 +263,15 @@ MonoBehaviour:
   rangedRecoveryBack: 0.18
   rangedRecoveryPitch: -10
   rangedRecoveryScale: 0.05
-  slamWindupBack: 0.45
-  slamWindupUp: 0.55
-  slamWindupPitch: -55
-  slamWindupScale: 0.15
-  slamRecoveryForward: 0.5
-  slamRecoveryDown: 0.4
-  slamRecoveryPitch: 45
-  slamImpactWidthScale: 1.1
-  slamImpactHeightScale: 0.9
+  slamWindupBack: 0.38
+  slamWindupUp: 0.62
+  slamWindupPitch: -50
+  slamWindupScale: 0.14
+  slamRecoveryForward: 0.55
+  slamRecoveryDown: 0.48
+  slamRecoveryPitch: 50
+  slamImpactWidthScale: 1.15
+  slamImpactHeightScale: 0.84
   deathDuration: 0.4
   transitionSpeed: 14
 --- !u!114 &3060501810865363920

@@ -8,42 +8,26 @@ namespace UnityRPG.AI
     public sealed class BossChargeAttack : BossPatternBase
     {
         [Header("Charge")]
-        [SerializeField]
-        [Min(0f)]
-        private float minimumStartRange = 4f;
-
-        [SerializeField]
-        [Min(0f)]
-        private float maximumStartRange = 10f;
-
-        [SerializeField]
-        [Min(0.01f)]
-        private float chargeSpeed = 12f;
-
-        [SerializeField]
-        [Min(0.01f)]
-        private float maximumChargeDistance = 10f;
-
-        [SerializeField]
-        [Min(0f)]
-        private float hitRange = 1.2f;
-
-        [SerializeField]
-        [Min(0f)]
-        private float damageMultiplier = 1.6f;
+        [SerializeField, Min(0f)] private float minimumStartRange = 4f;
+        [SerializeField, Min(0f)] private float maximumStartRange = 10f;
+        [SerializeField, Min(0.01f)] private float chargeSpeed = 12f;
+        [SerializeField, Min(0.01f)] private float maximumChargeDistance = 10f;
+        [SerializeField, Min(0f)] private float hitRange = 1.2f;
+        [SerializeField, Min(0f)] private float damageMultiplier = 1.6f;
 
         [Header("Telegraph")]
-        [SerializeField]
-        private GameObject telegraphObject;
+        [SerializeField] private GameObject telegraphObject;
 
         [Header("VFX")]
         [SerializeField] private GameObject chargeVfxPrefab;
         [SerializeField] private GameObject impactVfxPrefab;
         [SerializeField, Min(0f)] private float chargeVfxCleanupDelay = 0.7f;
 
-        private GameObject activeChargeVfx;
-
         private EnemyMotor enemyMotor;
+        private Collider bossCollider;
+        private CharacterController ignoredTargetController;
+
+        private GameObject activeChargeVfx;
 
         private Vector3 chargeDirection;
         private float travelledDistance;
@@ -52,12 +36,12 @@ namespace UnityRPG.AI
         protected override BossPatternType PatternType => BossPatternType.Charge;
 
         public override bool ShouldTrackTargetRotation => CurrentPhase != BossPatternPhase.Active;
-
         public override bool ShouldStopMotor => CurrentPhase != BossPatternPhase.Active;
 
         protected override void Awake()
         {
             enemyMotor = GetComponent<EnemyMotor>();
+            bossCollider = GetComponent<Collider>();
 
             base.Awake();
         }
@@ -75,7 +59,6 @@ namespace UnityRPG.AI
         protected override bool CanStartPattern(Transform target)
         {
             Vector3 direction = target.position - transform.position;
-
             direction.y = 0f;
 
             float sqrDistance = direction.sqrMagnitude;
@@ -109,6 +92,8 @@ namespace UnityRPG.AI
 
             chargeDirection.Normalize();
 
+            IgnoreTargetCollision();
+
             travelledDistance = 0f;
             hasHitTarget = false;
         }
@@ -122,16 +107,20 @@ namespace UnityRPG.AI
             }
 
             float remainingDistance = maximumChargeDistance - travelledDistance;
-
             float moveDistance = Mathf.Min(chargeSpeed * deltaTime, remainingDistance);
 
-            if (!enemyMotor.TryMove(chargeDirection * moveDistance))
-            {
-                CompleteActive();
-                return;
-            }
+            moveDistance = ClampMoveDistanceToTarget(moveDistance);
 
-            travelledDistance += moveDistance;
+            if (moveDistance > 0f)
+            {
+                if (!enemyMotor.TryMove(chargeDirection * moveDistance))
+                {
+                    CompleteActive();
+                    return;
+                }
+
+                travelledDistance += moveDistance;
+            }
 
             if (!hasHitTarget && TryHitTarget())
             {
@@ -141,9 +130,13 @@ namespace UnityRPG.AI
             }
 
             if (travelledDistance >= maximumChargeDistance)
-            {
                 CompleteActive();
-            }
+        }
+
+        protected override void OnRecoveryStarted()
+        {
+            RestoreTargetCollision();
+            StopChargeVfx();
         }
 
         protected override void OnPatternCancelled()
@@ -151,6 +144,7 @@ namespace UnityRPG.AI
             if (telegraphObject != null)
                 telegraphObject.SetActive(false);
 
+            RestoreTargetCollision();
             StopChargeVfx();
 
             chargeDirection = Vector3.zero;
@@ -161,49 +155,76 @@ namespace UnityRPG.AI
         private bool TryHitTarget()
         {
             if (CurrentTarget == null)
-            {
                 return false;
-            }
 
             Vector3 direction = CurrentTarget.position - transform.position;
-
             direction.y = 0f;
 
             if (direction.sqrMagnitude > hitRange * hitRange)
-            {
                 return false;
-            }
 
             if (!TryApplyDamage(CurrentTarget, damageMultiplier))
                 return false;
 
             Collider targetCollider = CurrentTarget.GetComponentInParent<Collider>();
-            Vector3 hitPoint = targetCollider != null ? targetCollider.ClosestPoint(transform.position) : CurrentTarget.position;
+            Vector3 hitPoint = targetCollider != null ?
+                targetCollider.ClosestPoint(transform.position) :
+                CurrentTarget.position;
 
             VfxSpawner.Spawn(impactVfxPrefab, hitPoint, Quaternion.identity);
 
             return true;
         }
 
-        protected override void OnValidate()
+        private float ClampMoveDistanceToTarget(float moveDistance)
         {
-            base.OnValidate();
+            if (CurrentTarget == null)
+                return moveDistance;
 
-            minimumStartRange = Mathf.Max(0f, minimumStartRange);
+            Vector3 toTarget = CurrentTarget.position - transform.position;
+            toTarget.y = 0f;
 
-            maximumStartRange = Mathf.Max(minimumStartRange, maximumStartRange);
+            float forwardDistance = Vector3.Dot(toTarget, chargeDirection);
 
-            chargeSpeed = Mathf.Max(0.01f, chargeSpeed);
+            if (forwardDistance <= 0f)
+                return moveDistance;
 
-            maximumChargeDistance = Mathf.Max(0.01f, maximumChargeDistance);
+            float lateralDistanceSqr =
+                Mathf.Max(0f, toTarget.sqrMagnitude - forwardDistance * forwardDistance);
 
-            hitRange = Mathf.Max(0f, hitRange);
-            damageMultiplier = Mathf.Max(0f, damageMultiplier);
+            float hitRangeSqr = hitRange * hitRange;
+
+            if (lateralDistanceSqr > hitRangeSqr)
+                return moveDistance;
+
+            float hitDistance =
+                forwardDistance - Mathf.Sqrt(hitRangeSqr - lateralDistanceSqr);
+
+            return Mathf.Min(moveDistance, Mathf.Max(0f, hitDistance));
         }
 
-        protected override void OnRecoveryStarted()
+        private void IgnoreTargetCollision()
         {
-            StopChargeVfx();
+            if (bossCollider == null || CurrentTarget == null)
+                return;
+
+            CharacterController targetController =
+                CurrentTarget.GetComponent<CharacterController>();
+
+            if (targetController == null)
+                return;
+
+            ignoredTargetController = targetController;
+            Physics.IgnoreCollision(bossCollider, ignoredTargetController, true);
+        }
+
+        private void RestoreTargetCollision()
+        {
+            if (bossCollider == null || ignoredTargetController == null)
+                return;
+
+            Physics.IgnoreCollision(bossCollider, ignoredTargetController, false);
+            ignoredTargetController = null;
         }
 
         private void StopChargeVfx()
@@ -211,13 +232,26 @@ namespace UnityRPG.AI
             if (activeChargeVfx == null)
                 return;
 
-            ParticleSystem[] particleSystems = activeChargeVfx.GetComponentsInChildren<ParticleSystem>();
+            ParticleSystem[] particleSystems =
+                activeChargeVfx.GetComponentsInChildren<ParticleSystem>();
 
             for (int i = 0; i < particleSystems.Length; i++)
                 particleSystems[i].Stop(true, ParticleSystemStopBehavior.StopEmitting);
 
             Destroy(activeChargeVfx, chargeVfxCleanupDelay);
             activeChargeVfx = null;
+        }
+
+        protected override void OnValidate()
+        {
+            base.OnValidate();
+
+            minimumStartRange = Mathf.Max(0f, minimumStartRange);
+            maximumStartRange = Mathf.Max(minimumStartRange, maximumStartRange);
+            chargeSpeed = Mathf.Max(0.01f, chargeSpeed);
+            maximumChargeDistance = Mathf.Max(0.01f, maximumChargeDistance);
+            hitRange = Mathf.Max(0f, hitRange);
+            damageMultiplier = Mathf.Max(0f, damageMultiplier);
         }
     }
 }
