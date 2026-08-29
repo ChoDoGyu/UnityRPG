@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityRPG.Combat;
 using UnityRPG.Character.Stats;
 using UnityRPG.VFX;
+using UnityRPG.Core;
 
 namespace UnityRPG.Skill
 {
@@ -37,6 +38,9 @@ namespace UnityRPG.Skill
         [SerializeField]
         [Min(0f)]
         private float damageMultiplier = 1.5f;
+
+        [Header("SFX")]
+        [SerializeField] private AudioClip dashSlashSfx;
 
         private readonly HashSet<IDamageable> hitTargets = new HashSet<IDamageable>();
 
@@ -99,6 +103,7 @@ namespace UnityRPG.Skill
             hitTargets.Clear();
 
             combatVfxController.PlayDashSlash();
+            AudioService.Instance?.PlaySfx(dashSlashSfx);
 
             CheckHitTargets();
 

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityRPG.Character.Stats;
 using UnityRPG.Combat;
+using UnityRPG.Core;
 
 namespace UnityRPG.Skill
 {
@@ -43,6 +44,9 @@ namespace UnityRPG.Skill
         [SerializeField]
         [Min(0.01f)]
         private float actionDuration = 0.3f;
+
+        [Header("SFX")]
+        [SerializeField] private AudioClip projectileSfx;
 
         public float ActionDuration => actionDuration;
 
@@ -88,6 +92,8 @@ namespace UnityRPG.Skill
                 DamageCalculator.CreateAttackDamage(playerStats.Attack, damageMultiplier, playerStats.CritChance, playerStats.CritDamage, gameObject);
 
             projectile.Initialize(direction, projectileSpeed, projectileLifetime, hitRadius, collisionMask, damageInfo);
+
+            AudioService.Instance?.PlaySfx(projectileSfx);
 
             return true;
         }

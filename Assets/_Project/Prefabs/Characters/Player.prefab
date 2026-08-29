@@ -415,6 +415,9 @@ MonoBehaviour:
   maxComboCount: 3
   hitNormalizedTime: 0.5
   targetTrackingNormalizedTime: 0.25
+  slashSfx01: {fileID: 8300000, guid: 5d1d0d68a4a4626489644260c417c942, type: 3}
+  slashSfx02: {fileID: 8300000, guid: 3fbbf2165566d0f49b7d2f6d08450e81, type: 3}
+  hitSfx: {fileID: 8300000, guid: 0e4e7937d17258d4ab93cd35c5c2ab93, type: 3}
 --- !u!114 &7083225340647677956
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -477,6 +480,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   damageMultiplier: 1.5
+  dashSlashSfx: {fileID: 8300000, guid: 5dab11b324c2c1847a17c19566512c9e, type: 3}
 --- !u!114 &7025670843452615858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -500,6 +504,7 @@ MonoBehaviour:
     m_Bits: 65
   damageMultiplier: 2
   actionDuration: 0.3
+  projectileSfx: {fileID: 8300000, guid: 6d7f0aded4f0d6e47a5833aa050ec522, type: 3}
 --- !u!114 &6108543259105645243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -519,6 +524,7 @@ MonoBehaviour:
   damageMultiplier: 2.5
   actionDuration: 0.45
   hitNormalizedTime: 0.5
+  spinSfx: {fileID: 8300000, guid: 80929a1031e63604a8f7760393758a6e, type: 3}
 --- !u!114 &888765474829304046
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -534,6 +540,7 @@ MonoBehaviour:
   attackBonus: 5
   duration: 5
   actionDuration: 0.3
+  buffSfx: {fileID: 8300000, guid: 9a65bed17513146429094794ed5ce4e7, type: 3}
 --- !u!114 &8062844567832452623
 MonoBehaviour:
   m_ObjectHideFlags: 0

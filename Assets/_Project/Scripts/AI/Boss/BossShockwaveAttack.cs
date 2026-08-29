@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityRPG.Combat;
+using UnityRPG.Core;
 
 namespace UnityRPG.AI
 {
@@ -34,6 +35,9 @@ namespace UnityRPG.AI
         [Header("Reference")]
         [SerializeField]
         private Transform spawnPoint;
+
+        [Header("SFX")]
+        [SerializeField] private AudioClip shockwaveSfx;
 
         [SerializeField]
         private BossShockwaveProjectile projectilePrefab;
@@ -93,6 +97,8 @@ namespace UnityRPG.AI
             BossShockwaveProjectile projectile = Instantiate(projectilePrefab, spawnPoint.position, Quaternion.LookRotation(direction));
 
             projectile.Initialize(direction, projectileSpeed, hitRadius, maximumDistance, damageInfo, collisionMask);
+
+            AudioService.Instance?.PlaySfx(shockwaveSfx);
         }
 
         protected override void OnValidate()

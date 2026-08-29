@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityRPG.Character.Stats;
+using UnityRPG.Core;
 using UnityRPG.VFX;
 
 namespace UnityRPG.Combat
@@ -11,27 +12,22 @@ namespace UnityRPG.Combat
     public sealed class PlayerAttackController : MonoBehaviour
     {
         [Header("Reference")]
-        [SerializeField]
-        private Transform attackReference;
+        [SerializeField] private Transform attackReference;
 
         [Header("Attack")]
-        [SerializeField]
-        [Min(0.01f)]
-        private float attackDuration = 0.4f;
+        [SerializeField, Min(0.01f)] private float attackDuration = 0.4f;
+        [SerializeField, Min(1)] private int maxComboCount = 3;
+        [SerializeField, Range(0f, 1f)] private float hitNormalizedTime = 0.5f;
+        [SerializeField, Range(0f, 1f)] private float targetTrackingNormalizedTime = 0.25f;
 
-        [SerializeField]
-        [Min(1)]
-        private int maxComboCount = 3;
-
-        [SerializeField]
-        [Range(0f, 1f)]
-        private float hitNormalizedTime = 0.5f;
-
-        [SerializeField]
-        [Range(0f, 1f)]
-        private float targetTrackingNormalizedTime = 0.25f;
+        [Header("SFX")]
+        [SerializeField] private AudioClip slashSfx01;
+        [SerializeField] private AudioClip slashSfx02;
+        [SerializeField] private AudioClip hitSfx;
 
         private MeleeHitDetector hitDetector;
+        private PlayerStats playerStats;
+        private CombatVfxController combatVfxController;
 
         private float remainingDuration;
         private int currentComboStep;
@@ -39,13 +35,8 @@ namespace UnityRPG.Combat
         private bool isHitApplied;
         private bool isConfigured;
 
-        private PlayerStats playerStats;
-        private CombatVfxController combatVfxController;
-
         public bool IsAttacking => remainingDuration > 0f;
-
         public int CurrentComboStep => currentComboStep;
-
         public bool CanTrackTarget => IsAttacking && NormalizedProgress <= targetTrackingNormalizedTime;
 
         public float NormalizedProgress
@@ -53,9 +44,7 @@ namespace UnityRPG.Combat
             get
             {
                 if (currentComboStep <= 0)
-                {
                     return 0f;
-                }
 
                 return Mathf.Clamp01(1f - remainingDuration / attackDuration);
             }
@@ -79,9 +68,7 @@ namespace UnityRPG.Combat
         public void RequestAttack()
         {
             if (!isConfigured)
-            {
                 return;
-            }
 
             if (!IsAttacking)
             {
@@ -95,9 +82,7 @@ namespace UnityRPG.Combat
         public void UpdateAttack(float deltaTime)
         {
             if (!IsAttacking)
-            {
                 return;
-            }
 
             remainingDuration = Mathf.Max(0f, remainingDuration - deltaTime);
 
@@ -106,19 +91,15 @@ namespace UnityRPG.Combat
             if (!isHitApplied && normalizedProgress >= hitNormalizedTime)
             {
                 ApplyHit();
-
                 isHitApplied = true;
             }
 
             if (remainingDuration > 0f)
-            {
                 return;
-            }
 
             if (isNextAttackQueued && currentComboStep < maxComboCount)
             {
                 StartAttack(currentComboStep + 1);
-
                 return;
             }
 
@@ -128,20 +109,15 @@ namespace UnityRPG.Combat
         private void StartAttack(int comboStep)
         {
             currentComboStep = comboStep;
-
             remainingDuration = attackDuration;
-
             isNextAttackQueued = false;
-
             isHitApplied = false;
         }
 
         private void QueueNextAttack()
         {
             if (currentComboStep >= maxComboCount)
-            {
                 return;
-            }
 
             isNextAttackQueued = true;
         }
@@ -155,15 +131,36 @@ namespace UnityRPG.Combat
         private void ApplyHit()
         {
             combatVfxController.PlayBasicSlash(currentComboStep);
+            PlaySlashSfx();
 
             var hits = hitDetector.FindHits(attackReference);
-            DamageInfo damageInfo = DamageCalculator.CreateAttackDamage(playerStats.Attack, 1f, playerStats.CritChance, playerStats.CritDamage, gameObject);
+
+            DamageInfo damageInfo = DamageCalculator.CreateAttackDamage(
+                playerStats.Attack,
+                1f,
+                playerStats.CritChance,
+                playerStats.CritDamage,
+                gameObject);
+
+            bool hasHit = false;
 
             foreach (MeleeHitResult hit in hits)
             {
                 hit.Target.TakeDamage(damageInfo);
                 combatVfxController.PlayHit(hit.Point);
+                hasHit = true;
             }
+
+            if (hasHit && hitSfx != null)
+                AudioService.Instance?.PlaySfx(hitSfx);
+        }
+
+        private void PlaySlashSfx()
+        {
+            AudioClip clip = currentComboStep == 2 ? slashSfx02 : slashSfx01;
+
+            if (clip != null)
+                AudioService.Instance?.PlaySfx(clip);
         }
     }
 }

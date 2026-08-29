@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityRPG.VFX;
+using UnityRPG.Core;
 
 namespace UnityRPG.AI
 {
@@ -22,6 +23,9 @@ namespace UnityRPG.AI
         [Header("VFX")]
         [SerializeField] private GameObject impactVfxPrefab;
         [SerializeField, Min(0f)] private float vfxGroundOffset = 0.05f;
+
+        [Header("SFX")]
+        [SerializeField] private AudioClip slamSfx;
 
         protected override BossPatternType PatternType => BossPatternType.GroundSlam;
 
@@ -54,7 +58,9 @@ namespace UnityRPG.AI
             telegraphObject.SetActive(false);
 
             Vector3 position = transform.position + Vector3.up * vfxGroundOffset;
+
             VfxSpawner.Spawn(impactVfxPrefab, position, Quaternion.identity);
+            AudioService.Instance?.PlaySfx(slamSfx);
 
             ExecuteHit();
         }

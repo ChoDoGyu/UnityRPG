@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityRPG.Core;
 using UnityRPG.VFX;
 
 namespace UnityRPG.AI
@@ -12,7 +13,7 @@ namespace UnityRPG.AI
         [SerializeField, Min(0f)] private float maximumStartRange = 10f;
         [SerializeField, Min(0.01f)] private float chargeSpeed = 12f;
         [SerializeField, Min(0.01f)] private float maximumChargeDistance = 10f;
-        [SerializeField, Min(0f)] private float hitRange = 1.2f;
+        [SerializeField, Min(0f)] private float hitRange = 2.5f;
         [SerializeField, Min(0f)] private float damageMultiplier = 1.6f;
 
         [Header("Telegraph")]
@@ -23,10 +24,10 @@ namespace UnityRPG.AI
         [SerializeField] private GameObject impactVfxPrefab;
         [SerializeField, Min(0f)] private float chargeVfxCleanupDelay = 0.7f;
 
-        private EnemyMotor enemyMotor;
-        private Collider bossCollider;
-        private CharacterController ignoredTargetController;
+        [Header("SFX")]
+        [SerializeField] private AudioClip hitSfx;
 
+        private EnemyMotor enemyMotor;
         private GameObject activeChargeVfx;
 
         private Vector3 chargeDirection;
@@ -41,7 +42,6 @@ namespace UnityRPG.AI
         protected override void Awake()
         {
             enemyMotor = GetComponent<EnemyMotor>();
-            bossCollider = GetComponent<Collider>();
 
             base.Awake();
         }
@@ -92,8 +92,6 @@ namespace UnityRPG.AI
 
             chargeDirection.Normalize();
 
-            IgnoreTargetCollision();
-
             travelledDistance = 0f;
             hasHitTarget = false;
         }
@@ -109,18 +107,13 @@ namespace UnityRPG.AI
             float remainingDistance = maximumChargeDistance - travelledDistance;
             float moveDistance = Mathf.Min(chargeSpeed * deltaTime, remainingDistance);
 
-            moveDistance = ClampMoveDistanceToTarget(moveDistance);
-
-            if (moveDistance > 0f)
+            if (!enemyMotor.TryMove(chargeDirection * moveDistance))
             {
-                if (!enemyMotor.TryMove(chargeDirection * moveDistance))
-                {
-                    CompleteActive();
-                    return;
-                }
-
-                travelledDistance += moveDistance;
+                CompleteActive();
+                return;
             }
+
+            travelledDistance += moveDistance;
 
             if (!hasHitTarget && TryHitTarget())
             {
@@ -135,7 +128,6 @@ namespace UnityRPG.AI
 
         protected override void OnRecoveryStarted()
         {
-            RestoreTargetCollision();
             StopChargeVfx();
         }
 
@@ -144,7 +136,6 @@ namespace UnityRPG.AI
             if (telegraphObject != null)
                 telegraphObject.SetActive(false);
 
-            RestoreTargetCollision();
             StopChargeVfx();
 
             chargeDirection = Vector3.zero;
@@ -172,59 +163,9 @@ namespace UnityRPG.AI
                 CurrentTarget.position;
 
             VfxSpawner.Spawn(impactVfxPrefab, hitPoint, Quaternion.identity);
+            AudioService.Instance?.PlaySfx(hitSfx);
 
             return true;
-        }
-
-        private float ClampMoveDistanceToTarget(float moveDistance)
-        {
-            if (CurrentTarget == null)
-                return moveDistance;
-
-            Vector3 toTarget = CurrentTarget.position - transform.position;
-            toTarget.y = 0f;
-
-            float forwardDistance = Vector3.Dot(toTarget, chargeDirection);
-
-            if (forwardDistance <= 0f)
-                return moveDistance;
-
-            float lateralDistanceSqr =
-                Mathf.Max(0f, toTarget.sqrMagnitude - forwardDistance * forwardDistance);
-
-            float hitRangeSqr = hitRange * hitRange;
-
-            if (lateralDistanceSqr > hitRangeSqr)
-                return moveDistance;
-
-            float hitDistance =
-                forwardDistance - Mathf.Sqrt(hitRangeSqr - lateralDistanceSqr);
-
-            return Mathf.Min(moveDistance, Mathf.Max(0f, hitDistance));
-        }
-
-        private void IgnoreTargetCollision()
-        {
-            if (bossCollider == null || CurrentTarget == null)
-                return;
-
-            CharacterController targetController =
-                CurrentTarget.GetComponent<CharacterController>();
-
-            if (targetController == null)
-                return;
-
-            ignoredTargetController = targetController;
-            Physics.IgnoreCollision(bossCollider, ignoredTargetController, true);
-        }
-
-        private void RestoreTargetCollision()
-        {
-            if (bossCollider == null || ignoredTargetController == null)
-                return;
-
-            Physics.IgnoreCollision(bossCollider, ignoredTargetController, false);
-            ignoredTargetController = null;
         }
 
         private void StopChargeVfx()

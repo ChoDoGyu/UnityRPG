@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityRPG.Character.Stats;
 using UnityRPG.VFX;
+using UnityRPG.Core;
 
 namespace UnityRPG.Skill
 {
@@ -22,6 +23,9 @@ namespace UnityRPG.Skill
         [SerializeField]
         [Min(0.01f)]
         private float actionDuration = 0.3f;
+
+        [Header("SFX")]
+        [SerializeField] private AudioClip buffSfx;
 
         private PlayerStats playerStats;
         private CombatVfxController combatVfxController;
@@ -59,6 +63,7 @@ namespace UnityRPG.Skill
             remainingDuration = duration;
 
             combatVfxController.PlayAttackBuff();
+            AudioService.Instance?.PlaySfx(buffSfx);
 
             return true;
         }

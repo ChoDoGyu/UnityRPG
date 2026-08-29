@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityRPG.VFX;
+using UnityRPG.Core;
 
 namespace UnityRPG.AI
 {
@@ -25,6 +26,9 @@ namespace UnityRPG.AI
         [SerializeField] private GameObject impactVfxPrefab;
         [SerializeField, Min(0f)] private float vfxHeight = 0.8f;
 
+        [Header("SFX")]
+        [SerializeField] private AudioClip heavySlashSfx;
+
         private GameObject activeWindupVfx;
 
         protected override BossPatternType PatternType => BossPatternType.HeavySlash;
@@ -43,7 +47,9 @@ namespace UnityRPG.AI
             ClearWindupVfx();
 
             Vector3 position = transform.position + Vector3.up * vfxHeight;
+
             VfxSpawner.Spawn(slashVfxPrefab, position, transform.rotation);
+            AudioService.Instance?.PlaySfx(heavySlashSfx);
 
             ExecuteHit();
         }

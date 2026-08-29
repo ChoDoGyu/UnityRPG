@@ -656,6 +656,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyMeleeAttack
   hitVfxPrefab: {fileID: 5307426551704648260, guid: f0ff063b85368834d9f0cd6acc8a0418, type: 3}
+  attackSfx: {fileID: 0}
 --- !u!114 &3337247284365926919
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -719,6 +720,7 @@ MonoBehaviour:
   windupVfxPrefab: {fileID: 7505000327670572560, guid: 2caaebdda1a7bd445a2eda85d482f47f, type: 3}
   impactVfxPrefab: {fileID: 7505000327670572560, guid: a73fdac5558de00409f4b60a61c38cd6, type: 3}
   vfxGroundOffset: 0.05
+  slamSfx: {fileID: 8300000, guid: 50e90c5c123fa09459a32fea01438e6a, type: 3}
 --- !u!114 &7031700382925010541
 MonoBehaviour:
   m_ObjectHideFlags: 0

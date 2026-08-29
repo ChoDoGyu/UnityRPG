@@ -333,6 +333,7 @@ MonoBehaviour:
   collisionMask:
     serializedVersion: 2
     m_Bits: 136
+  projectileSfx: {fileID: 8300000, guid: 6be475969f028df4ab34553835c7a1e6, type: 3}
 --- !u!114 &3104975225200431123
 MonoBehaviour:
   m_ObjectHideFlags: 0

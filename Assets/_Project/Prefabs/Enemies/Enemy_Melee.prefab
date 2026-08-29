@@ -231,6 +231,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.AI.EnemyMeleeAttack
   hitVfxPrefab: {fileID: 5307426551704648260, guid: f0ff063b85368834d9f0cd6acc8a0418, type: 3}
+  attackSfx: {fileID: 8300000, guid: 3fbbf2165566d0f49b7d2f6d08450e81, type: 3}
 --- !u!114 &4978355971520167727
 MonoBehaviour:
   m_ObjectHideFlags: 0

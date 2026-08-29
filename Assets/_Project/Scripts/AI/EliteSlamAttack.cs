@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityRPG.Character.Player;
 using UnityRPG.Combat;
 using UnityRPG.VFX;
+using UnityRPG.Core;
 
 namespace UnityRPG.AI
 {
@@ -34,6 +35,9 @@ namespace UnityRPG.AI
         [SerializeField] private GameObject windupVfxPrefab;
         [SerializeField] private GameObject impactVfxPrefab;
         [SerializeField, Min(0f)] private float vfxGroundOffset = 0.05f;
+
+        [Header("SFX")]
+        [SerializeField] private AudioClip slamSfx;
 
         private GameObject activeWindupVfx;
 
@@ -149,7 +153,9 @@ namespace UnityRPG.AI
             }
 
             Vector3 impactPosition = transform.position + Vector3.up * vfxGroundOffset;
+
             VfxSpawner.Spawn(impactVfxPrefab, impactPosition, Quaternion.identity);
+            AudioService.Instance?.PlaySfx(slamSfx);
 
             if (!IsTargetAlive(currentTarget))
                 return;
@@ -165,7 +171,9 @@ namespace UnityRPG.AI
             if (damageable == null)
                 return;
 
-            DamageInfo damageInfo = new DamageInfo(context.Definition.Attack * damageMultiplier, gameObject);
+            DamageInfo damageInfo =
+                new DamageInfo(context.Definition.Attack * damageMultiplier, gameObject);
+
             damageable.TakeDamage(damageInfo);
         }
 

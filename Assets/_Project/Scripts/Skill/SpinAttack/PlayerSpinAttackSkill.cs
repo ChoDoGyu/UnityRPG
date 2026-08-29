@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityRPG.Combat;
 using UnityRPG.Character.Stats;
 using UnityRPG.VFX;
+using UnityRPG.Core;
 
 namespace UnityRPG.Skill
 {
@@ -24,6 +25,9 @@ namespace UnityRPG.Skill
         [SerializeField, Min(0.01f)] private float actionDuration = 0.45f;
 
         [SerializeField, Range(0f, 1f)] private float hitNormalizedTime = 0.5f;
+
+        [Header("SFX")]
+        [SerializeField] private AudioClip spinSfx;
 
         private float remainingDuration;
         private bool isHitApplied;
@@ -55,6 +59,7 @@ namespace UnityRPG.Skill
             isHitApplied = false;
 
             combatVfxController.PlaySpinAttack();
+            AudioService.Instance?.PlaySfx(spinSfx);
 
             return true;
         }
