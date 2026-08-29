@@ -10,13 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e614f9b3901d39d4dbd2f87c23f5c579, type: 3}
-  m_Name: Equipment_IronSword
+  m_Name: Equipment_IronArmor
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Item.EquipmentDefinition
-  itemId: weapon_iron_sword
-  displayName: "\uCCA0\uAC80"
-  description: "\uAE30\uBCF8\uC801\uC778 \uD55C\uC190 \uCCA0\uAC80\uC774\uB2E4."
-  slot: 0
+  itemId: armor_iron
+  displayName: "\uCCA0 \uAC11\uC637"
+  description: "\uD2BC\uD2BC\uD55C \uCCA0\uD310\uC73C\uB85C \uB9CC\uB4E0 \uAE30\uBCF8\uC801\uC778
+    \uAC11\uC637\uC774\uB2E4."
+  slot: 2
   statBonuses:
-  - statType: 1
-    value: 3
-  equippedVisualPrefab: {fileID: 8017978739740902231, guid: 1faa0ce59bb7bce47a1ba0db64302171, type: 3}
+  - statType: 0
+    value: 10
+  - statType: 2
+    value: 5
+  equippedVisualPrefab: {fileID: 8781491586631670973, guid: b426e847573038b4895d875ae7a15b92, type: 3}

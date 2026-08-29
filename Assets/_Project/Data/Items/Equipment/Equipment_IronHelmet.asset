@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e614f9b3901d39d4dbd2f87c23f5c579, type: 3}
-  m_Name: Equipment_LeatherArmor
+  m_Name: Equipment_IronHelmet
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Item.EquipmentDefinition
-  itemId: armor_leather
-  displayName: "\uAC00\uC8FD \uAC11\uC637"
-  description: "\uAC00\uBCCD\uACE0 \uD2BC\uD2BC\uD55C \uAC00\uC8FD \uAC11\uC637\uC774\uB2E4."
-  slot: 2
+  itemId: helmet_iron
+  displayName: "\uCCA0 \uD22C\uAD6C"
+  description: "\uD2BC\uD2BC\uD55C \uCCA0\uB85C \uB9CC\uB4E0 \uAE30\uBCF8\uC801\uC778
+    \uD22C\uAD6C\uC774\uB2E4."
+  slot: 1
   statBonuses:
-  - statType: 0
-    value: 10
   - statType: 2
-    value: 2
+    value: 3
+  equippedVisualPrefab: {fileID: 5101664533119687765, guid: 2fac622d2ec16af4091b25c1ca1eaebb, type: 3}

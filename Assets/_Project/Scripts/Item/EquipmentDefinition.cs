@@ -10,8 +10,12 @@ namespace UnityRPG.Item
         [SerializeField] private EquipmentSlot slot;
         [SerializeField] private EquipmentStatBonus[] statBonuses;
 
+        [Header("Visual")]
+        [SerializeField] private GameObject equippedVisualPrefab;
+
         public EquipmentSlot Slot => slot;
         public IReadOnlyList<EquipmentStatBonus> StatBonuses => statBonuses;
+        public GameObject EquippedVisualPrefab => equippedVisualPrefab;
 
         public override ItemType Type => ItemType.Equipment;
         public override int MaxStack => 1;
