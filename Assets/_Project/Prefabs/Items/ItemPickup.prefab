@@ -69,6 +69,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Item.ItemPickup
   item: {fileID: 0}
   amount: 1
+  pickupSfx: {fileID: 8300000, guid: e9a77198d7b5d9c48ad74dbf1c2fa336, type: 3}
 --- !u!1 &4530999974949076925
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityRPG.Character.Player;
+using UnityRPG.Core;
 
 namespace UnityRPG.Item
 {
@@ -8,6 +9,9 @@ namespace UnityRPG.Item
     [RequireComponent(typeof(PlayerHealth))]
     public sealed class PlayerConsumableController : MonoBehaviour
     {
+        [Header("SFX")]
+        [SerializeField] private AudioClip consumableSfx;
+
         private PlayerInventory inventory;
         private PlayerHealth playerHealth;
         private bool isConfigured;
@@ -34,7 +38,12 @@ namespace UnityRPG.Item
             if (inventory.RemoveItem(item, 1) != 1)
                 return false;
 
-            return playerHealth.TryHeal(item.HealAmount);
+            bool healed = playerHealth.TryHeal(item.HealAmount);
+
+            if (healed)
+                AudioService.Instance?.PlaySfx(consumableSfx);
+
+            return healed;
         }
     }
 }

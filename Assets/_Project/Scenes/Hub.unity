@@ -200,6 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc9956c8254ba2645bcdef77ceb254e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Interaction.DungeonEntranceTransition
+  portalActivateSfx: {fileID: 8300000, guid: e43c967979bb49246b060a1d489fe594, type: 3}
 --- !u!1001 &183627032
 PrefabInstance:
   m_ObjectHideFlags: 0

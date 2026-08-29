@@ -8,6 +8,9 @@ namespace UnityRPG.Interaction
     [RequireComponent(typeof(DungeonExitInteractable))]
     public sealed class DungeonExitTransition : MonoBehaviour
     {
+        [Header("SFX")]
+        [SerializeField] private AudioClip portalActivateSfx;
+
         private DungeonExitInteractable exitInteractable;
 
         private void Awake()
@@ -33,7 +36,8 @@ namespace UnityRPG.Interaction
                 return;
             }
 
-            SaveGameController saveGameController = interactor.GetComponentInParent<SaveGameController>();
+            SaveGameController saveGameController =
+                interactor.GetComponentInParent<SaveGameController>();
 
             if (saveGameController == null)
             {
@@ -49,6 +53,7 @@ namespace UnityRPG.Interaction
                 return;
             }
 
+            AudioService.Instance?.PlaySfx(portalActivateSfx);
             SceneTransitionService.Instance.LoadScene(SceneNames.Hub);
         }
     }

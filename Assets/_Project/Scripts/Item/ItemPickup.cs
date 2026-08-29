@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityRPG.Core;
 
 namespace UnityRPG.Item
 {
@@ -9,6 +10,9 @@ namespace UnityRPG.Item
         [Header("Item")]
         [SerializeField] private ItemDefinition item;
         [SerializeField, Min(1)] private int amount = 1;
+
+        [Header("SFX")]
+        [SerializeField] private AudioClip pickupSfx;
 
         private Collider triggerCollider;
         private bool isColliderConfigured;
@@ -61,6 +65,8 @@ namespace UnityRPG.Item
 
             if (added <= 0)
                 return;
+
+            AudioService.Instance?.PlaySfx(pickupSfx);
 
             amount -= added;
 

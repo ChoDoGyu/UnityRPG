@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityRPG.Character.Growth;
+using UnityRPG.Core;
 using UnityRPG.Interaction;
 using UnityRPG.Item;
 
@@ -11,6 +12,11 @@ namespace UnityRPG.Quest
     public sealed class NpcQuestGiver : MonoBehaviour
     {
         [SerializeField] private QuestDefinition questDefinition;
+
+        [Header("SFX")]
+        [SerializeField] private AudioClip talkSfx;
+        [SerializeField] private AudioClip questAcceptSfx;
+        [SerializeField] private AudioClip questCompleteSfx;
 
         private NpcInteractable npcInteractable;
 
@@ -48,14 +54,14 @@ namespace UnityRPG.Quest
             if (quest == null)
             {
                 if (questLog.TryAcceptQuest(questDefinition))
-                    RequestDialogue(questDefinition.AcceptDialogue);
+                    RequestDialogue(questDefinition.AcceptDialogue, questAcceptSfx);
 
                 return;
             }
 
             if (quest.State == QuestState.Active)
             {
-                RequestDialogue(questDefinition.ActiveDialogue);
+                RequestDialogue(questDefinition.ActiveDialogue, talkSfx);
                 return;
             }
 
@@ -66,7 +72,7 @@ namespace UnityRPG.Quest
             }
 
             if (quest.State == QuestState.Completed)
-                RequestDialogue(questDefinition.CompletedDialogue);
+                RequestDialogue(questDefinition.CompletedDialogue, talkSfx);
         }
 
         private void CompleteQuest(GameObject interactor, PlayerQuestLog questLog)
@@ -79,7 +85,7 @@ namespace UnityRPG.Quest
 
             if (!TryGrantItemRewards(inventory))
             {
-                RequestDialogue(questDefinition.InventoryFullDialogue);
+                RequestDialogue(questDefinition.InventoryFullDialogue, talkSfx);
                 return;
             }
 
@@ -92,13 +98,16 @@ namespace UnityRPG.Quest
             if (questDefinition.ExperienceReward > 0)
                 playerGrowth.AddExperience(questDefinition.ExperienceReward);
 
-            RequestDialogue(questDefinition.ReadyToTurnInDialogue);
+            RequestDialogue(questDefinition.ReadyToTurnInDialogue, questCompleteSfx);
         }
 
-        private void RequestDialogue(string dialogue)
+        private void RequestDialogue(string dialogue, AudioClip sfx)
         {
-            if (!string.IsNullOrWhiteSpace(dialogue))
-                DialogueRequested?.Invoke(npcInteractable.Definition.DisplayName, dialogue);
+            if (string.IsNullOrWhiteSpace(dialogue))
+                return;
+
+            DialogueRequested?.Invoke(npcInteractable.Definition.DisplayName, dialogue);
+            AudioService.Instance?.PlaySfx(sfx);
         }
 
         private bool TryGrantItemRewards(PlayerInventory inventory)
@@ -115,7 +124,9 @@ namespace UnityRPG.Quest
                     inventory.RemoveItem(reward.Item, added);
 
                 for (int j = 0; j < i; j++)
-                    inventory.RemoveItem(questDefinition.ItemRewards[j].Item, questDefinition.ItemRewards[j].Amount);
+                    inventory.RemoveItem(
+                        questDefinition.ItemRewards[j].Item,
+                        questDefinition.ItemRewards[j].Amount);
 
                 return false;
             }

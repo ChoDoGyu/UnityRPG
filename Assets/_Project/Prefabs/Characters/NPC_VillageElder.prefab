@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 2113977769661610274}
   - component: {fileID: 3633061946636277371}
   m_Layer: 0
-  m_Name: NPC
+  m_Name: NPC_VillageElder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -179,6 +179,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Quest.NpcQuestGiver
   questDefinition: {fileID: 11400000, guid: 73ed91bc054d20443b27c017b2d7f536, type: 2}
+  talkSfx: {fileID: 8300000, guid: 86d24d4790ee9c048825179b7b88792c, type: 3}
+  questAcceptSfx: {fileID: 8300000, guid: e21ebef8722e21f4988b299aa5eea16e, type: 3}
+  questCompleteSfx: {fileID: 8300000, guid: 987a70bd48071cd46abf409823e5417a, type: 3}
 --- !u!114 &3633061946636277371
 MonoBehaviour:
   m_ObjectHideFlags: 0

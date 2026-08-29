@@ -7,6 +7,9 @@ namespace UnityRPG.Interaction
     [RequireComponent(typeof(DungeonEntranceInteractable))]
     public sealed class DungeonEntranceTransition : MonoBehaviour
     {
+        [Header("SFX")]
+        [SerializeField] private AudioClip portalActivateSfx;
+
         private DungeonEntranceInteractable entrance;
 
         private void Awake()
@@ -32,6 +35,7 @@ namespace UnityRPG.Interaction
                 return;
             }
 
+            AudioService.Instance?.PlaySfx(portalActivateSfx);
             SceneTransitionService.Instance.LoadScene(SceneNames.Dungeon);
         }
     }

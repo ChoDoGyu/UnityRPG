@@ -590,6 +590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 916e04f9d034c784d817cb9eed945772, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Item.PlayerConsumableController
+  consumableSfx: {fileID: 8300000, guid: b4be6f62aa4711a46a69f8ba8a8c3202, type: 3}
 --- !u!114 &8718427882651745805
 MonoBehaviour:
   m_ObjectHideFlags: 0

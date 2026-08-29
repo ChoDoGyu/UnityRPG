@@ -4946,6 +4946,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a23850cf2ed9d948847df3c061c39b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Interaction.DungeonExitTransition
+  portalActivateSfx: {fileID: 8300000, guid: e43c967979bb49246b060a1d489fe594, type: 3}
 --- !u!1 &1653639476
 GameObject:
   m_ObjectHideFlags: 0
