@@ -209,6 +209,7 @@ GameObject:
   - component: {fileID: 1158260419}
   - component: {fileID: 1158260420}
   - component: {fileID: 1158260421}
+  - component: {fileID: 1158260422}
   m_Layer: 0
   m_Name: GameRoot
   m_TagString: Untagged
@@ -321,6 +322,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f6f25359151b854c92fadbda4882f8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityRPG.Gameplay::UnityRPG.Infrastructure.Save.SettingsService
+--- !u!81 &1158260422
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158260414}
+  m_Enabled: 1
 --- !u!1 &1243808163
 GameObject:
   m_ObjectHideFlags: 0
