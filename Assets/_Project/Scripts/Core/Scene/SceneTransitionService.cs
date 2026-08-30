@@ -8,6 +8,10 @@ namespace UnityRPG.Core
     {
         [Header("View")]
         [SerializeField] private GameObject loadingOverlay;
+        [SerializeField] private CanvasGroup loadingCanvasGroup;
+
+        [Header("Fade")]
+        [SerializeField, Min(0.01f)] private float fadeDuration = 0.25f;
 
         public static SceneTransitionService Instance { get; private set; }
 
@@ -24,8 +28,14 @@ namespace UnityRPG.Core
 
             Instance = this;
 
-            if (loadingOverlay == null)
+            if (loadingOverlay == null || loadingCanvasGroup == null)
                 Debug.LogError("[Scene] LoadingOverlay 참조가 누락되었습니다.", this);
+
+            if (loadingCanvasGroup != null)
+                loadingCanvasGroup.alpha = 0f;
+
+            if (loadingOverlay != null)
+                loadingOverlay.SetActive(false);
         }
 
         public void LoadScene(string targetScene)
@@ -52,9 +62,7 @@ namespace UnityRPG.Core
             LoadingProgress = 0f;
 
             SetLoadingOverlay(true);
-
-            // Loading 화면이 실제로 한 프레임 표시된 뒤 Scene 전환을 시작한다.
-            yield return null;
+            yield return FadeLoadingOverlay(1f);
 
             Debug.Log($"[Scene] {targetScene} Scene으로 이동을 시작합니다.");
 
@@ -87,10 +95,12 @@ namespace UnityRPG.Core
 
             LoadingProgress = 1f;
 
-            // Target Scene 활성화 후 Awake / Start / Spawn / Camera 초기화를
-            // Loading 화면 뒤에서 마무리한다.
+            // Target Scene 활성화 후 Awake / Start / Spawn / Save Restore 등을
+            // LoadingOverlay 뒤에서 마무리한다.
             yield return null;
             yield return new WaitForEndOfFrame();
+
+            yield return FadeLoadingOverlay(0f);
 
             SetLoadingOverlay(false);
             IsTransitioning = false;
@@ -98,8 +108,31 @@ namespace UnityRPG.Core
             Debug.Log($"[Scene] {targetScene} Scene 이동이 완료되었습니다.");
         }
 
+        private IEnumerator FadeLoadingOverlay(float targetAlpha)
+        {
+            if (loadingCanvasGroup == null)
+                yield break;
+
+            float startAlpha = loadingCanvasGroup.alpha;
+            float elapsed = 0f;
+
+            while (elapsed < fadeDuration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float t = Mathf.Clamp01(elapsed / fadeDuration);
+
+                loadingCanvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, t);
+                yield return null;
+            }
+
+            loadingCanvasGroup.alpha = targetAlpha;
+        }
+
         private void FinishTransition()
         {
+            if (loadingCanvasGroup != null)
+                loadingCanvasGroup.alpha = 0f;
+
             SetLoadingOverlay(false);
             IsTransitioning = false;
         }
