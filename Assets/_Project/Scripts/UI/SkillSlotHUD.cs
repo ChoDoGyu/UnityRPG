@@ -19,6 +19,8 @@ namespace UnityRPG.UI
         [SerializeField] private TMP_Text cooldownText;
 
         private RuntimeSkill runtimeSkill;
+        private int lastCooldownTenths = -1;
+        private bool wasReady = true;
 
         public SkillId SkillId => skillId;
 
@@ -31,6 +33,10 @@ namespace UnityRPG.UI
 
             keyText.text = keyLabel;
             skillNameText.text = runtimeSkill.Definition.DisplayName;
+
+            lastCooldownTenths = -1;
+            wasReady = !runtimeSkill.IsReady;
+
             Refresh();
         }
 
@@ -43,11 +49,23 @@ namespace UnityRPG.UI
 
             if (runtimeSkill.IsReady)
             {
-                cooldownText.text = string.Empty;
+                if (!wasReady)
+                    cooldownText.text = string.Empty;
+
+                wasReady = true;
+                lastCooldownTenths = -1;
                 return;
             }
 
-            cooldownText.text = $"{runtimeSkill.RemainingCooldown:0.0}";
+            int cooldownTenths = Mathf.RoundToInt(runtimeSkill.RemainingCooldown * 10f);
+
+            if (wasReady || cooldownTenths != lastCooldownTenths)
+            {
+                cooldownText.text = (cooldownTenths / 10f).ToString("0.0");
+                lastCooldownTenths = cooldownTenths;
+            }
+
+            wasReady = false;
         }
     }
 }

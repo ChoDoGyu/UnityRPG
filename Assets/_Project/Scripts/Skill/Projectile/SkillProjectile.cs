@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityRPG.Combat;
 using UnityRPG.VFX;
@@ -9,6 +8,8 @@ namespace UnityRPG.Skill
     [RequireComponent(typeof(ProjectileVfxController))]
     public sealed class SkillProjectile : MonoBehaviour
     {
+        private readonly RaycastHit[] hitResults = new RaycastHit[16];
+
         private Vector3 direction;
         private float speed;
         private float remainingLifetime;
@@ -25,18 +26,14 @@ namespace UnityRPG.Skill
             vfxController = GetComponent<ProjectileVfxController>();
         }
 
-        public void Initialize(Vector3 direction, float speed, float lifetime, float hitRadius, LayerMask collisionMask, DamageInfo damageInfo)
+        public void Initialize(Vector3 direction, float speed, float lifetime, float hitRadius,
+            LayerMask collisionMask, DamageInfo damageInfo)
         {
             this.direction = direction.normalized;
-
             this.speed = speed;
-
             remainingLifetime = lifetime;
-
             this.hitRadius = hitRadius;
-
             this.collisionMask = collisionMask;
-
             this.damageInfo = damageInfo;
 
             isInitialized = true;
@@ -45,18 +42,13 @@ namespace UnityRPG.Skill
         private void Update()
         {
             if (!isInitialized)
-            {
                 return;
-            }
 
             float deltaTime = Time.deltaTime;
-
             float moveDistance = speed * deltaTime;
 
             if (MoveProjectile(moveDistance))
-            {
                 return;
-            }
 
             remainingLifetime -= deltaTime;
 
@@ -66,31 +58,45 @@ namespace UnityRPG.Skill
 
         private bool MoveProjectile(float moveDistance)
         {
-            RaycastHit[] hits =
-                Physics.SphereCastAll(transform.position, hitRadius, direction, moveDistance, collisionMask, QueryTriggerInteraction.Ignore);
+            int hitCount = Physics.SphereCastNonAlloc(
+                transform.position,
+                hitRadius,
+                direction,
+                hitResults,
+                moveDistance,
+                collisionMask,
+                QueryTriggerInteraction.Ignore);
 
-            Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+            RaycastHit closestHit = default;
+            float closestDistance = float.MaxValue;
+            bool hasHit = false;
 
-            foreach (RaycastHit hit in hits)
+            for (int i = 0; i < hitCount; i++)
             {
-                if (IsSourceCollider(hit.collider))
-                {
+                RaycastHit hit = hitResults[i];
+
+                if (IsSourceCollider(hit.collider) || hit.distance >= closestDistance)
                     continue;
-                }
 
-                transform.position = hit.point - direction * hitRadius;
+                closestHit = hit;
+                closestDistance = hit.distance;
+                hasHit = true;
+            }
 
-                IDamageable damageable = hit.collider.GetComponentInParent<IDamageable>();
+            if (hasHit)
+            {
+                transform.position = closestHit.point - direction * hitRadius;
+
+                IDamageable damageable = closestHit.collider.GetComponentInParent<IDamageable>();
 
                 if (damageable != null)
                     damageable.TakeDamage(damageInfo);
 
-                FinishProjectile(hit.point, true);
+                FinishProjectile(closestHit.point, true);
                 return true;
             }
 
             transform.position += direction * moveDistance;
-
             return false;
         }
 
@@ -99,9 +105,7 @@ namespace UnityRPG.Skill
             GameObject source = damageInfo.Source;
 
             if (source == null)
-            {
                 return false;
-            }
 
             Transform colliderTransform = collider.transform;
 
@@ -115,9 +119,7 @@ namespace UnityRPG.Skill
 
             isInitialized = false;
 
-            float delay = vfxController != null ?
-                vfxController.Finish(position, playImpact) : 0f;
-
+            float delay = vfxController != null ? vfxController.Finish(position, playImpact) : 0f;
             Destroy(gameObject, delay);
         }
     }

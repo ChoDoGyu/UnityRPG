@@ -8,6 +8,8 @@ namespace UnityRPG.AI
     [RequireComponent(typeof(ProjectileVfxController))]
     public sealed class BossShockwaveProjectile : MonoBehaviour
     {
+        private readonly RaycastHit[] hitResults = new RaycastHit[16];
+
         private Vector3 direction;
         private DamageInfo damageInfo;
 
@@ -72,24 +74,41 @@ namespace UnityRPG.AI
             if (hasHitTarget)
                 return;
 
-            RaycastHit[] hits = Physics.SphereCastAll(transform.position, hitRadius, direction,
-                moveDistance, collisionMask, QueryTriggerInteraction.Ignore);
+            int hitCount = Physics.SphereCastNonAlloc(
+                transform.position,
+                hitRadius,
+                direction,
+                hitResults,
+                moveDistance,
+                collisionMask,
+                QueryTriggerInteraction.Ignore);
 
-            for (int i = 0; i < hits.Length; i++)
+            IDamageable closestDamageable = null;
+            Collider closestCollider = null;
+            float closestDistance = float.MaxValue;
+
+            for (int i = 0; i < hitCount; i++)
             {
-                IDamageable damageable = hits[i].collider.GetComponentInParent<IDamageable>();
+                RaycastHit hit = hitResults[i];
+                IDamageable damageable = hit.collider.GetComponentInParent<IDamageable>();
 
-                if (damageable == null)
+                if (damageable == null || hit.distance >= closestDistance)
                     continue;
 
-                damageable.TakeDamage(damageInfo);
-
-                Vector3 hitPoint = hits[i].collider.ClosestPoint(transform.position);
-                vfxController.PlayImpact(hitPoint);
-
-                hasHitTarget = true;
-                return;
+                closestDamageable = damageable;
+                closestCollider = hit.collider;
+                closestDistance = hit.distance;
             }
+
+            if (closestDamageable == null)
+                return;
+
+            closestDamageable.TakeDamage(damageInfo);
+
+            Vector3 hitPoint = closestCollider.ClosestPoint(transform.position);
+            vfxController.PlayImpact(hitPoint);
+
+            hasHitTarget = true;
         }
 
         private void FinishProjectile()
