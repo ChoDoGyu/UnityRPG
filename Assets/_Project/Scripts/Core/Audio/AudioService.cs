@@ -29,6 +29,14 @@ namespace UnityRPG.Core
 
         private Coroutine bgmRoutine;
 
+        private float masterVolume = 1f;
+        private float bgmVolume = 1f;
+        private float sfxVolume = 1f;
+
+        public float MasterVolume => masterVolume;
+        public float BgmVolume => bgmVolume;
+        public float SfxVolume => sfxVolume;
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -97,17 +105,20 @@ namespace UnityRPG.Core
 
         public void SetMasterVolume(float volume)
         {
-            SetVolume(MasterVolumeParameter, volume);
+            masterVolume = Mathf.Clamp01(volume);
+            SetVolume(MasterVolumeParameter, masterVolume);
         }
 
         public void SetBgmVolume(float volume)
         {
-            SetVolume(BgmVolumeParameter, volume);
+            bgmVolume = Mathf.Clamp01(volume);
+            SetVolume(BgmVolumeParameter, bgmVolume);
         }
 
         public void SetSfxVolume(float volume)
         {
-            SetVolume(SfxVolumeParameter, volume);
+            sfxVolume = Mathf.Clamp01(volume);
+            SetVolume(SfxVolumeParameter, sfxVolume);
         }
 
         private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
