@@ -61,6 +61,7 @@ namespace UnityRPG.UI
                 return;
             }
 
+            UISfxService.Instance?.PlayClick();
             SceneTransitionService.Instance.LoadScene(SceneNames.Hub);
         }
 
@@ -69,7 +70,10 @@ namespace UnityRPG.UI
             SaveLoadStatus status = saveLoadCoordinator.ContinueGame();
 
             if (status == SaveLoadStatus.Success)
+            {
+                UISfxService.Instance?.PlayClick();
                 return;
+            }
 
             Debug.LogError($"[Save] 게임 불러오기를 시작하지 못했습니다: {status}", this);
             RefreshContinueButton();
@@ -77,6 +81,8 @@ namespace UnityRPG.UI
 
         private void HandleQuit()
         {
+            UISfxService.Instance?.PlayClick();
+
             Debug.Log("[UI] 게임 종료를 요청합니다.");
             Application.Quit();
         }

@@ -104,7 +104,10 @@ namespace UnityRPG.UI
                 return;
 
             Vector2Int resolution = resolutions[index];
+
             ApplyDisplaySettings(resolution.x, resolution.y, fullscreenToggle.isOn);
+
+            UISfxService.Instance?.PlayClick();
         }
 
         private void HandleFullscreenChanged(bool fullscreen)
@@ -115,7 +118,10 @@ namespace UnityRPG.UI
                 return;
 
             Vector2Int resolution = resolutions[index];
+
             ApplyDisplaySettings(resolution.x, resolution.y, fullscreen);
+
+            UISfxService.Instance?.PlayClick();
         }
 
         private static void ApplyDisplaySettings(int width, int height, bool fullscreen)

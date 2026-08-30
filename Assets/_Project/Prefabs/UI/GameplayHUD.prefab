@@ -3748,6 +3748,8 @@ GameObject:
   - component: {fileID: 7389988259425456845}
   - component: {fileID: 1521926352830110392}
   - component: {fileID: 5259946584422742956}
+  - component: {fileID: 3663261374459257519}
+  - component: {fileID: 8912770561318989161}
   m_Layer: 5
   m_Name: SettingsPanel
   m_TagString: Untagged
@@ -3849,6 +3851,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityRPG.UI::UnityRPG.UI.DisplaySettingsUI
   resolutionDropdown: {fileID: 599171954378203685}
   fullscreenToggle: {fileID: 4602224743944151927}
+--- !u!225 &3663261374459257519
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2353107673530737512}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &8912770561318989161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2353107673530737512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06e35bae19c194c4a9c62f8b96d973ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.UI::UnityRPG.UI.UIPanelTransition
+  canvasGroup: {fileID: 3663261374459257519}
+  panelTransform: {fileID: 5278145330737125527}
+  duration: 0.15
+  hiddenScale: 0.96
 --- !u!1 &2473128634583298509
 GameObject:
   m_ObjectHideFlags: 0
@@ -5029,6 +5059,8 @@ GameObject:
   - component: {fileID: 6978647051639305423}
   - component: {fileID: 3227472029532383990}
   - component: {fileID: 3147353311109321567}
+  - component: {fileID: 8300426329237995095}
+  - component: {fileID: 6227324424791689100}
   m_Layer: 5
   m_Name: InventoryPanel
   m_TagString: Untagged
@@ -5098,6 +5130,34 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &8300426329237995095
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3501616146950357571}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &6227324424791689100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3501616146950357571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06e35bae19c194c4a9c62f8b96d973ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.UI::UnityRPG.UI.UIPanelTransition
+  canvasGroup: {fileID: 8300426329237995095}
+  panelTransform: {fileID: 6978647051639305423}
+  duration: 0.15
+  hiddenScale: 0.96
 --- !u!1 &3629991979825768549
 GameObject:
   m_ObjectHideFlags: 0
@@ -11675,13 +11735,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7983169461144845472}
+  - component: {fileID: 1035553179075312473}
+  - component: {fileID: 112747486753831746}
   m_Layer: 5
   m_Name: PauseRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7983169461144845472
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11704,6 +11766,34 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &1035553179075312473
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7317283273594415886}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &112747486753831746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7317283273594415886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06e35bae19c194c4a9c62f8b96d973ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.UI::UnityRPG.UI.UIPanelTransition
+  canvasGroup: {fileID: 1035553179075312473}
+  panelTransform: {fileID: 2844306973523594466}
+  duration: 0.15
+  hiddenScale: 0.96
 --- !u!1 &7370882435824137935
 GameObject:
   m_ObjectHideFlags: 0
@@ -12439,10 +12529,13 @@ MonoBehaviour:
   inputReader: {fileID: 0}
   saveGameController: {fileID: 0}
   inventoryPanel: {fileID: 3501616146950357571}
+  inventoryTransition: {fileID: 6227324424791689100}
   inventoryCloseButton: {fileID: 7502621858798783066}
   pauseRoot: {fileID: 7317283273594415886}
   pausePanel: {fileID: 5177587369749007130}
   settingsPanel: {fileID: 2353107673530737512}
+  pauseTransition: {fileID: 112747486753831746}
+  settingsTransition: {fileID: 8912770561318989161}
   resumeButton: {fileID: 1543020684408642580}
   settingsButton: {fileID: 7837658571640304633}
   settingsBackButton: {fileID: 33457454609512151}

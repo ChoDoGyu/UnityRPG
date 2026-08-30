@@ -143,6 +143,8 @@ namespace UnityRPG.UI
 
             selectedSlotView.SetSelected(true);
             RefreshInventoryDetail(selectedSlot);
+
+            UISfxService.Instance?.PlayClick();
         }
 
         private void HandleEquipmentSlotSelected(EquipmentSlotUI slotView)
@@ -161,14 +163,19 @@ namespace UnityRPG.UI
 
             selectedEquipmentSlotView.SetSelected(true);
             RefreshEquipmentDetail(selectedEquipmentSlotView);
+
+            UISfxService.Instance?.PlayClick();
         }
 
         private void HandleActionClicked()
         {
             if (selectedEquipmentSlotView != null)
             {
-                if (selectedEquipmentSlotView.EquippedItem != null)
-                    playerEquipmentController.TryUnequip(selectedEquipmentSlotView.Slot);
+                if (selectedEquipmentSlotView.EquippedItem != null &&
+                    playerEquipmentController.TryUnequip(selectedEquipmentSlotView.Slot))
+                {
+                    UISfxService.Instance?.PlayUnequip();
+                }
 
                 return;
             }
@@ -182,8 +189,11 @@ namespace UnityRPG.UI
                 return;
             }
 
-            if (selectedSlot.Item is EquipmentDefinition equipment)
-                playerEquipmentController.TryEquip(equipment);
+            if (selectedSlot.Item is EquipmentDefinition equipment &&
+                playerEquipmentController.TryEquip(equipment))
+            {
+                UISfxService.Instance?.PlayEquip();
+            }
         }
 
         private void RefreshInventorySelection(IReadOnlyList<InventorySlot> inventorySlots)

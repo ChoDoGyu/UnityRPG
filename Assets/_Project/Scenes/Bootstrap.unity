@@ -207,6 +207,7 @@ GameObject:
   - component: {fileID: 1158260417}
   - component: {fileID: 1158260418}
   - component: {fileID: 1158260419}
+  - component: {fileID: 1158260420}
   m_Layer: 0
   m_Name: GameRoot
   m_TagString: Untagged
@@ -288,6 +289,23 @@ MonoBehaviour:
   hubBgm: {fileID: 8300000, guid: 7ef11006196949f44b0fd3ca079cbc7e, type: 3}
   dungeonBgm: {fileID: 8300000, guid: f78de939374a8ed4c87e16d9acb2d409, type: 3}
   bgmFadeDuration: 0.5
+--- !u!114 &1158260420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158260414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73403c08f507297469c0480ed8880e8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityRPG.UI::UnityRPG.UI.UISfxService
+  clickSfx: {fileID: 8300000, guid: f7b4b07810ef7e94d9c315a4cdc4b5b9, type: 3}
+  openSfx: {fileID: 8300000, guid: 232bfdd03301e254a882a9744e6e0fd7, type: 3}
+  closeSfx: {fileID: 8300000, guid: 08d752efe2958964392a3c92d9094424, type: 3}
+  equipSfx: {fileID: 8300000, guid: f1a9a626b37df814eb7ba5c6983180e6, type: 3}
+  unequipSfx: {fileID: 8300000, guid: 1c5081168d73ff14792153cd360d2b16, type: 3}
 --- !u!1 &1243808163
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,12 +16,15 @@ namespace UnityRPG.UI
 
         [Header("Inventory")]
         [SerializeField] private GameObject inventoryPanel;
+        [SerializeField] private UIPanelTransition inventoryTransition;
         [SerializeField] private Button inventoryCloseButton;
 
         [Header("Pause")]
         [SerializeField] private GameObject pauseRoot;
         [SerializeField] private GameObject pausePanel;
         [SerializeField] private GameObject settingsPanel;
+        [SerializeField] private UIPanelTransition pauseTransition;
+        [SerializeField] private UIPanelTransition settingsTransition;
         [SerializeField] private Button resumeButton;
         [SerializeField] private Button settingsButton;
         [SerializeField] private Button settingsBackButton;
@@ -64,17 +67,17 @@ namespace UnityRPG.UI
             settingsBackButton.onClick.AddListener(CloseSettings);
 
             mainMenuButton.onClick.AddListener(HandleMainMenu);
-
             saveButton.onClick.AddListener(HandleSave);
 
-            inventoryPanel.SetActive(false);
-            pauseRoot.SetActive(false);
+            inventoryTransition.SetVisibleImmediate(false);
 
             pausePanel.SetActive(true);
-            settingsPanel.SetActive(false);
+            settingsTransition.SetVisibleImmediate(false);
+            pauseTransition.SetVisibleImmediate(false);
 
             isInventoryOpen = false;
             isPauseOpen = false;
+            isSettingsOpen = false;
         }
 
         private void Update()
@@ -98,17 +101,17 @@ namespace UnityRPG.UI
             isPauseOpen = false;
             isSettingsOpen = false;
 
-            if (inventoryPanel != null)
-                inventoryPanel.SetActive(false);
+            if (inventoryTransition != null)
+                inventoryTransition.SetVisibleImmediate(false);
 
-            if (pauseRoot != null)
-                pauseRoot.SetActive(false);
+            if (settingsTransition != null)
+                settingsTransition.SetVisibleImmediate(false);
 
             if (pausePanel != null)
                 pausePanel.SetActive(true);
 
-            if (settingsPanel != null)
-                settingsPanel.SetActive(false);
+            if (pauseTransition != null)
+                pauseTransition.SetVisibleImmediate(false);
         }
 
         private void OnDestroy()
@@ -172,7 +175,9 @@ namespace UnityRPG.UI
                 return;
 
             isInventoryOpen = true;
-            inventoryPanel.SetActive(true);
+
+            inventoryTransition.Show();
+            UISfxService.Instance?.PlayOpen();
 
             RefreshGameplayState();
         }
@@ -185,7 +190,8 @@ namespace UnityRPG.UI
             isInventoryOpen = false;
 
             inventoryUI.ResetView();
-            inventoryPanel.SetActive(false);
+            inventoryTransition.Hide();
+            UISfxService.Instance?.PlayClose();
 
             RefreshGameplayState();
         }
@@ -198,9 +204,11 @@ namespace UnityRPG.UI
             isPauseOpen = true;
             isSettingsOpen = false;
 
-            pauseRoot.SetActive(true);
             pausePanel.SetActive(true);
-            settingsPanel.SetActive(false);
+            settingsTransition.SetVisibleImmediate(false);
+
+            pauseTransition.Show();
+            UISfxService.Instance?.PlayOpen();
 
             RefreshGameplayState();
         }
@@ -213,11 +221,39 @@ namespace UnityRPG.UI
             isPauseOpen = false;
             isSettingsOpen = false;
 
+            settingsTransition.SetVisibleImmediate(false);
             pausePanel.SetActive(true);
-            settingsPanel.SetActive(false);
-            pauseRoot.SetActive(false);
+
+            pauseTransition.Hide();
+            UISfxService.Instance?.PlayClose();
 
             RefreshGameplayState();
+        }
+
+        private void OpenSettings()
+        {
+            if (!isPauseOpen || isSettingsOpen)
+                return;
+
+            isSettingsOpen = true;
+
+            pausePanel.SetActive(false);
+            settingsTransition.Show();
+
+            UISfxService.Instance?.PlayOpen();
+        }
+
+        private void CloseSettings()
+        {
+            if (!isPauseOpen || !isSettingsOpen)
+                return;
+
+            isSettingsOpen = false;
+
+            pausePanel.SetActive(true);
+            settingsTransition.Hide();
+
+            UISfxService.Instance?.PlayClose();
         }
 
         private void RefreshGameplayState()
@@ -260,45 +296,6 @@ namespace UnityRPG.UI
             isGameplaySuspended = false;
         }
 
-        private bool HasAllReferences()
-        {
-            return inputReader != null &&
-                   inventoryUI != null &&
-                   inventoryPanel != null &&
-                   inventoryCloseButton != null &&
-                   pauseRoot != null &&
-                   pausePanel != null &&
-                   settingsPanel != null &&
-                   resumeButton != null &&
-                   settingsButton != null &&
-                   settingsBackButton != null &&
-                   saveGameController != null &&
-                   saveButton != null &&
-                   mainMenuButton != null;
-        }
-
-        private void OpenSettings()
-        {
-            if (!isPauseOpen || isSettingsOpen)
-                return;
-
-            isSettingsOpen = true;
-
-            pausePanel.SetActive(false);
-            settingsPanel.SetActive(true);
-        }
-
-        private void CloseSettings()
-        {
-            if (!isPauseOpen || !isSettingsOpen)
-                return;
-
-            isSettingsOpen = false;
-
-            settingsPanel.SetActive(false);
-            pausePanel.SetActive(true);
-        }
-
         private void HandleMainMenu()
         {
             if (SceneTransitionService.Instance == null)
@@ -326,11 +323,32 @@ namespace UnityRPG.UI
 
             if (status == SaveLoadStatus.Success)
             {
+                UISfxService.Instance?.PlayClick();
                 Debug.Log($"[Save] 게임을 저장했습니다: {saveGameController.SaveFilePath}", this);
                 return;
             }
 
             Debug.LogError($"[Save] 게임 저장에 실패했습니다: {status}", this);
+        }
+
+        private bool HasAllReferences()
+        {
+            return inputReader != null &&
+                   inventoryUI != null &&
+                   inventoryPanel != null &&
+                   inventoryTransition != null &&
+                   inventoryCloseButton != null &&
+                   pauseRoot != null &&
+                   pausePanel != null &&
+                   settingsPanel != null &&
+                   pauseTransition != null &&
+                   settingsTransition != null &&
+                   resumeButton != null &&
+                   settingsButton != null &&
+                   settingsBackButton != null &&
+                   saveGameController != null &&
+                   saveButton != null &&
+                   mainMenuButton != null;
         }
     }
 }
