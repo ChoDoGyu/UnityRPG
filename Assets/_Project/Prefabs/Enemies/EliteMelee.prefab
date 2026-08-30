@@ -751,8 +751,20 @@ MonoBehaviour:
   lootEntries:
   - item: {fileID: 11400000, guid: a5c9e1d32c3ab91498b7905223be2ef9, type: 2}
     dropChance: 1
-    minAmount: 2
-    maxAmount: 3
+    minAmount: 1
+    maxAmount: 1
+  - item: {fileID: 11400000, guid: 2f8999f226b108a4caacf4db5869ab37, type: 2}
+    dropChance: 1
+    minAmount: 1
+    maxAmount: 1
+  - item: {fileID: 11400000, guid: 8eb8f5bee54903741974624217635416, type: 2}
+    dropChance: 1
+    minAmount: 1
+    maxAmount: 1
+  - item: {fileID: 11400000, guid: c0d170e12733146439b8cfc27e3fe313, type: 2}
+    dropChance: 1
+    minAmount: 1
+    maxAmount: 1
 --- !u!114 &7755948309732871053
 MonoBehaviour:
   m_ObjectHideFlags: 0

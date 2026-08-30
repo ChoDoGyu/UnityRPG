@@ -38,7 +38,8 @@ namespace UnityRPG.Item
 
         private void LateUpdate()
         {
-            SyncWeaponPoint();
+            if (activeVisuals.ContainsKey(EquipmentSlot.Weapon))
+                SyncWeaponPoint();
         }
 
         private void SyncWeaponPoint()
@@ -73,6 +74,9 @@ namespace UnityRPG.Item
 
             if (point == null)
                 return;
+
+            if (slot == EquipmentSlot.Weapon)
+                SyncWeaponPoint();
 
             GameObject visual = Instantiate(equipped.EquippedVisualPrefab, point);
             visual.transform.localPosition = Vector3.zero;

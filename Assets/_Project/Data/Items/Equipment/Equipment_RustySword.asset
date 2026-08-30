@@ -19,3 +19,4 @@ MonoBehaviour:
   statBonuses:
   - statType: 1
     value: 1
+  equippedVisualPrefab: {fileID: 8017978739740902231, guid: 1faa0ce59bb7bce47a1ba0db64302171, type: 3}

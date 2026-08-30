@@ -24,7 +24,11 @@ namespace UnityRPG.UI
         [SerializeField] private TMP_Text healthText;
 
         private CanvasGroup canvasGroup;
+
+        private BossPhase lastPhase;
         private bool isVisible;
+        private bool hasVisibilityState;
+        private bool hasPhaseState;
 
         private void Awake()
         {
@@ -48,13 +52,7 @@ namespace UnityRPG.UI
 
         private void LateUpdate()
         {
-            if (!HasBossReferences())
-            {
-                SetVisible(false);
-                return;
-            }
-
-            if (bossHealth.IsDead)
+            if (!HasBossReferences() || bossHealth.IsDead)
             {
                 SetVisible(false);
                 return;
@@ -63,8 +61,8 @@ namespace UnityRPG.UI
             bool isEngaged = bossController.CurrentTarget != null;
             SetVisible(isEngaged);
 
-            if (isEngaged)
-                Refresh();
+            if (isEngaged && (!hasPhaseState || bossCombatController.CurrentPhase != lastPhase))
+                RefreshPhase();
         }
 
         private void OnDestroy()
@@ -90,28 +88,29 @@ namespace UnityRPG.UI
             }
 
             bossNameText.text = bossDisplayName;
+
+            bossHealth.Damaged += HandleBossDamaged;
             bossHealth.Died += HandleBossDied;
 
-            Refresh();
+            RefreshHealth();
+            RefreshPhase();
             SetVisible(false);
         }
 
         public void Unbind()
         {
             if (bossHealth != null)
+            {
+                bossHealth.Damaged -= HandleBossDamaged;
                 bossHealth.Died -= HandleBossDied;
+            }
 
             bossHealth = null;
             bossCombatController = null;
             bossController = null;
 
+            hasPhaseState = false;
             SetVisible(false);
-        }
-
-        private void Refresh()
-        {
-            RefreshHealth();
-            RefreshPhase();
         }
 
         private void RefreshHealth()
@@ -126,7 +125,15 @@ namespace UnityRPG.UI
 
         private void RefreshPhase()
         {
-            phaseText.text = bossCombatController.CurrentPhase == BossPhase.Phase1 ? "Phase 1" : "Phase 2";
+            lastPhase = bossCombatController.CurrentPhase;
+            hasPhaseState = true;
+
+            phaseText.text = lastPhase == BossPhase.Phase1 ? "Phase 1" : "Phase 2";
+        }
+
+        private void HandleBossDamaged(float damage)
+        {
+            RefreshHealth();
         }
 
         private void HandleBossDied()
@@ -136,7 +143,12 @@ namespace UnityRPG.UI
 
         private void SetVisible(bool visible)
         {
+            if (hasVisibilityState && isVisible == visible)
+                return;
+
             isVisible = visible;
+            hasVisibilityState = true;
+
             canvasGroup.alpha = visible ? 1f : 0f;
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;
@@ -149,7 +161,8 @@ namespace UnityRPG.UI
 
         private bool HasViewReferences()
         {
-            return canvasGroup != null && bossNameText != null && phaseText != null && healthSlider != null && healthText != null;
+            return canvasGroup != null && bossNameText != null && phaseText != null &&
+                   healthSlider != null && healthText != null;
         }
     }
 }
