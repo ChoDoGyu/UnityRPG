@@ -2,6 +2,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityRPG.Infrastructure.Save;
 
 namespace UnityRPG.UI
 {
@@ -19,6 +20,13 @@ namespace UnityRPG.UI
             if (!HasAllReferences())
             {
                 Debug.LogError("[UI] DisplaySettingsUI의 참조가 누락되었습니다.", this);
+                enabled = false;
+                return;
+            }
+
+            if (SettingsService.Instance == null)
+            {
+                Debug.LogError("[UI] SettingsService를 찾을 수 없습니다.", this);
                 enabled = false;
                 return;
             }
@@ -79,19 +87,20 @@ namespace UnityRPG.UI
 
         private void RefreshCurrentValues()
         {
-            int currentIndex = FindCurrentResolutionIndex();
+            int currentIndex = FindResolutionIndex(
+                SettingsService.Instance.ResolutionWidth,
+                SettingsService.Instance.ResolutionHeight);
 
             resolutionDropdown.SetValueWithoutNotify(currentIndex);
             resolutionDropdown.RefreshShownValue();
-
-            fullscreenToggle.SetIsOnWithoutNotify(Screen.fullScreen);
+            fullscreenToggle.SetIsOnWithoutNotify(SettingsService.Instance.Fullscreen);
         }
 
-        private int FindCurrentResolutionIndex()
+        private int FindResolutionIndex(int width, int height)
         {
             for (int i = 0; i < resolutions.Count; i++)
             {
-                if (resolutions[i].x == Screen.width && resolutions[i].y == Screen.height)
+                if (resolutions[i].x == width && resolutions[i].y == height)
                     return i;
             }
 
@@ -105,7 +114,10 @@ namespace UnityRPG.UI
 
             Vector2Int resolution = resolutions[index];
 
-            ApplyDisplaySettings(resolution.x, resolution.y, fullscreenToggle.isOn);
+            SettingsService.Instance.SetDisplaySettings(
+                resolution.x,
+                resolution.y,
+                fullscreenToggle.isOn);
 
             UISfxService.Instance?.PlayClick();
         }
@@ -119,15 +131,12 @@ namespace UnityRPG.UI
 
             Vector2Int resolution = resolutions[index];
 
-            ApplyDisplaySettings(resolution.x, resolution.y, fullscreen);
+            SettingsService.Instance.SetDisplaySettings(
+                resolution.x,
+                resolution.y,
+                fullscreen);
 
             UISfxService.Instance?.PlayClick();
-        }
-
-        private static void ApplyDisplaySettings(int width, int height, bool fullscreen)
-        {
-            FullScreenMode mode = fullscreen ? FullScreenMode.FullScreenWindow : FullScreenMode.Windowed;
-            Screen.SetResolution(width, height, mode);
         }
 
         private bool HasAllReferences()

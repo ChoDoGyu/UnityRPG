@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityRPG.Core;
+using UnityRPG.Infrastructure.Save;
 
 namespace UnityRPG.UI
 {
@@ -21,9 +21,9 @@ namespace UnityRPG.UI
                 return;
             }
 
-            if (AudioService.Instance == null)
+            if (SettingsService.Instance == null)
             {
-                Debug.LogError("[UI] AudioService를 찾을 수 없습니다.", this);
+                Debug.LogError("[UI] SettingsService를 찾을 수 없습니다.", this);
                 enabled = false;
                 return;
             }
@@ -49,24 +49,24 @@ namespace UnityRPG.UI
 
         private void RefreshCurrentValues()
         {
-            masterVolumeSlider.SetValueWithoutNotify(AudioService.Instance.MasterVolume);
-            bgmVolumeSlider.SetValueWithoutNotify(AudioService.Instance.BgmVolume);
-            sfxVolumeSlider.SetValueWithoutNotify(AudioService.Instance.SfxVolume);
+            masterVolumeSlider.SetValueWithoutNotify(SettingsService.Instance.MasterVolume);
+            bgmVolumeSlider.SetValueWithoutNotify(SettingsService.Instance.BgmVolume);
+            sfxVolumeSlider.SetValueWithoutNotify(SettingsService.Instance.SfxVolume);
         }
 
         private void HandleMasterVolumeChanged(float value)
         {
-            AudioService.Instance?.SetMasterVolume(value);
+            SettingsService.Instance?.SetMasterVolume(value);
         }
 
         private void HandleBgmVolumeChanged(float value)
         {
-            AudioService.Instance?.SetBgmVolume(value);
+            SettingsService.Instance?.SetBgmVolume(value);
         }
 
         private void HandleSfxVolumeChanged(float value)
         {
-            AudioService.Instance?.SetSfxVolume(value);
+            SettingsService.Instance?.SetSfxVolume(value);
         }
 
         private bool HasAllReferences()

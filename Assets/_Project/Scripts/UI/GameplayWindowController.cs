@@ -250,6 +250,8 @@ namespace UnityRPG.UI
 
             isSettingsOpen = false;
 
+            SettingsService.Instance?.SaveSettings();
+
             pausePanel.SetActive(true);
             settingsTransition.Hide();
 
