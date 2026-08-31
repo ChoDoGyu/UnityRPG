@@ -2,10 +2,10 @@
 
 Unity 6.3 LTS 기반 3D Single-Player Action RPG Vertical Slice입니다.
 
-전투 시스템을 중심으로 Enemy AI, Boss Pattern, Inventory  Equipment,
-Quest, Save  Load, UI, Audio  VFX를 연결하여
+전투 시스템을 중심으로 Enemy AI, Boss Pattern, Inventory / Equipment,
+Quest, Save / Load, UI, Audio / VFX를 연결하여
 
-MainMenu → Hub → Quest → Dungeon → Boss → Reward → Hub → Save  Continue
+**MainMenu → Hub → Quest → Dungeon → Boss → Reward → Hub → Save / Continue**
 
 까지 하나의 완전한 Gameplay Loop로 구현했습니다.
 
@@ -13,14 +13,14 @@ MainMenu → Hub → Quest → Dungeon → Boss → Reward → Hub → Save  Con
 
 ## Overview
 
- 항목  내용 
- ---  --- 
- Engine  Unity 6.3 LTS `6000.3.9f1` 
- Render Pipeline  URP 
- Language  C# 
- Platform  Windows 
- Development  1인 개발 
- Role  기획  Client Programming  UI  Data  Optimization  Build 
+| 항목 | 내용 |
+| --- | --- |
+| Engine | Unity 6.3 LTS `6000.3.9f1` |
+| Render Pipeline | URP |
+| Language | C# |
+| Platform | Windows |
+| Development | 1인 개발 |
+| Role | 기획 / Client Programming / UI / Data / Optimization / Build |
 
 ---
 
@@ -29,7 +29,7 @@ MainMenu → Hub → Quest → Dungeon → Boss → Reward → Hub → Save  Con
 ```text
 MainMenu
 ↓
-New Game  Continue
+New Game / Continue
 ↓
 Hub
 ↓
@@ -37,7 +37,7 @@ NPC Quest
 ↓
 Dungeon
 ↓
-Normal Enemy  Elite
+Normal Enemy / Elite
 ↓
 Boss
 ↓
@@ -47,26 +47,26 @@ Hub Return
 ↓
 Quest Turn-in
 ↓
-Save  Continue
+Save / Continue
 ```
 
 ---
 
 ## Key Features
 
-- CharacterController 기반 3D 이동  Dodge  Lock-On
+- CharacterController 기반 3D 이동 / Dodge / Lock-On
 - 3타 기본 공격과 4종 Active Skill
 - `DamageInfo → IDamageable` 기반 공통 Damage Pipeline
-- Melee  Ranged  Elite Enemy AI
+- Melee / Ranged / Elite Enemy AI
 - Phase와 4종 Pattern을 사용하는 Boss Battle
-- Inventory  Equipment  Consumable
+- Inventory / Equipment / Consumable
 - `RuntimeStat + StatModifier` 기반 능력치 시스템
-- NPC Interaction  Quest  Growth
+- NPC Interaction / Quest / Growth
 - Dungeon Encounter 및 완료 상태 관리
-- JSON 기반 Save  Load  Continue  Checkpoint
-- Inventory  HUD  Pause  Settings UI
-- Persistent Audio  Scene Transition  VFX Feedback
-- Editor  Development Build 전용 Developer Console
+- JSON 기반 Save / Load / Continue / Checkpoint
+- Inventory / HUD / Pause / Settings UI
+- Persistent Audio / Scene Transition / VFX Feedback
+- Editor / Development Build 전용 Developer Console
 
 ---
 
@@ -82,7 +82,7 @@ Plain C# Runtime
 → 플레이 중 변경되는 상태
 
 MonoBehaviour
-→ Unity Lifecycle  Scene  Component 연결
+→ Unity Lifecycle / Scene / Component 연결
 ```
 
 Item, Skill, Quest, Stat 등의 원본 데이터와
@@ -91,13 +91,13 @@ Item, Skill, Quest, Stat 등의 원본 데이터와
 ### Combat
 
 ```text
-Attack  Skill  Projectile
+Attack / Skill / Projectile
 ↓
 DamageInfo
 ↓
 IDamageable
 ↓
-PlayerHealth  EnemyHealth
+PlayerHealth / EnemyHealth
 ```
 
 공격자와 피해 수신자의 구체 타입 의존성을 줄이고
@@ -118,12 +118,12 @@ BossPatternBase
 ```
 
 `BossCombatController`는 Pattern 선택을 담당하고,
-각 Pattern은 자신의 거리  Phase 조건과 실제 공격 행동을 담당합니다.
+각 Pattern은 자신의 거리 / Phase 조건과 실제 공격 행동을 담당합니다.
 
 공통 `Windup → Active → Recovery → Cooldown` 생명주기는
 `BossPatternBase`에서 관리합니다.
 
-### Save  Load
+### Save / Load
 
 ```text
 Gameplay Runtime
@@ -139,7 +139,7 @@ SaveFileService
 save_0.json
 ```
 
-Runtime과 JSON File IO를 분리했으며,
+Runtime과 JSON File I/O를 분리했으며,
 복원 시 Save Data를 먼저 검증한 뒤 Runtime에 적용합니다.
 
 ### Event-driven Presentation
@@ -149,7 +149,7 @@ Gameplay State 변경
 ↓
 Event
 ↓
-HUD  UI  Visual
+HUD / UI / Visual
 ```
 
 Gameplay Controller가 UI나 Visual을 직접 수정하지 않고
@@ -161,42 +161,42 @@ Runtime Event를 통해 Presentation 계층에 상태 변화를 전달합니다.
 
 ### Boss Pattern Architecture
 
-- [BossPatternBase.cs](Assets_ProjectScriptsAIBossBossPatternBase.cs)
-- [BossCombatController.cs](Assets_ProjectScriptsAIBossBossCombatController.cs)
+- [BossPatternBase.cs](Assets/_Project/Scripts/AI/Boss/BossPatternBase.cs)
+- [BossCombatController.cs](Assets/_Project/Scripts/AI/Boss/BossCombatController.cs)
 
 공통 Pattern 생명주기와 Pattern 선택 책임을 분리한 Boss 전투 구조입니다.
 
-### Save  Load Architecture
+### Save / Load Architecture
 
-- [SaveGameController.cs](Assets_ProjectScriptsInfrastructureSaveSaveGameController.cs)
-- [PlayerItemSaveAdapter.cs](Assets_ProjectScriptsInfrastructureSavePlayerItemSaveAdapter.cs)
-- [SaveFileService.cs](Assets_ProjectScriptsInfrastructureSaveSaveFileService.cs)
+- [SaveGameController.cs](Assets/_Project/Scripts/Infrastructure/Save/SaveGameController.cs)
+- [PlayerItemSaveAdapter.cs](Assets/_Project/Scripts/Infrastructure/Save/PlayerItemSaveAdapter.cs)
+- [SaveFileService.cs](Assets/_Project/Scripts/Infrastructure/Save/SaveFileService.cs)
 
-Gameplay Runtime, Save DTO, File IO의 책임을 분리하고
+Gameplay Runtime, Save DTO, File I/O의 책임을 분리하고
 복원 전 데이터 검증을 수행합니다.
 
-### Equipment  Stat
+### Equipment / Stat
 
-- [PlayerEquipmentController.cs](Assets_ProjectScriptsItemPlayerEquipmentController.cs)
-- [RuntimeStat.cs](Assets_ProjectScriptsCharacterStatsRuntimeStat.cs)
-- [StatModifier.cs](Assets_ProjectScriptsCharacterStatsStatModifier.cs)
+- [PlayerEquipmentController.cs](Assets/_Project/Scripts/Item/PlayerEquipmentController.cs)
+- [RuntimeStat.cs](Assets/_Project/Scripts/Character/Stats/RuntimeStat.cs)
+- [StatModifier.cs](Assets/_Project/Scripts/Character/Stats/StatModifier.cs)
 
 장비 교체 실패 시 Rollback을 수행하며,
 `StatModifier.Source`를 이용해 특정 장비가 적용한 능력치만 제거합니다.
 
 ### Developer Console
 
-- [IConsoleCommand.cs](Assets_ProjectScriptsDeveloperToolsIConsoleCommand.cs)
-- [CommandRegistry.cs](Assets_ProjectScriptsDeveloperToolsCommandRegistry.cs)
-- [PlayerDeveloperCommandRegistrar.cs](Assets_ProjectScriptsDeveloperToolsPlayerDeveloperCommandRegistrar.cs)
+- [IConsoleCommand.cs](Assets/_Project/Scripts/DeveloperTools/IConsoleCommand.cs)
+- [CommandRegistry.cs](Assets/_Project/Scripts/DeveloperTools/CommandRegistry.cs)
+- [PlayerDeveloperCommandRegistrar.cs](Assets/_Project/Scripts/DeveloperTools/PlayerDeveloperCommandRegistrar.cs)
 
 Console Core와 Gameplay Dependency를 분리하고,
 각 Command가 실제 Gameplay API를 재사용하도록 구성했습니다.
 
 ### Quest Runtime
 
-- [PlayerQuestLog.cs](Assets_ProjectScriptsQuestPlayerQuestLog.cs)
-- [RuntimeQuest.cs](Assets_ProjectScriptsQuestRuntimeQuest.cs)
+- [PlayerQuestLog.cs](Assets/_Project/Scripts/Quest/PlayerQuestLog.cs)
+- [RuntimeQuest.cs](Assets/_Project/Scripts/Quest/RuntimeQuest.cs)
 
 `QuestDefinition`의 정적 데이터와
 Player별 Quest 진행 상태를 분리하고 상태 전이를 관리합니다.
@@ -219,7 +219,7 @@ Projectile
 
 Boss HUD
 → Damage Event 기반 HP 갱신
-→ Phase  Visibility 변경 시에만 갱신
+→ Phase / Visibility 변경 시에만 갱신
 
 Damage Flash
 → MaterialPropertyBlock
@@ -261,7 +261,7 @@ Runtime 적용
 
 ### Windows Fullscreen 밝기 문제
 
-최종 Windows Release Build에서 Windowed  Fullscreen의 밝기가 달라지는 문제를 확인하고
+최종 Windows Release Build에서 Windowed / Fullscreen의 밝기가 달라지는 문제를 확인하고
 Graphics API를 분리 검증한 뒤 Direct3D11 구성으로 최종 확정했습니다.
 
 ---
@@ -269,23 +269,23 @@ Graphics API를 분리 검증한 뒤 Direct3D11 구성으로 최종 확정했습
 ## Project Structure
 
 ```text
-Assets
-└─ _Project
-   ├─ Art
-   ├─ Audio
-   ├─ Data
-   ├─ Editor
-   ├─ Prefabs
-   ├─ Scenes
-   └─ Scripts
-      ├─ AI
-      ├─ Character
-      ├─ Core
-      ├─ DeveloperTools
-      ├─ Infrastructure
-      ├─ Item
-      ├─ Quest
-      └─ UI
+Assets/
+└─ _Project/
+   ├─ Art/
+   ├─ Audio/
+   ├─ Data/
+   ├─ Editor/
+   ├─ Prefabs/
+   ├─ Scenes/
+   └─ Scripts/
+      ├─ AI/
+      ├─ Character/
+      ├─ Core/
+      ├─ DeveloperTools/
+      ├─ Infrastructure/
+      ├─ Item/
+      ├─ Quest/
+      └─ UI/
 ```
 
 Gameplay 및 프로젝트 전용 Asset은 `_Project` 아래에 분리하여 관리했습니다.
@@ -294,7 +294,7 @@ Gameplay 및 프로젝트 전용 Asset은 `_Project` 아래에 분리하여 관�
 
 ## Development & Validation
 
-개별 기능 구현 이후 관련 시스템과의 Integration  Regression Test를 반복했습니다.
+개별 기능 구현 이후 관련 시스템과의 Integration / Regression Test를 반복했습니다.
 
 최종적으로 다음 전체 흐름을 다시 검증했습니다.
 
@@ -304,7 +304,7 @@ MainMenu
 → Hub
 → Quest Accept
 → Dungeon
-→ Enemy  Elite
+→ Enemy / Elite
 → Boss
 → Return Portal
 → Hub
@@ -315,7 +315,7 @@ MainMenu
 ```
 
 Windows Release Build에서도 Scene Transition, Combat, Skill,
-Windowed  Fullscreen 및 재실행을 확인했습니다.
+Windowed / Fullscreen 및 재실행을 확인했습니다.
 
 ---
 
@@ -333,7 +333,7 @@ Direct3D11
 프로젝트를 Unity Hub에서 열고
 
 ```text
-Assets_ProjectScenesBootstrap.unity
+Assets/_Project/Scenes/Bootstrap.unity
 ```
 
 Scene에서 Play하여 시작할 수 있습니다.
