@@ -342,6 +342,6 @@ Scene에서 Play하여 시작할 수 있습니다.
 
 ## Links
 
-- 기술 포트폴리오 (Notion) 추후 연결
+- [기술 포트폴리오 (Notion)](https://zinc-lipstick-51c.notion.site/UnityRPG-3cdd3addd2cb802281d9ef23c339acf6)
 - Gameplay Video 추후 연결
 - Portfolio PDF 추후 연결
