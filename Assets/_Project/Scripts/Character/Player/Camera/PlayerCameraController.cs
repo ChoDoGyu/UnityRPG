@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 namespace UnityRPG.Character.Player
 {
@@ -42,7 +42,7 @@ namespace UnityRPG.Character.Player
         {
             if (cameraTarget == null)
             {
-                Debug.LogError("[Player] PlayerCameraControllerÀÇ Camera TargetÀÌ ¼³Á¤µÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+                Debug.LogError("[Player] PlayerCameraControllerì˜ Camera Targetì´ ì„¤ì •ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
 
                 return;
             }

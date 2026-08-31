@@ -18,16 +18,14 @@ namespace UnityRPG.AI
 
         public event Action<float> Damaged;
         public event Action Died;
-        public event Action<GameObject> DiedBy;
+        public event Action<GameObject> KilledBy;
 
         private void Awake()
         {
             context = GetComponent<EnemyContext>();
 
             if (!context.IsConfigured)
-            {
                 return;
-            }
 
             currentHealth = context.Definition.MaxHealth;
             isConfigured = true;
@@ -36,11 +34,11 @@ namespace UnityRPG.AI
         public void TakeDamage(DamageInfo damageInfo)
         {
             if (!isConfigured || IsDead)
-            {
                 return;
-            }
 
-            float finalDamage = DamageCalculator.CalculateAfterDefense(damageInfo.Amount, context.Definition.Defense);
+            float finalDamage = DamageCalculator.CalculateAfterDefense(
+                damageInfo.Amount,
+                context.Definition.Defense);
 
             if (finalDamage <= 0f)
                 return;
@@ -51,7 +49,7 @@ namespace UnityRPG.AI
             if (currentHealth <= 0f)
             {
                 Died?.Invoke();
-                DiedBy?.Invoke(damageInfo.Source);
+                KilledBy?.Invoke(damageInfo.Source);
             }
         }
     }

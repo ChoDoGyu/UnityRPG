@@ -15,14 +15,11 @@ namespace UnityRPG.UI
         [SerializeField] private SaveGameController saveGameController;
 
         [Header("Inventory")]
-        [SerializeField] private GameObject inventoryPanel;
         [SerializeField] private UIPanelTransition inventoryTransition;
         [SerializeField] private Button inventoryCloseButton;
 
         [Header("Pause")]
-        [SerializeField] private GameObject pauseRoot;
         [SerializeField] private GameObject pausePanel;
-        [SerializeField] private GameObject settingsPanel;
         [SerializeField] private UIPanelTransition pauseTransition;
         [SerializeField] private UIPanelTransition settingsTransition;
         [SerializeField] private Button resumeButton;
@@ -42,9 +39,7 @@ namespace UnityRPG.UI
         private bool previousCursorVisible;
         private CursorLockMode previousCursorLockState;
 
-        public bool IsInventoryOpen => isInventoryOpen;
-        public bool IsPauseOpen => isPauseOpen;
-        public bool IsAnyWindowOpen => isInventoryOpen || isPauseOpen;
+        private bool IsAnyWindowOpen => isInventoryOpen || isPauseOpen;
 
         private void Awake()
         {
@@ -337,12 +332,9 @@ namespace UnityRPG.UI
         {
             return inputReader != null &&
                    inventoryUI != null &&
-                   inventoryPanel != null &&
                    inventoryTransition != null &&
                    inventoryCloseButton != null &&
-                   pauseRoot != null &&
                    pausePanel != null &&
-                   settingsPanel != null &&
                    pauseTransition != null &&
                    settingsTransition != null &&
                    resumeButton != null &&

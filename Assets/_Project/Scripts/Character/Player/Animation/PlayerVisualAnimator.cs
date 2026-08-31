@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityRPG.Skill;
 
 namespace UnityRPG.Character.Player
@@ -216,7 +216,7 @@ namespace UnityRPG.Character.Player
                 leftFoot == null ||
                 rightFoot == null)
             {
-                Debug.LogError("[Player] PlayerVisualAnimatorÀÇ Ä³¸¯ÅÍ ÆÄÃ÷ ¶Ç´Â ÀÌµ¿ ±âÁØ ÂüÁ¶°¡ ´©¶ôµÇ¾ú½À´Ï´Ù.", this);
+                Debug.LogError("[Player] PlayerVisualAnimatorì˜ ìºë¦­í„° íŒŒì¸  ë˜ëŠ” ì´ë™ ê¸°ì¤€ ì°¸ì¡°ê°€ ëˆ„ë½ë˜ì—ˆìŠµë‹ˆë‹¤.", this);
 
                 return false;
             }

@@ -41,7 +41,7 @@ namespace UnityRPG.Item
                 Debug.LogError("[Item] ItemPickup에 ItemDefinition이 설정되지 않았습니다.", this);
         }
 
-        public bool Initialize(ItemDefinition item, int amount)
+        public bool TryInitialize(ItemDefinition item, int amount)
         {
             if (!isColliderConfigured || item == null || amount <= 0)
                 return false;

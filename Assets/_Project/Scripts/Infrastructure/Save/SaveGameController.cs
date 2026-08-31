@@ -88,15 +88,5 @@ namespace UnityRPG.Infrastructure.Save
 
             return SaveLoadStatus.Success;
         }
-
-        public SaveLoadStatus GetSaveStatus()
-        {
-            return fileService.Load(out _);
-        }
-
-        public bool DeleteSave()
-        {
-            return fileService.Delete();
-        }
     }
 }

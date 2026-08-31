@@ -11,7 +11,6 @@ namespace UnityRPG.Infrastructure.Save
         private SaveFileService fileService;
         private string pendingSceneName;
 
-        public bool HasSave => fileService != null && fileService.Exists();
         public bool HasValidSave => fileService != null && fileService.Load(out _) == SaveLoadStatus.Success;
 
         private void Awake()

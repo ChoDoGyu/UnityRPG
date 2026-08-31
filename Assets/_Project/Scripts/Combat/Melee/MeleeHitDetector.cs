@@ -32,25 +32,17 @@ namespace UnityRPG.Combat
                 Vector3 point = hit.ClosestPoint(attackReference.position);
 
                 if (!targets.TryGetValue(damageable, out Vector3 previousPoint) ||
-                    (point - attackReference.position).sqrMagnitude < (previousPoint - attackReference.position).sqrMagnitude)
+                    (point - attackReference.position).sqrMagnitude <
+                    (previousPoint - attackReference.position).sqrMagnitude)
+                {
                     targets[damageable] = point;
+                }
             }
 
             foreach (KeyValuePair<IDamageable, Vector3> target in targets)
                 results.Add(new MeleeHitResult(target.Key, target.Value));
 
             return results;
-        }
-
-        public List<IDamageable> FindTargets(Transform attackReference)
-        {
-            List<MeleeHitResult> hits = FindHits(attackReference);
-            List<IDamageable> targets = new();
-
-            for (int i = 0; i < hits.Count; i++)
-                targets.Add(hits[i].Target);
-
-            return targets;
         }
     }
 }

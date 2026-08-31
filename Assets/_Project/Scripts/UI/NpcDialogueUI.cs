@@ -18,8 +18,6 @@ namespace UnityRPG.UI
         private float remainingTime;
         private bool isVisible;
 
-        public bool IsVisible => isVisible;
-
         private void Start()
         {
             if (!HasAllReferences())

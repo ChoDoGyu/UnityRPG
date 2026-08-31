@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 
 namespace UnityRPG.AI
@@ -129,7 +129,7 @@ namespace UnityRPG.AI
             if (modelRoot != null && body != null)
                 return true;
 
-            Debug.LogError("[Enemy] EnemyVisualAnimatorÀÇ Reference°¡ ¼³Á¤µÇÁö ¾Ê¾Ò½À´Ï´Ù.", this);
+            Debug.LogError("[Enemy] EnemyVisualAnimatorì˜ Referenceê°€ ì„¤ì •ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.", this);
             return false;
         }
 

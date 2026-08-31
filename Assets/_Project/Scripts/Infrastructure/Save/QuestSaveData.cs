@@ -10,11 +10,4 @@ namespace UnityRPG.Infrastructure.Save
         public string state;
         public List<QuestObjectiveSaveData> objectives = new();
     }
-
-    [Serializable]
-    public sealed class QuestObjectiveSaveData
-    {
-        public int objectiveIndex;
-        public int currentAmount;
-    }
 }

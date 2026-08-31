@@ -20,16 +20,16 @@ namespace UnityRPG.Quest
         private void OnEnable()
         {
             if (enemyHealth != null)
-                enemyHealth.DiedBy += HandleDiedBy;
+                enemyHealth.KilledBy += HandleKilledBy;
         }
 
         private void OnDisable()
         {
             if (enemyHealth != null)
-                enemyHealth.DiedBy -= HandleDiedBy;
+                enemyHealth.KilledBy -= HandleKilledBy;
         }
 
-        private void HandleDiedBy(GameObject source)
+        private void HandleKilledBy(GameObject source)
         {
             if (source == null || !enemyContext.IsConfigured)
                 return;

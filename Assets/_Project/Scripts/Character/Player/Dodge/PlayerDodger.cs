@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 namespace UnityRPG.Character.Player
 {
@@ -82,7 +82,7 @@ namespace UnityRPG.Character.Player
             if (facingReference == null)
             {
                 Debug.LogError(
-                    "[Player] PlayerDodgerÀÇ Facing Reference°¡ ¼³Á¤µÇÁö ¾Ê¾Ò½À´Ï´Ù.",
+                    "[Player] PlayerDodgerì˜ Facing Referenceê°€ ì„¤ì •ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.",
                     this);
 
                 return;

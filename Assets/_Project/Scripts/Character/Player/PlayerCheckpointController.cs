@@ -15,7 +15,7 @@ namespace UnityRPG.Character.Player
         public string SceneName => sceneName;
         public Vector3 RespawnPosition => respawnPosition;
 
-        public bool ActivateCheckpoint(string id, string scene, Vector3 position)
+        public bool TryActivateCheckpoint(string id, string scene, Vector3 position)
         {
             if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(scene))
                 return false;

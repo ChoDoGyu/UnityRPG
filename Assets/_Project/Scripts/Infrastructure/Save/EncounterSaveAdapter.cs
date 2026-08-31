@@ -64,7 +64,7 @@ namespace UnityRPG.Infrastructure.Save
                     !lookup.TryGetValue(saveEncounter.encounterId, out EncounterTrigger encounter))
                     return false;
 
-                if (!encounter.RestoreState(saveEncounter.hasStarted, saveEncounter.isCompleted))
+                if (!encounter.TryRestoreState(saveEncounter.hasStarted, saveEncounter.isCompleted))
                     return false;
             }
 

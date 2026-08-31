@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 using UnityRPG.Combat;
 using UnityRPG.Character.Stats;
@@ -53,7 +53,7 @@ namespace UnityRPG.Skill
 
             if (directionReference == null)
             {
-                Debug.LogError("[Skill] DashSlashÀÇ Direction Reference°¡ ¼³Á¤µÇÁö ¾Ê¾Ò½À´Ï´Ù.", this);
+                Debug.LogError("[Skill] DashSlashì˜ Direction Referenceê°€ ì„¤ì •ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.", this);
                 return;
             }
 

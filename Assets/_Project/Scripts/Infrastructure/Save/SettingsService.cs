@@ -15,7 +15,7 @@ namespace UnityRPG.Infrastructure.Save
 
         public int ResolutionWidth => data.resolutionWidth;
         public int ResolutionHeight => data.resolutionHeight;
-        public bool Fullscreen => data.fullscreen;
+        public bool IsFullscreen => data.fullscreen;
         public float MasterVolume => data.masterVolume;
         public float BgmVolume => data.bgmVolume;
         public float SfxVolume => data.sfxVolume;

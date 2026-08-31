@@ -11,25 +11,11 @@ namespace UnityRPG.AI
     public sealed class EliteSlamAttack : MonoBehaviour
     {
         [Header("Slam")]
-        [SerializeField]
-        [Min(0f)]
-        private float range = 3f;
-
-        [SerializeField]
-        [Min(0f)]
-        private float windup = 1f;
-
-        [SerializeField]
-        [Min(0f)]
-        private float recovery = 0.8f;
-
-        [SerializeField]
-        [Min(0f)]
-        private float cooldown = 5f;
-
-        [SerializeField]
-        [Min(0f)]
-        private float damageMultiplier = 1.5f;
+        [SerializeField, Min(0f)] private float range = 3f;
+        [SerializeField, Min(0f)] private float windup = 1f;
+        [SerializeField, Min(0f)] private float recovery = 0.8f;
+        [SerializeField, Min(0f)] private float cooldown = 5f;
+        [SerializeField, Min(0f)] private float damageMultiplier = 1.5f;
 
         [Header("VFX")]
         [SerializeField] private GameObject windupVfxPrefab;
@@ -40,7 +26,6 @@ namespace UnityRPG.AI
         [SerializeField] private AudioClip slamSfx;
 
         private GameObject activeWindupVfx;
-
         private EnemyContext context;
 
         private EnemyAttackPhase currentPhase = EnemyAttackPhase.Ready;
@@ -48,13 +33,8 @@ namespace UnityRPG.AI
         private float remainingPhaseTime;
 
         public EnemyAttackPhase CurrentPhase => currentPhase;
-
         public float Range => range;
-
-        public float DamageMultiplier => damageMultiplier;
-
         public bool IsReady => currentPhase == EnemyAttackPhase.Ready;
-
         public bool IsActionLocked => currentPhase == EnemyAttackPhase.Windup || currentPhase == EnemyAttackPhase.Recovery;
 
         public float PhaseNormalizedProgress
@@ -64,9 +44,7 @@ namespace UnityRPG.AI
                 float duration = GetCurrentPhaseDuration();
 
                 if (duration <= 0f)
-                {
                     return 0f;
-                }
 
                 return 1f - Mathf.Clamp01(remainingPhaseTime / duration);
             }
@@ -80,9 +58,7 @@ namespace UnityRPG.AI
         public bool TryStartSlam(Transform target)
         {
             if (!context.IsConfigured || !IsReady || !IsTargetAlive(target))
-            {
                 return false;
-            }
 
             currentTarget = target;
             currentPhase = EnemyAttackPhase.Windup;
@@ -97,9 +73,7 @@ namespace UnityRPG.AI
         public void UpdateAttack(float deltaTime)
         {
             if (!context.IsConfigured || currentPhase == EnemyAttackPhase.Ready || deltaTime <= 0f)
-            {
                 return;
-            }
 
             if (IsActionLocked && !IsTargetAlive(currentTarget))
             {
@@ -110,9 +84,7 @@ namespace UnityRPG.AI
             remainingPhaseTime = Mathf.Max(0f, remainingPhaseTime - deltaTime);
 
             if (remainingPhaseTime > 0f)
-            {
                 return;
-            }
 
             switch (currentPhase)
             {
@@ -180,9 +152,7 @@ namespace UnityRPG.AI
         private bool IsTargetAlive(Transform target)
         {
             if (target == null)
-            {
                 return false;
-            }
 
             PlayerHealth playerHealth = target.GetComponent<PlayerHealth>();
 

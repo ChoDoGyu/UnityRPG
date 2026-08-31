@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 namespace UnityRPG.Interaction
 {
@@ -16,10 +16,10 @@ namespace UnityRPG.Interaction
         private void OnValidate()
         {
             if (string.IsNullOrWhiteSpace(npcId))
-                Debug.LogWarning($"[NPC] {name}ÀÇ NpcId°¡ ºñ¾î ÀÖ½À´Ï´Ù.", this);
+                Debug.LogWarning($"[NPC] {name}ì˜ NpcIdê°€ ë¹„ì–´ ìˆìŠµë‹ˆë‹¤.", this);
 
             if (string.IsNullOrWhiteSpace(displayName))
-                Debug.LogWarning($"[NPC] {name}ÀÇ DisplayNameÀÌ ºñ¾î ÀÖ½À´Ï´Ù.", this);
+                Debug.LogWarning($"[NPC] {name}ì˜ DisplayNameì´ ë¹„ì–´ ìˆìŠµë‹ˆë‹¤.", this);
         }
     }
 }

@@ -15,9 +15,7 @@ namespace UnityRPG.Skill
             get
             {
                 if (Definition.Cooldown <= 0f)
-                {
                     return 0f;
-                }
 
                 return RemainingCooldown / Definition.Cooldown;
             }
@@ -26,45 +24,27 @@ namespace UnityRPG.Skill
         public RuntimeSkill(SkillDefinition definition)
         {
             Definition = definition ?? throw new ArgumentNullException(nameof(definition));
-
             RemainingCooldown = 0f;
         }
 
         public bool TryStartCooldown()
         {
             if (!IsReady)
-            {
                 return false;
-            }
 
             RemainingCooldown = Definition.Cooldown;
-
             return true;
         }
 
         public void UpdateCooldown(float deltaTime)
         {
-            if (IsReady)
-            {
+            if (IsReady || deltaTime <= 0f)
                 return;
-            }
-
-            if (deltaTime <= 0f)
-            {
-                return;
-            }
 
             RemainingCooldown -= deltaTime;
 
             if (RemainingCooldown < 0f)
-            {
                 RemainingCooldown = 0f;
-            }
-        }
-
-        public void ResetCooldown()
-        {
-            RemainingCooldown = 0f;
         }
     }
 }

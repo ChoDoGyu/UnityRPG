@@ -15,17 +15,13 @@ namespace UnityRPG.AI
 
         public bool IsMoving => isConfigured && agent.enabled && agent.isOnNavMesh && agent.velocity.sqrMagnitude > 0.01f;
 
-        public Vector3 Velocity => isConfigured ? agent.velocity : Vector3.zero;
-
         private void Awake()
         {
             agent = GetComponent<NavMeshAgent>();
             context = GetComponent<EnemyContext>();
 
             if (!context.IsConfigured)
-            {
                 return;
-            }
 
             agent.speed = context.Definition.MoveSpeed;
             isConfigured = true;
@@ -34,9 +30,7 @@ namespace UnityRPG.AI
         public bool TrySetDestination(Vector3 destination)
         {
             if (!isConfigured || !agent.enabled || !agent.isOnNavMesh)
-            {
                 return false;
-            }
 
             agent.isStopped = false;
 
@@ -46,14 +40,10 @@ namespace UnityRPG.AI
         public void Stop()
         {
             if (!isConfigured || !agent.enabled || !agent.isOnNavMesh)
-            {
                 return;
-            }
 
             if (agent.isStopped && !agent.hasPath)
-            {
                 return;
-            }
 
             agent.isStopped = true;
             agent.ResetPath();
@@ -64,21 +54,20 @@ namespace UnityRPG.AI
             direction.y = 0f;
 
             if (!isConfigured || direction.sqrMagnitude <= 0.001f)
-            {
                 return;
-            }
 
             Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
 
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, agent.angularSpeed * deltaTime);
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation,
+                targetRotation,
+                agent.angularSpeed * deltaTime);
         }
 
         public void Disable()
         {
             if (!isConfigured || !agent.enabled)
-            {
                 return;
-            }
 
             if (agent.isOnNavMesh)
             {

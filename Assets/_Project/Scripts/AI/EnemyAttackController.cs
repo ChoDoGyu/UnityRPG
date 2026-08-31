@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityRPG.Character.Player;
 
 namespace UnityRPG.AI
@@ -79,7 +79,7 @@ namespace UnityRPG.AI
                 case EnemyType.Melee:
                     if (meleeAttack == null || !meleeAttack.enabled)
                     {
-                        Debug.LogError("[Enemy] Melee EnemyÀÇ EnemyMeleeAttackÀÌ ¾ø°Å³ª ºñÈ°¼ºÈ­µÇ¾î ÀÖ½À´Ï´Ù.", this);
+                        Debug.LogError("[Enemy] Melee Enemyì˜ EnemyMeleeAttackì´ ì—†ê±°ë‚˜ ë¹„í™œì„±í™”ë˜ì–´ ìˆìŠµë‹ˆë‹¤.", this);
 
                         return;
                     }
@@ -88,7 +88,7 @@ namespace UnityRPG.AI
                 case EnemyType.Ranged:
                     if (rangedAttack == null || !rangedAttack.enabled)
                     {
-                        Debug.LogError("[Enemy] Ranged EnemyÀÇ EnemyRangedAttackÀÌ ¾ø°Å³ª ºñÈ°¼ºÈ­µÇ¾î ÀÖ½À´Ï´Ù.", this);
+                        Debug.LogError("[Enemy] Ranged Enemyì˜ EnemyRangedAttackì´ ì—†ê±°ë‚˜ ë¹„í™œì„±í™”ë˜ì–´ ìˆìŠµë‹ˆë‹¤.", this);
 
                         return;
                     }

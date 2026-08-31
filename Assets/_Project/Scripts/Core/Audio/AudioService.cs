@@ -1,4 +1,4 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
@@ -29,14 +29,6 @@ namespace UnityRPG.Core
 
         private Coroutine bgmRoutine;
 
-        private float masterVolume = 1f;
-        private float bgmVolume = 1f;
-        private float sfxVolume = 1f;
-
-        public float MasterVolume => masterVolume;
-        public float BgmVolume => bgmVolume;
-        public float SfxVolume => sfxVolume;
-
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -48,7 +40,7 @@ namespace UnityRPG.Core
             Instance = this;
 
             if (audioMixer == null || bgmSource == null || sfxSource == null)
-                Debug.LogError("[Audio] Audio º≥¡§¿Ã « ø‰«’¥œ¥Ÿ.", this);
+                Debug.LogError("[Audio] Audio ÏÑ§Ï†ïÏù¥ ÌïÑÏöîÌï©ÎãàÎã§.", this);
         }
 
         private void OnEnable()
@@ -105,20 +97,17 @@ namespace UnityRPG.Core
 
         public void SetMasterVolume(float volume)
         {
-            masterVolume = Mathf.Clamp01(volume);
-            SetVolume(MasterVolumeParameter, masterVolume);
+            SetVolume(MasterVolumeParameter, volume);
         }
 
         public void SetBgmVolume(float volume)
         {
-            bgmVolume = Mathf.Clamp01(volume);
-            SetVolume(BgmVolumeParameter, bgmVolume);
+            SetVolume(BgmVolumeParameter, volume);
         }
 
         public void SetSfxVolume(float volume)
         {
-            sfxVolume = Mathf.Clamp01(volume);
-            SetVolume(SfxVolumeParameter, sfxVolume);
+            SetVolume(SfxVolumeParameter, volume);
         }
 
         private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)

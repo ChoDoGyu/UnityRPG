@@ -98,7 +98,7 @@ namespace UnityRPG.Item
             playerHealth.ClampToMaxHealth();
         }
 
-        internal bool EquipForRestore(EquipmentDefinition item)
+        internal bool TryEquipForRestore(EquipmentDefinition item)
         {
             if (!isConfigured || item == null || equipment.HasEquipment(item.Slot))
                 return false;

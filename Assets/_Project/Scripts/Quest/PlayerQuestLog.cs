@@ -69,7 +69,7 @@ namespace UnityRPG.Quest
             quests.Clear();
         }
 
-        internal bool AddRestoredQuest(RuntimeQuest quest)
+        internal bool TryAddRestoredQuest(RuntimeQuest quest)
         {
             if (quest == null || FindQuest(quest.Definition.QuestId) != null)
                 return false;

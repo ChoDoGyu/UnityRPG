@@ -16,7 +16,6 @@ namespace UnityRPG.Item
 
         public IReadOnlyList<InventorySlot> Slots => slots;
         public int MaxSlots => maxSlots;
-        public int UsedSlotCount => slots.Count;
 
         public int AddItem(ItemDefinition item, int amount)
         {

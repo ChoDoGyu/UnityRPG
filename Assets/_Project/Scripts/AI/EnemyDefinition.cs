@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 namespace UnityRPG.AI
 {
@@ -68,10 +68,10 @@ namespace UnityRPG.AI
         private void OnValidate()
         {
             if (attackRange > detectionRange)
-                Debug.LogWarning($"[Enemy] {name}: Attack Range°¡ Detection Rangeº¸´Ù Å®´Ï´Ù.", this);
+                Debug.LogWarning($"[Enemy] {name}: Attack Rangeê°€ Detection Rangeë³´ë‹¤ í½ë‹ˆë‹¤.", this);
 
             if (string.IsNullOrWhiteSpace(enemyId))
-                Debug.LogWarning($"[Enemy] {name}: EnemyId°¡ ºñ¾î ÀÖ½À´Ï´Ù.", this);
+                Debug.LogWarning($"[Enemy] {name}: EnemyIdê°€ ë¹„ì–´ ìˆìŠµë‹ˆë‹¤.", this);
         }
     }
 }

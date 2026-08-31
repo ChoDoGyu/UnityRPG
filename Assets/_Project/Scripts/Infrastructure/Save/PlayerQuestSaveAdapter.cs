@@ -61,7 +61,7 @@ namespace UnityRPG.Infrastructure.Save
 
             for (int i = 0; i < restoredQuests.Count; i++)
             {
-                if (!questLog.AddRestoredQuest(restoredQuests[i]))
+                if (!questLog.TryAddRestoredQuest(restoredQuests[i]))
                     return false;
             }
 

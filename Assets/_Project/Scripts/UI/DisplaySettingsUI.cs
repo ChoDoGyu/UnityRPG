@@ -93,7 +93,7 @@ namespace UnityRPG.UI
 
             resolutionDropdown.SetValueWithoutNotify(currentIndex);
             resolutionDropdown.RefreshShownValue();
-            fullscreenToggle.SetIsOnWithoutNotify(SettingsService.Instance.Fullscreen);
+            fullscreenToggle.SetIsOnWithoutNotify(SettingsService.Instance.IsFullscreen);
         }
 
         private int FindResolutionIndex(int width, int height)

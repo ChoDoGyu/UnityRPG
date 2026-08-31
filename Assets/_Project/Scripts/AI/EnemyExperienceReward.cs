@@ -20,15 +20,15 @@ namespace UnityRPG.AI
 
         private void OnEnable()
         {
-            enemyHealth.DiedBy += HandleDiedBy;
+            enemyHealth.KilledBy += HandleKilledBy;
         }
 
         private void OnDisable()
         {
-            enemyHealth.DiedBy -= HandleDiedBy;
+            enemyHealth.KilledBy -= HandleKilledBy;
         }
 
-        private void HandleDiedBy(GameObject source)
+        private void HandleKilledBy(GameObject source)
         {
             if (hasRewarded || source == null || !context.IsConfigured)
                 return;

@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityRPG.Character.Stats;
 using UnityRPG.Core;
 using UnityRPG.VFX;
@@ -58,7 +58,7 @@ namespace UnityRPG.Combat
 
             if (attackReference == null)
             {
-                Debug.LogError("[Combat] PlayerAttackControllerÀÇ Attack Reference°¡ ¼³Á¤µÇÁö ¾Ê¾Ò½À´Ï´Ù.", this);
+                Debug.LogError("[Combat] PlayerAttackControllerì˜ Attack Referenceê°€ ì„¤ì •ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.", this);
                 return;
             }
 

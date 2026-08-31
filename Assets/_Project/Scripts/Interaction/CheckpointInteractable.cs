@@ -33,7 +33,7 @@ namespace UnityRPG.Interaction
             Vector3 position = respawnPoint != null ? respawnPoint.position : transform.position;
             string sceneName = SceneManager.GetActiveScene().name;
 
-            if (!checkpointController.ActivateCheckpoint(checkpointId, sceneName, position))
+            if (!checkpointController.TryActivateCheckpoint(checkpointId, sceneName, position))
                 return;
 
             Debug.Log($"[Checkpoint] 활성화: {checkpointId}", this);

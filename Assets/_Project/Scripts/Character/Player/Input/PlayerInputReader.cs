@@ -10,7 +10,6 @@ namespace UnityRPG.Character.Player
         private readonly HashSet<object> uiInputBlockers = new HashSet<object>();
 
         private PlayerInputActions inputActions;
-        private bool gameplayInputEnabled;
 
         public Vector2 MoveInput => inputActions.Player.Move.ReadValue<Vector2>();
         public Vector2 LookInput => inputActions.Player.Look.ReadValue<Vector2>();
@@ -25,7 +24,6 @@ namespace UnityRPG.Character.Player
         public bool WasSkill3Pressed => inputActions.Player.Skill3.WasPressedThisFrame();
         public bool WasSkill4Pressed => inputActions.Player.Skill4.WasPressedThisFrame();
 
-        public bool IsGameplayInputEnabled => gameplayInputEnabled;
         public bool WasDeveloperConsolePressed => inputActions.Developer.ToggleConsole.WasPressedThisFrame();
         public bool WasInventoryPressed => inputActions.UI.Inventory.WasPressedThisFrame();
         public bool WasCancelPressed => inputActions.UI.Cancel.WasPressedThisFrame();
@@ -50,8 +48,6 @@ namespace UnityRPG.Character.Player
             inputActions.Player.Disable();
             inputActions.UI.Disable();
             inputActions.Developer.Disable();
-
-            gameplayInputEnabled = false;
         }
 
         public void BlockGameplayInput(object source)
@@ -84,8 +80,6 @@ namespace UnityRPG.Character.Player
                 inputActions.Player.Enable();
             else
                 inputActions.Player.Disable();
-
-            gameplayInputEnabled = shouldEnable;
         }
 
         public void BlockUIInput(object source)

@@ -85,7 +85,7 @@ namespace UnityRPG.Item
 
             ItemPickup pickup = Instantiate(pickupPrefab, position, Quaternion.identity);
 
-            if (!pickup.Initialize(entry.Item, amount))
+            if (!pickup.TryInitialize(entry.Item, amount))
                 Destroy(pickup.gameObject);
         }
 

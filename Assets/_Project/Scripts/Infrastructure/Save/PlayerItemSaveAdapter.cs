@@ -85,7 +85,7 @@ namespace UnityRPG.Infrastructure.Save
                 EquipmentSaveData saveEquipment = data.equipment[i];
                 itemDatabase.TryGetItem(saveEquipment.itemId, out ItemDefinition item);
 
-                if (!equipmentController.EquipForRestore((EquipmentDefinition)item))
+                if (!equipmentController.TryEquipForRestore((EquipmentDefinition)item))
                     return false;
             }
 

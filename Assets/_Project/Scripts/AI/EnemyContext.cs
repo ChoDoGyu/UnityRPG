@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 namespace UnityRPG.AI
 {
@@ -20,7 +20,7 @@ namespace UnityRPG.AI
                 return;
             }
 
-            Debug.LogError("[Enemy] EnemyContextÀÇ Enemy DefinitionÀÌ ¼³Á¤µÇÁö ¾Ê¾Ò½À´Ï´Ù.", this);
+            Debug.LogError("[Enemy] EnemyContextì˜ Enemy Definitionì´ ì„¤ì •ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.", this);
         }
     }
 }

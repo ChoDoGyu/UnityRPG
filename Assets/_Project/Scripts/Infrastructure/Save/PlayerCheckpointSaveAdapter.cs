@@ -56,7 +56,7 @@ namespace UnityRPG.Infrastructure.Save
                 return false;
 
             Vector3 position = new Vector3(data.positionX, data.positionY, data.positionZ);
-            return checkpointController.ActivateCheckpoint(data.checkpointId, data.sceneName, position);
+            return checkpointController.TryActivateCheckpoint(data.checkpointId, data.sceneName, position);
         }
     }
 }

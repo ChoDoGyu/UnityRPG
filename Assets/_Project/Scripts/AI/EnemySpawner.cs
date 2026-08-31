@@ -34,11 +34,7 @@ namespace UnityRPG.AI
         public event Action<GameObject> EnemySpawned;
         public event Action AllEnemiesDefeated;
 
-        public int AliveEnemyCount => aliveEnemyCount;
-        public bool HasSpawned => hasSpawned;
-        public bool AreAllEnemiesDefeated => hasSpawned && aliveEnemyCount <= 0;
-
-        public bool SpawnAll()
+        public bool TrySpawnAll()
         {
             if (hasSpawned)
                 return false;

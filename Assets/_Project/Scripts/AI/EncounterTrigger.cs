@@ -81,7 +81,7 @@ namespace UnityRPG.AI
                 return;
             }
 
-            if (!enemySpawner.SpawnAll())
+            if (!enemySpawner.TrySpawnAll())
             {
                 return;
             }
@@ -100,7 +100,7 @@ namespace UnityRPG.AI
             StateChanged?.Invoke();
         }
 
-        public bool RestoreState(bool started, bool completed)
+        public bool TryRestoreState(bool started, bool completed)
         {
             if (!isConfigured || string.IsNullOrWhiteSpace(encounterId))
                 return false;
@@ -119,7 +119,7 @@ namespace UnityRPG.AI
 
             if (started)
             {
-                if (!enemySpawner.SpawnAll())
+                if (!enemySpawner.TrySpawnAll())
                     return false;
 
                 hasStarted = true;

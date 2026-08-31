@@ -1,4 +1,4 @@
-using TMPro;
+ï»¿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityRPG.Character.Growth;
@@ -39,7 +39,7 @@ namespace UnityRPG.UI
         {
             if (!HasAllReferences())
             {
-                Debug.LogError("[UI] PlayerStatusHUDÀÇ ÂüÁ¶°¡ ´©¶ôµÇ¾ú½À´Ï´Ù.", this);
+                Debug.LogError("[UI] PlayerStatusHUDì˜ ì°¸ì¡°ê°€ ëˆ„ë½ë˜ì—ˆìŠµë‹ˆë‹¤.", this);
                 enabled = false;
                 return;
             }

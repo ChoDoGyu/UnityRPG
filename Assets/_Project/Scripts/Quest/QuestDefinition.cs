@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -43,10 +43,10 @@ namespace UnityRPG.Quest
             experienceReward = Mathf.Max(0, experienceReward);
 
             if (string.IsNullOrWhiteSpace(questId))
-                Debug.LogWarning($"[Quest] {name}ÀÇ QuestId°¡ ºñ¾î ÀÖ½À´Ï´Ù.", this);
+                Debug.LogWarning($"[Quest] {name}ì˜ QuestIdê°€ ë¹„ì–´ ìˆìŠµë‹ˆë‹¤.", this);
 
             if (string.IsNullOrWhiteSpace(displayName))
-                Debug.LogWarning($"[Quest] {name}ÀÇ DisplayNameÀÌ ºñ¾î ÀÖ½À´Ï´Ù.", this);
+                Debug.LogWarning($"[Quest] {name}ì˜ DisplayNameì´ ë¹„ì–´ ìˆìŠµë‹ˆë‹¤.", this);
         }
     }
 }

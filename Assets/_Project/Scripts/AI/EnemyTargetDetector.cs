@@ -22,16 +22,12 @@ namespace UnityRPG.AI
 
         public Transform CurrentTarget => currentTarget;
 
-        public bool HasTarget => currentTarget != null;
-
         private void Awake()
         {
             context = GetComponent<EnemyContext>();
 
             if (!context.IsConfigured)
-            {
                 return;
-            }
 
             if (targetLayer.value == 0)
             {
@@ -57,9 +53,7 @@ namespace UnityRPG.AI
             {
                 if (IsTargetAlive(currentTarget) &&
                     IsTargetInDetectionRange(currentTarget))
-                {
                     return;
-                }
 
                 currentTarget = null;
             }
@@ -84,32 +78,23 @@ namespace UnityRPG.AI
                 Collider hit = detectionBuffer[i];
 
                 if (hit == null)
-                {
                     continue;
-                }
 
                 PlayerController player = hit.GetComponentInParent<PlayerController>();
 
                 if (player == null)
-                {
                     continue;
-                }
 
                 if (!IsTargetAlive(player.transform))
-                {
                     continue;
-                }
 
                 Vector3 direction = player.transform.position - transform.position;
-
                 direction.y = 0f;
 
                 float sqrDistance = direction.sqrMagnitude;
 
                 if (sqrDistance >= closestSqrDistance)
-                {
                     continue;
-                }
 
                 closestSqrDistance = sqrDistance;
                 closestTarget = player.transform;
@@ -121,9 +106,7 @@ namespace UnityRPG.AI
         private bool IsTargetAlive(Transform target)
         {
             if (target == null)
-            {
                 return false;
-            }
 
             PlayerHealth playerHealth = target.GetComponent<PlayerHealth>();
 
@@ -133,7 +116,6 @@ namespace UnityRPG.AI
         private bool IsTargetInDetectionRange(Transform target)
         {
             Vector3 direction = target.position - transform.position;
-
             direction.y = 0f;
 
             float detectionRange = context.Definition.DetectionRange;

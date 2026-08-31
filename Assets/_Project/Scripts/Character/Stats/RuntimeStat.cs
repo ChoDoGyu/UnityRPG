@@ -6,7 +6,7 @@ namespace UnityRPG.Character.Stats
     {
         private readonly List<StatModifier> modifiers = new List<StatModifier>();
 
-        public float BaseValue { get; private set; }
+        public float BaseValue { get; }
 
         public float Value
         {
@@ -15,9 +15,7 @@ namespace UnityRPG.Character.Stats
                 float value = BaseValue;
 
                 foreach (StatModifier modifier in modifiers)
-                {
                     value += modifier.Value;
-                }
 
                 return value;
             }
@@ -28,17 +26,10 @@ namespace UnityRPG.Character.Stats
             BaseValue = baseValue;
         }
 
-        public void SetBaseValue(float value)
-        {
-            BaseValue = value;
-        }
-
         public void AddModifier(StatModifier modifier)
         {
             if (modifier == null)
-            {
                 return;
-            }
 
             modifiers.Add(modifier);
         }

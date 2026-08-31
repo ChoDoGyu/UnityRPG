@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityRPG.Character.Stats;
 using UnityRPG.Combat;
 using UnityRPG.Core;
@@ -58,7 +58,7 @@ namespace UnityRPG.Skill
         {
             if (spawnPoint == null || directionReference == null || projectilePrefab == null)
             {
-                Debug.LogError("[Skill] Projectile SkillÀÇ Reference°¡ ¼³Á¤µÇÁö ¾Ê¾Ò½À´Ï´Ù.", this);
+                Debug.LogError("[Skill] Projectile Skillì˜ Referenceê°€ ì„¤ì •ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.", this);
 
                 return;
             }
