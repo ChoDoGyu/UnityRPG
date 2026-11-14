@@ -9,6 +9,8 @@ Quest, Save / Load, UI, Audio / VFX를 연결하여
 
 까지 하나의 완전한 Gameplay Loop로 구현했습니다.
 
+[UnityRPG 실제 게임플레이 보기 (YouTube)](https://youtu.be/m8P98AnVkJM)
+
 ---
 
 ## Overview
@@ -117,8 +119,9 @@ BossPatternBase
 └ Shockwave
 ```
 
-`BossCombatController`는 Pattern 선택을 담당하고,
-각 Pattern은 자신의 거리 / Phase 조건과 실제 공격 행동을 담당합니다.
+`BossCombatController`는 실행 조건을 만족하는 Pattern 후보를 모아 무작위로 선택합니다.
+직전 Pattern은 먼저 제외하고, 다른 후보가 없으면 직전 Pattern을 포함해 다시 후보를 모읍니다.
+거리와 보스 Phase 등 패턴별 실행 조건과 공격 행동은 각 Pattern에서 처리합니다.
 
 공통 `Windup → Active → Recovery → Cooldown` 생명주기는
 `BossPatternBase`에서 관리합니다.
@@ -139,8 +142,9 @@ SaveFileService
 save_0.json
 ```
 
-Runtime과 JSON File I/O를 분리했으며,
-복원 시 Save Data를 먼저 검증한 뒤 Runtime에 적용합니다.
+Runtime과 JSON File I/O를 분리했습니다.
+`SaveFileService`가 JSON을 읽고 저장 버전과 필수 데이터를 검사한 뒤,
+`SaveGameController`가 현재 씬을 확인하고 각 Adapter를 순서대로 호출합니다.
 
 ### Event-driven Presentation
 
@@ -172,8 +176,8 @@ Runtime Event를 통해 Presentation 계층에 상태 변화를 전달합니다.
 - [PlayerItemSaveAdapter.cs](Assets/_Project/Scripts/Infrastructure/Save/PlayerItemSaveAdapter.cs)
 - [SaveFileService.cs](Assets/_Project/Scripts/Infrastructure/Save/SaveFileService.cs)
 
-Gameplay Runtime, Save DTO, File I/O의 책임을 분리하고
-복원 전 데이터 검증을 수행합니다.
+Gameplay Runtime, Save DTO, File I/O의 책임을 분리했습니다.
+`PlayerItemSaveAdapter`는 인벤토리와 장비를 비우기 전에 아이템 ID·수량, 장비 슬롯·중복 여부 등을 검사합니다.
 
 ### Equipment / Stat
 
@@ -181,8 +185,8 @@ Gameplay Runtime, Save DTO, File I/O의 책임을 분리하고
 - [RuntimeStat.cs](Assets/_Project/Scripts/Character/Stats/RuntimeStat.cs)
 - [StatModifier.cs](Assets/_Project/Scripts/Character/Stats/StatModifier.cs)
 
-장비 교체 실패 시 Rollback을 수행하며,
-`StatModifier.Source`를 이용해 특정 장비가 적용한 능력치만 제거합니다.
+장비 교체 중 기존 장비를 인벤토리에 돌려놓지 못하면, 먼저 꺼낸 새 장비를 인벤토리에 다시 넣고 실패를 반환합니다.
+정상적으로 교체할 때는 `StatModifier.Source`로 기존 장비가 적용한 능력치 보정만 제거합니다.
 
 ### Developer Console
 
@@ -236,23 +240,19 @@ Object Pooling은 현재 Vertical Slice의 동시 객체 수와 생성 빈도를
 
 ## Troubleshooting Highlights
 
-### Save Restore 중 기존 Runtime 유실 방지
+### 인벤토리·장비 복원 전 검사
 
-기존 Runtime을 먼저 초기화하지 않고
+저장된 인벤토리나 장비 데이터가 유효한지 확인하기 전에 기존 값을 비우면, 복원에 실패했을 때 해당 상태가 유실될 수 있습니다. `PlayerItemSaveAdapter`에서는 다음 순서로 처리합니다.
 
 ```text
-Load
+인벤토리·장비 데이터 검사
 ↓
-Validate
+검사를 통과하면 인벤토리·장비 상태 초기화
 ↓
-복원 가능한 상태 구성
-↓
-검증 성공
-↓
-Runtime 적용
+인벤토리·장비 복원
 ```
 
-순서로 변경하여 잘못된 Save Data가 기존 상태를 손상시키지 않도록 했습니다.
+전체 로드는 성장, 인벤토리·장비, 퀘스트, 인카운터, 체크포인트, 위치 순으로 적용합니다. 중간 단계에서 실패하면 `RestoreFailed`를 반환합니다. 앞 단계에서 적용한 값은 남을 수 있습니다.
 
 ### Persistent Runtime의 Scene Lifecycle
 
@@ -343,5 +343,5 @@ Scene에서 Play하여 시작할 수 있습니다.
 ## Links
 
 - [기술 포트폴리오 (Notion)](https://zinc-lipstick-51c.notion.site/UnityRPG-3cdd3addd2cb802281d9ef23c339acf6)
-- Gameplay Video 추후 연결
+- [게임플레이 영상 (YouTube)](https://youtu.be/m8P98AnVkJM)
 - Portfolio PDF 추후 연결
